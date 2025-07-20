@@ -1,0 +1,104 @@
+.documento-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ddd;
+  align-items: flex-start;
+}
+
+.thumbnail, .thumbnail-container {
+  width: 100px;
+  height: auto;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.documento-detalles {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.doc-nombre {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #222;
+}
+
+.doc-fecha, .doc-relacion {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.doc-meta {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.doc-acciones {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+  padding: 0.2rem;
+}
+
+.icon-btn:hover {
+  color: #222;
+}
+
+/* Mejorar la apariencia de la zona de drop para agregar documentos */
+.drop-zone {
+  border: 2px dashed #007bff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.drop-zone:hover {
+  background-color: #f1f1f1;
+  border-color: #0056b3; /* Cambio de color al pasar el ratón */
+}
+
+.doc-panel {
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.doc-panel-header {
+  background: #f0f0f0;
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+.doc-panel-header:hover {
+  background: #e0e0e0;
+}
+
+.doc-panel-content {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.doc-panel-content.hidden {
+  display: none;
+}
+
+#fecha{
+  width: 97%;
+}

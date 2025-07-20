@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - SIGEST HC</title>
+  <link rel="stylesheet" href="css/estilos.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <script type="module" src="src/login.js" defer></script>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h1>Acceso SIGEST HC</h1>
+      <form id="loginForm">
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" required />
+
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="contrasena" required />
+
+        <button type="submit" class="btn-primary">Iniciar Sesión</button>
+      </form>
+      <div id="loginError" class="error hidden">Credenciales inválidas. Intenta de nuevo.</div>
+    </div>
+  </div>
+</body>
+</html>

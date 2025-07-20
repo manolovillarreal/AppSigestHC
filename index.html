@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIGEST HC</title>
+    <link rel="stylesheet" href="css/estilos.css" />
+    <link rel="stylesheet" href="css/atencionView.css" />
+    <link rel="stylesheet" href="css/documentos.css" />
+    <link rel="stylesheet" href="css/modales.css" />
+    <!-- CSS de SweetAlert2 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <!-- Script de SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script>
+      // Configurar ruta del worker de PDF.js
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    </script>
+    <script type="module" src="src/main.js" defer></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="usuario-info">
+            <span class="material-icons perfil-icon">account_circle</span>
+            <span id="nombreUsuario" class="usuario-nombre">Usuario</span>
+          </div>
+          <button id="btnLogout" class="btn-icon" title="Cerrar sesión">
+            <span class="material-icons">logout</span>
+          </button>
+        </div>
+
+        <button id="btnNuevaAtencion" class="btn-primary hidden">Nueva Atención</button>
+
+        <div id="atenciones-container"></div>
+      </aside>
+
+      <main class="main-content">
+        <h1>Bienvenido, <span id="nombreCompletoUsuario">Usuario</span></h1>
+        <p>Seleccione una atención para ver sus documentos.</p>
+        <div id="atencion-panel" class="hidden">
+        
+        </div>
+      </main>
+    </div>
+   
+  </body>
+</html>

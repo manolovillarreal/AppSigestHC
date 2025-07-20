@@ -1,0 +1,102 @@
+.atencion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #f5f5f5;
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.atencion-info {
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.btn-secundario {
+  background: none;
+  border: 1px solid #aaa;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #444;
+  border-radius: 4px;
+}
+
+.btn-secundario:hover {
+  background-color: #e2e2e2;
+}
+
+#panel-cabecera-atencion button + button {
+  margin-left: 0.5rem;
+}
+
+/* Cabecera relativa para ubicar botón flotante */
+.atencion-header {
+  position: relative;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+/* Botón cerrar en esquina superior derecha */
+.btn-cerrar-atencion {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #777;
+  cursor: pointer;
+}
+
+.btn-cerrar-atencion:hover {
+  color: #000;
+}
+
+/* Botón cerrar en esquina superior derecha */
+.btn-anular-atencion {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #777;
+  cursor: pointer;
+}
+.btn-anular-atencion:hover {
+  color: #940505;
+}
+
+/* Contenedor botón avanzar */
+.contenedor-avanzar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.btn-avanzar {
+  background-color: #0069d9;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.btn-avanzar:hover {
+  background-color: #0054b4;
+}
+
+#obs-cambio-estado{
+  width: 360px;
+  font-size: 17px;
+}
