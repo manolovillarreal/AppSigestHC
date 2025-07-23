@@ -69,3 +69,10 @@ export function formatearErroresHTML(errores) {
       `<strong></strong> ${mensajes}`)
     .join('<br>');
 }
+
+export function cargarCSS(url) {
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = url;
+  document.head.appendChild(link);
+}

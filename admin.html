@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | SIGEST HC</title>
+    <link rel="stylesheet" href="css/estilos.css" />
+    <link rel="stylesheet" href="css/modales.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="src/admin/admin.js" defer></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="usuario-info">
+            <span class="material-icons perfil-icon">admin_panel_settings</span>
+            <span id="nombreUsuario" class="usuario-nombre">Admin</span>
+          </div>
+          <button id="btnLogout" class="btn-icon" title="Cerrar sesión">
+            <span class="material-icons">logout</span>
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+            <div id="modulosAdmin" class="modulos-admin">
+    <!-- Aquí irán los botones dinámicamente -->
+  </div>
+       
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <h1>Módulo de Configuración</h1>
+        <div id="vistaContenido" class="admin-view-container">
+          <p>Selecciona un elemento de la barra lateral para ver su configuración.</p>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

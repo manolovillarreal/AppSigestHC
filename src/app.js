@@ -68,6 +68,24 @@ function configurarVistaPorRol() {
   
    document.getElementById('nombreUsuario').textContent = perfil.nombreUsuario;
    document.getElementById('nombreCompletoUsuario').textContent = perfil.nombre;
+
+     // Si el usuario es Administrador, agregar botón de Admin
+  if (perfil.rol.nombre === "Admin") {
+    const header = document.querySelector(".sidebar-header");
+
+    const btnAdmin = document.createElement("button");
+    btnAdmin.id = "btnAdmin";
+    btnAdmin.classList.add("btn-icon");
+    btnAdmin.title = "Panel de Administración";
+
+    btnAdmin.innerHTML = `<span class="material-icons">settings</span>`;
+    btnAdmin.addEventListener("click", () => {
+      window.location.href = "admin.html";
+    });
+
+     header.insertBefore(btnAdmin, btnLogout);
+  }
+
 }
 
 

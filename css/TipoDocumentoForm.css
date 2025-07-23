@@ -1,0 +1,137 @@
+/*************************************/
+/******** TipoDocumentoForm  *******/
+/************************************/
+.tipo-doc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  max-width: 600px;
+}
+.tipo-doc-form .fila-horizontal {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap; /* opcional si quieres que se ajusten en pantallas pequeñas */
+}
+
+.tipo-doc-form .campo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 150px;
+}
+
+.tipo-doc-form #campo_nombre {
+   flex: 3;
+}
+
+
+.tipo-doc-form label {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.tipo-doc-form input
+{
+  padding: 0.4rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.tipo-doc-form textarea
+{
+  height: 50px;
+  font-family: sans-serif;
+  padding: 0.4rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.tipo-doc-form .acciones {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.acciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.acciones-izquierda {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.tipo-doc-form.inactivo > *:not(.acciones) {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(0.7);
+}
+
+.tipo-doc-form.inactivo {
+  position: relative;
+}
+
+.tipo-doc-form.inactivo::after {
+  content: 'Inactivo';
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: #ff5c5c;
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.permisos-form {
+  margin-top: 1.5rem;
+}
+
+.permiso-rol-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+}
+
+.permiso-rol-nombre {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.permiso-rol-opciones {
+  display: flex;
+  gap: 1.5rem;
+  padding-left: 0.5rem;
+}
+
+.checkbox-permiso {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+}
