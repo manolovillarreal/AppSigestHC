@@ -1,4 +1,3 @@
-import { cargarCSS } from "../helpers/utils.js";
 
 export class Modal {
   constructor(title = "") {
@@ -14,7 +13,6 @@ export class Modal {
         <div class="modal-body"></div>
       </div>
     `;
-    cargarCSS('css/modal.css');
     this._bindCloseEvents();
   }
 

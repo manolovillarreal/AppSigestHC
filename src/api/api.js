@@ -16,8 +16,7 @@ async function manejarRespuesta(res) {
     const mensaje = data?.mensaje || 'Error desconocido';
     const errores = data?.data?.ErrorMessages || null;
 
-    console.log(data);
-    
+   
     console.warn(`❗ Error API: ${mensaje}`);
     if (errores) console.warn('Detalles:', errores);
   }
@@ -31,6 +30,7 @@ export async function apiGet(path) {
   const res = await fetch(`${API_URL}${path}`, {
     headers: getTokenHeader()
   });
+  
   return await manejarRespuesta(res);
 }
 

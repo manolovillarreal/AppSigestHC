@@ -39,7 +39,7 @@ export class ListaTipoDocumentos extends BaseComponent {
     titulo.textContent = "Tipos de Documento";
 
     const btnAgregar = document.createElement("button");
-    btnAgregar.classList.add("btn", "btn-primario");
+    btnAgregar.classList.add("btn", "btn-primary");
     btnAgregar.textContent = "Agregar Tipo";
     btnAgregar.addEventListener("click",this.handleClickBtnAgregarTipoDocumento);
 
@@ -61,8 +61,11 @@ export class ListaTipoDocumentos extends BaseComponent {
 
   handleClickTipoDocumentoItem(tipoDocumento) {
     debug.log("seleccion: ",tipoDocumento)
-    const vista = new TipoDocumentoView(tipoDocumento);
-    vista.mount(document.getElementById("vistaContenido"));
+    const vista = new TipoDocumentoView(tipoDocumento,async ()=>{
+      console.log("close");      
+      await this.mount(this.container);
+    });
+    vista.mount(this.container);
   }
 
   handleClickBtnAgregarTipoDocumento() {
@@ -70,7 +73,7 @@ export class ListaTipoDocumentos extends BaseComponent {
   const form = new TipoDocumentoForm(null, async (creado) => {
     Swal.fire("Tipo creado", "Se creó exitosamente", "success");
     modal.cerrar();
-    listaTipos.load(); // si tienes acceso a la lista
+    this.load();
   });
 
   const modal = new Modal("Nuevo Tipo de Documento");

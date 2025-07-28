@@ -1,6 +1,5 @@
 import { BaseComponent } from "../../base/BaseComponent.js";
 import { apiPost,apiPut,apiDelete } from "../../api/api.js";
-import { cargarCSS } from "../../helpers/utils.js";
 
 /**
  * Formulario editable para un Tipo de Documento.
@@ -16,7 +15,6 @@ export class TipoDocumentoForm extends BaseComponent {
     super();
      this.tipoDocumento = tipoDocumento ?? this._crearTipoPorDefecto();
       this.onSave = onSave;
-     cargarCSS('css/TipoDocumentoForm.css');
   }
 
   /**
@@ -39,7 +37,6 @@ export class TipoDocumentoForm extends BaseComponent {
     const form = document.createElement("form");
     form.classList.add("tipo-doc-form");
 
-    console.log(activo);
     
     form.innerHTML = `
     <div class="fila-horizontal">
@@ -106,6 +103,7 @@ export class TipoDocumentoForm extends BaseComponent {
     `;
   this._configurarEstadoInicialYToggle(form, activo);
 
+  
 
    form.addEventListener("submit", (e) => this._handleSubmit(e, form));  
  
@@ -146,6 +144,7 @@ export class TipoDocumentoForm extends BaseComponent {
   }
 }
   _configurarEstadoInicialYToggle(form, activo) {
+    
   this.visible = activo;
   form.classList.toggle('inactivo', !this.visible);
 
@@ -162,9 +161,29 @@ export class TipoDocumentoForm extends BaseComponent {
       // Aplica o quita la clase inactivo
       form.classList.toggle('inactivo', !this.visible);
     });
+
+     const btnEliminar = form.querySelector('.btn-eliminar');
+    if (btnEliminar) {
+      btnEliminar.onclick = async () => await this.eliminarTipoDocumento();
+    }
   }
 }
+ async eliminarTipoDocumento() {
+    const confirmado = await Swal.fire({
+    title: "¿Estás seguro?",
+    text: "Esta acción no se puede deshacer",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  });
 
+  if (confirmado.isConfirmed) {
+    // Aquí podrías llamar un servicio para eliminar
+    await tipoDocumentoService.eliminar(this.tipoDocumento.id);
+    this.onSave?.();
+  }
+  }
    _crearTipoPorDefecto() {
     return {
       id: null,

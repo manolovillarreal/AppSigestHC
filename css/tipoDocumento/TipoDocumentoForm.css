@@ -4,8 +4,8 @@
 .tipo-doc-form {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 0 4px rgba(0,0,0,0.1);
@@ -53,18 +53,14 @@
   border-radius: 4px;
 }
 
-.tipo-doc-form .acciones {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
-}
+
 
 .acciones {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin-top: 1rem;
+
 }
 
 .acciones-izquierda {
@@ -103,26 +99,12 @@
   font-weight: bold;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
-
-.permisos-form {
-  margin-top: 1.5rem;
-}
-
-.permiso-rol-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: #f9f9f9;
-}
-
 .permiso-rol-nombre {
   font-weight: bold;
   font-size: 1rem;
   margin-bottom: 0.5rem;
   color: #333;
 }
-
 .permiso-rol-opciones {
   display: flex;
   gap: 1.5rem;

@@ -1,6 +1,7 @@
 export class BaseComponent {
   constructor() {
     this.element = null; // Se debe asignar en render()
+    this.container = null
   }
 
   /**
@@ -15,9 +16,9 @@ export class BaseComponent {
    * Reemplaza el contenido de un contenedor con el componente.
    * @param {HTMLElement|string} container - Un nodo o un id de nodo.
    */
-  async mount(container) {
+  async mount(container,load=true ) {
     // Ejecutar carga de datos si hay un método load
-    if (typeof this.load === "function") {
+    if (typeof this.load === "function" && load) {
       await this.load();
     }
 
@@ -36,6 +37,7 @@ export class BaseComponent {
     // Agregar el componente al contenedor
     if (this.element instanceof HTMLElement) {
       cont.appendChild(this.element);
+      this.container = cont;
     } else {
       console.warn(
         "⚠️ No se encontró 'this.element' válido al montar el componente."
@@ -47,7 +49,12 @@ export class BaseComponent {
    * Agrega el componente al final de un contenedor sin borrar nada.
    * @param {HTMLElement|string} container
    */
-  appendTo(container) {
+  async appendTo(container) {
+     // Ejecutar carga de datos si hay un método load
+    if (typeof this.load === "function") {
+      await this.load();
+    }
+
     const cont =
       typeof container === "string"
         ? document.getElementById(container)
@@ -58,6 +65,7 @@ export class BaseComponent {
     if (!this.element) this.render();
 
     cont.appendChild(this.element);
+    this.container = cont;
   }
 
   /**
@@ -67,7 +75,8 @@ export class BaseComponent {
   insertBefore(referenceNode) {
     if (!this.element) this.render();
 
-    referenceNode.parentNode.insertBefore(this.element, referenceNode);
+     this.container = referenceNode.parentNode;
+     this.container.insertBefore(this.element, referenceNode);
   }
 
   /**
@@ -77,9 +86,10 @@ export class BaseComponent {
   insertAfter(referenceNode) {
     if (!this.element) this.render();
 
-    referenceNode.parentNode.insertBefore(
-      this.element,
-      referenceNode.nextSibling
-    );
+    this.container = referenceNode.parentNode;
+  this.container.insertBefore(this.element, referenceNode.nextSibling);
   }
+
+  
+
 }

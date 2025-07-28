@@ -1,0 +1,51 @@
+.form-agregar-permiso {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  min-width: 300px;
+}
+
+.form-agregar-permiso h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.form-agregar-permiso select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.checkbox-permiso {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.form-agregar-permiso button[type="submit"] {
+  align-self: flex-end;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--color-primario, #1976d2);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.form-agregar-permiso button[type="submit"]:hover {
+  background-color: var(--color-primario-hover, #135ba1);
+}

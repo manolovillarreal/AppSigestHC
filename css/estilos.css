@@ -1,3 +1,23 @@
+
+:root {
+  --color-primario: #007bff;
+  --color-primario-hover: #0056b3;
+
+  --color-secundario: #6c757d;
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+  --color-warning: #ffc107;
+  --color-info: #17a2b8;
+
+  --color-texto: #212529;
+  --color-fondo: #ffffff;
+  --color-borde: #dee2e6;
+
+  --color-icono-verde: #28a745;
+  --color-icono-rojo: #dc3545;
+}
+
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -309,3 +329,7 @@ body {
   font-weight: bold;
 }
 
+#vistaContenido{
+  max-width: 600px;
+  margin-left: 25px;
+}

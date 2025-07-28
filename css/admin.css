@@ -83,6 +83,7 @@
   font-size: 0.85rem;
   color: #555;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .tipo-doc-item.inactivo {
@@ -90,8 +91,12 @@
   filter: grayscale(0.5);
   background-color: #f9f9f9;
   position: relative;
-  pointer-events: none; /* evita interacción si es necesario */
 }
+.tipo-doc-item.inactivo:hover {
+  background: #dbdada;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
 
 /* Opcional: etiqueta visual */
 .tipo-doc-item.inactivo::after {
@@ -106,6 +111,39 @@
   border-radius: 3px;
   font-weight: bold;
 }
+
+
+.permisos-colapsable {
+  margin-top: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+}
+
+.permisos-colapsable summary {
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+#permisos-por-rol-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+}
+
+
+.estado-requerido-add-wrapper {
+  margin-top: 0.5rem;
+  text-align: right;
+}
+
+
+.btn-agregar-estado:hover {
+  background-color: var(--color-primario-hover);
+}
+
 
 
 

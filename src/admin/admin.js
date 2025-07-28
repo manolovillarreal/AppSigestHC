@@ -2,6 +2,10 @@ import auth from "../auth/auth.js";
 import debug from "../helpers/debug.js";
 import contexto from "../contexto/contexto.js";
 import {ListaTipoDocumentos} from './tipoDocumento/ListaTipoDocumento.js'
+import { cargarCSS } from "../helpers/css.js";
+
+
+cargarCSS("admin");
 
 const modulos = [
   { id: "moduloTipoDocumento", nombre: "Tipos de Documento", icono: "description" },
