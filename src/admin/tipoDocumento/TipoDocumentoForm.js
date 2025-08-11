@@ -1,5 +1,7 @@
 import { BaseComponent } from "../../base/BaseComponent.js";
-import { apiPost,apiPut,apiDelete } from "../../api/api.js";
+import { apiPost,apiPut,apiDelete, apiGet } from "../../api/api.js";
+import tipoDocumentoService from '../../services/TipoDocumentoService.js';    
+
 
 /**
  * Formulario editable para un Tipo de Documento.
@@ -13,14 +15,28 @@ export class TipoDocumentoForm extends BaseComponent {
    */
   constructor(tipoDocumento, onSave) {
     super();
-     this.tipoDocumento = tipoDocumento ?? this._crearTipoPorDefecto();
-      this.onSave = onSave;
+    this.tipoDocumento = tipoDocumento ?? this._crearTipoPorDefecto();
+    this.onSave = onSave;
+    this.estadosAtencion = [];
+    this._cargandoEstados = false;
+  }
+
+  async load() {
+    if (this._cargandoEstados) return;
+    this._cargandoEstados = true;
+    const res = await apiGet("/EstadoAtencion");
+    if (res.ok) {
+      this.estadosAtencion = res.result;
+    } else {
+      this.estadosAtencion = [];
+    }
+    this._cargandoEstados = false;
   }
 
   /**
    * Renderiza el formulario en this.element.
    */
-  render() {
+   render() {
     const {
       codigo,
       nombre,
@@ -31,13 +47,19 @@ export class TipoDocumentoForm extends BaseComponent {
       permiteMultiples,
       limiteDePaginas,
       pesoPorPagina,
-      activo
+      activo,
+      estadoAtencionInicialId
     } = this.tipoDocumento;
 
     const form = document.createElement("form");
     form.classList.add("tipo-doc-form");
 
-    
+    // Select de estados de atención
+    let optionsEstados = '<option value="">Seleccione un estado inicial...</option>';
+    for (const estado of this.estadosAtencion) {
+      optionsEstados += `<option value="${estado.id}" ${estadoAtencionInicialId == estado.id ? "selected" : ""}>${estado.nombre}</option>`;
+    }
+
     form.innerHTML = `
     <div class="fila-horizontal">
     <div class="campo" id="campo_nombre">
@@ -48,19 +70,25 @@ export class TipoDocumentoForm extends BaseComponent {
           <label>Codigo</label>
           <input name="codigo" required value="${codigo}" />
         </div>
-      </div>      
+      </div>
       <div class="fila-horizontal">
         <div class="campo">
           <label>Extensión</label>
-          <input name="extensionPermitida" value="${extensionPermitida || ""}" />
+          <input name="extensionPermitida" value="${extensionPermitida || "pdf"}" />
         </div>
         <div class="campo">
           <label>Límite de páginas</label>
-          <input type="number" name="limiteDePaginas" min="0" value="${limiteDePaginas ?? ""}" />
+          <input type="number" name="limiteDePaginas" min="0" value="${limiteDePaginas || "0"}" />
         </div>
         <div class="campo">
           <label>Peso por página</label>
-          <input type="number" name="pesoPorPagina" min="200" value="${pesoPorPagina ?? ""}" />
+          <input type="number" name="pesoPorPagina" min="200" value="${pesoPorPagina || "500"}" />
+        </div>
+      </div>
+      <div class="fila-horizontal">
+        <div class="campo">
+          <label>Estado Inicial</label>
+          <select name="estadoAtencionInicialId" required>${optionsEstados}</select>
         </div>
       </div>
       <label>Descripción</label>
@@ -91,7 +119,7 @@ export class TipoDocumentoForm extends BaseComponent {
         <button class="icon-btn toggle-estado-btn" type="button" title="Ocultar / Mostrar">
           <span class="material-icons">${activo ? "visibility":"visibility_off"}</span>
         </button>
-        <button class="icon-btn" type="button" title="Eliminar">
+        <button id="btn-eliminar" class="icon-btn" type="button" title="Eliminar">
           <span class="material-icons">delete</span>
         </button>
       </div>
@@ -101,48 +129,48 @@ export class TipoDocumentoForm extends BaseComponent {
   </div>
 </div>
     `;
-  this._configurarEstadoInicialYToggle(form, activo);
-
-  
-
-   form.addEventListener("submit", (e) => this._handleSubmit(e, form));  
- 
-
+    this._configurarEstadoInicialYToggle(form, activo);
+    form.addEventListener("submit", (e) => this._handleSubmit(e, form));
     this.element = form;
   }
   async _handleSubmit(e, form) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const dto = {
-    id: this.tipoDocumento.id,
-    codigo: form.codigo.value.trim(),
-    nombre: form.nombre.value.trim(),
-    descripcion: form.descripcion.value.trim(),
-    extensionPermitida: form.extensionPermitida.value.trim(),
-    requiereNumeroRelacion: form.requiereNumeroRelacion.checked,
-    esAsistencial: form.esAsistencial.checked,
-    permiteMultiples: form.permiteMultiples.checked,
-    limiteDePaginas: form.limiteDePaginas.value ? parseInt(form.limiteDePaginas.value) : null,
-    pesoPorPagina: form.pesoPorPagina.value ? parseInt(form.pesoPorPagina.value) : null,
-    activo: this.visible
-  };
+    const dto = {
+      id: this.tipoDocumento.id,
+      codigo: form.codigo.value.trim(),
+      nombre: form.nombre.value.trim(),
+      descripcion: form.descripcion.value.trim(),
+      extensionPermitida: form.extensionPermitida.value.trim(),
+      requiereNumeroRelacion: form.requiereNumeroRelacion.checked,
+      esAsistencial: form.esAsistencial.checked,
+      permiteMultiples: form.permiteMultiples.checked,
+      limiteDePaginas: form.limiteDePaginas.value ? parseInt(form.limiteDePaginas.value) : null,
+      pesoPorPagina: form.pesoPorPagina.value ? parseInt(form.pesoPorPagina.value) : null,
+      activo: this.visible,
+      estadoAtencionInicialId: form.estadoAtencionInicialId.value ? parseInt(form.estadoAtencionInicialId.value) : null
+    };
 
-  if (!dto.nombre) {
-    Swal.fire("Error", "El nombre es obligatorio", "warning");
-    return;
+    if (!dto.nombre) {
+      Swal.fire("Error", "El nombre es obligatorio", "warning");
+      return;
+    }
+    if (!dto.estadoAtencionInicialId) {
+      Swal.fire("Error", "Debe seleccionar un estado inicial", "warning");
+      return;
+    }
+
+    const { id } = this.tipoDocumento;
+    const ruta = id ? `/TipoDocumento/${id}` : "/TipoDocumento";
+    const res = id ? await apiPut(ruta, dto) : await apiPost(ruta, dto);
+
+    if (res.ok) {
+      Swal.fire("Actualizado", "El tipo de documento fue actualizado", "success");
+      this.onSave?.(res.result);
+    } else {
+      Swal.fire("Error", res.errorMessages.join(", "), "error");
+    }
   }
-
-  const { id } = this.tipoDocumento;
-  const ruta = id ? `/TipoDocumento/${id}` : "/TipoDocumento";
-  const res = id ? await apiPut(ruta, dto) : await apiPost(ruta, dto);
-
-  if (res.ok) {
-    Swal.fire("Actualizado", "El tipo de documento fue actualizado", "success");
-    this.onSave?.(res.result);
-  } else {
-    Swal.fire("Error", res.errorMessages.join(", "), "error");
-  }
-}
   _configurarEstadoInicialYToggle(form, activo) {
     
   this.visible = activo;
@@ -162,7 +190,8 @@ export class TipoDocumentoForm extends BaseComponent {
       form.classList.toggle('inactivo', !this.visible);
     });
 
-     const btnEliminar = form.querySelector('.btn-eliminar');
+     const btnEliminar = form.querySelector('#btn-eliminar');
+
     if (btnEliminar) {
       btnEliminar.onclick = async () => await this.eliminarTipoDocumento();
     }
@@ -180,11 +209,21 @@ export class TipoDocumentoForm extends BaseComponent {
 
   if (confirmado.isConfirmed) {
     // Aquí podrías llamar un servicio para eliminar
-    await tipoDocumentoService.eliminar(this.tipoDocumento.id);
-    this.onSave?.();
+    const res = await tipoDocumentoService.eliminar(this.tipoDocumento.id);
+
+    console.log(res);
+    
+    if(res.ok) {
+      Swal.fire("Eliminado", "El tipo de documento fue eliminado", "success");
+      this.onSave?.();
+    }
+    else {
+      Swal.fire("Error", res.errorMessages.join(", "), "error");
+    }
+    }
+    
   }
-  }
-   _crearTipoPorDefecto() {
+  _crearTipoPorDefecto() {
     return {
       id: null,
       codigo: "",
@@ -196,7 +235,8 @@ export class TipoDocumentoForm extends BaseComponent {
       permiteMultiples: false,
       limiteDePaginas: null,
       pesoPorPagina: null,
-      activo: true
+      activo: true,
+      estadoAtencionInicialId: null
     };
   }
 }

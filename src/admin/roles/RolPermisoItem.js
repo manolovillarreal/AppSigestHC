@@ -1,24 +1,27 @@
 import { apiDelete, apiPut } from "../../api/api.js";
 import { BaseComponent } from "../../base/BaseComponent.js";
 
-
-export class PermisoPorRolForm extends BaseComponent {
+/**
+ * Componente editable para mostrar y modificar un permiso de tipo documento asignado a un rol.
+ */
+export class RolPermisoItem extends BaseComponent {
+  /**
+   * @param {Object} permiso - Objeto permiso (de tipoDocumentoRol).
+   */
   constructor(permiso) {
     super();
     this.permiso = permiso;
-    this.original = { ...permiso }; // guardar estado inicial
-    this.element = this._crearPermisoCard();
-
+    this.original = { ...permiso };
   }
 
-  _crearPermisoCard() {
+  render() {
     const card = document.createElement("div");
     card.classList.add("permiso-rol-card");
 
-    // Nombre del rol
-    const nombreRol = document.createElement("div");
-    nombreRol.classList.add("permiso-rol-nombre");
-    nombreRol.textContent = this.permiso.rol?.nombre || `Rol ${this.permiso.rolId}`;
+    // Nombre del tipo de documento
+    const nombreTipo = document.createElement("div");
+    nombreTipo.classList.add("permiso-rol-nombre");
+    nombreTipo.textContent = this.permiso.tipoDocumento?.nombre || `Tipo ${this.permiso.tipoDocumentoId}`;
 
     // Contenedor de checkboxes
     const opciones = document.createElement("div");
@@ -49,7 +52,7 @@ export class PermisoPorRolForm extends BaseComponent {
     acciones.appendChild(btnGuardar);
     acciones.appendChild(btnEliminar);
 
-    card.appendChild(nombreRol);
+    card.appendChild(nombreTipo);
     card.appendChild(opciones);
     card.appendChild(acciones);
 
@@ -61,7 +64,7 @@ export class PermisoPorRolForm extends BaseComponent {
     this.chkVer.addEventListener("change", () => this._detectarCambios());
     this.chkCargar.addEventListener("change", () => this._detectarCambios());
 
-    return card;
+    this.element = card;
   }
 
   _crearCheckbox(labelText, key, checked) {
@@ -89,15 +92,13 @@ export class PermisoPorRolForm extends BaseComponent {
 
   async _guardarCambios() {
     const dto = {
-      id: this.permiso.id,
-      tipoDocumentoId: this.permiso.tipoDocumentoId, // ← viene del permiso
+      tipoDocumentoId: this.permiso.tipoDocumentoId,
       rolId: this.permiso.rolId,
       puedeVer: this.chkVer.checked,
       puedeCargar: this.chkCargar.checked,
-      activo: true,
     };
 
-    const res = await apiPut(`/TipoDocumentoRol/${dto.id}`, dto);
+    const res = await apiPut(`/TipoDocumentoRol`, dto);
 
     if (res.ok) {
       this.original = { ...dto };
@@ -121,7 +122,6 @@ export class PermisoPorRolForm extends BaseComponent {
     if (confirmado.isConfirmed) {
       const { tipoDocumentoId, rolId } = this.permiso;
       const res = await apiDelete(`/TipoDocumentoRol?tipoDocumentoId=${tipoDocumentoId}&rolId=${rolId}`);
-
 
       if (res.ok) {
         this.element.remove();

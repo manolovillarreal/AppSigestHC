@@ -26,3 +26,10 @@ export const UI_CONFIG = {
   THUMBNAIL_SCALE: 0.3, // escala para canvas de PDFs
   FECHA_LOCALE: 'es-CO'
 };
+
+export const PERFILES = {
+  ADMISIONES: 'Admisiones',
+  MEDICO: 'Medico',
+  ENFERMERIA: 'Enfermeria',
+  ADMINISTRADOR: 'Admin'
+};

@@ -1,0 +1,35 @@
+.roles-list {
+  padding: 1rem;
+}
+
+.lista-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.lista-roles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rol-item {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+.rol-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rol-form input[type="text"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+

@@ -1,0 +1,107 @@
+/* Contenedor principal */
+.usuario-form {
+  padding: 1rem;
+  background-color: var(--color-blanco, #fff);
+  border: 1px solid var(--color-borde, #ddd);
+  border-radius: 5px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Fila horizontal para agrupar campos */
+.usuario-form .fila-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Campo individual */
+.usuario-form .campo {
+  min-width: 200px;
+  margin: 5px 0;
+}
+
+.usuario-form .campo label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.usuario-form .campo input,
+.usuario-form .campo select {
+  width: 95%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-borde, #ccc);
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+/* Checkbox con label en línea */
+.usuario-form .campo input[type="checkbox"] {
+  margin-right: 0.4rem;
+  width: auto;
+}
+
+/* Acciones */
+.usuario-form .acciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.2rem;
+}
+
+.usuario-form .acciones .btn-primary {
+  padding: 0.5rem 1.2rem;
+  background-color: var(--color-primario, #007bff);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.usuario-form .acciones .btn-primary:hover {
+  background-color: var(--color-primario-hover, #0056b3);
+}
+
+/* Botones de acciones izquierda como íconos */
+.usuario-form .acciones-izquierda {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.usuario-form .icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-texto, #333);
+}
+
+.usuario-form .icon-btn:hover {
+  color: var(--color-primario, #007bff);
+}
+
+/* Estado inactivo */
+.usuario-form.inactivo  > *:not(.acciones) {
+  opacity: 0.5;
+}
+.usuario-form.inactivo::after {
+  content: 'Inactivo';
+  bottom: 10px;
+  left: 10px;
+  background: #ff5c5c;
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Errores o alertas, si los manejas */
+.usuario-form .error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}

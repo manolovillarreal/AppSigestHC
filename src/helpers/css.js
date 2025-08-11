@@ -1,18 +1,36 @@
 const estilos = [
     "/css/estilos.css",
     'css/modal.css',
+    "css/FiltroLista.css",
+    "css/components/SelectConBuscador.css"
 ]
 
 const tipoDocumentoCss = [
   'css/tipoDocumento/AgregarPermisosTipoDocumento.css',
   'css/tipoDocumento/EstadoRequeridoForm.css',
-  'css/tipoDocumento/PermisoPorRolForm.css',
+  'css/tipoDocumento/TipoDocumentoPermisoItem.css',
   'css/tipoDocumento/TipoDocumentoForm.css'
 ]
 
+const UsuarioCss = [
+  'css/usuario/ListaUsuario.css',
+  'css/usuario/UsuarioForm.css',
+]
+
+const RolesCss = [
+  'css/roles/roles.css',
+];
+
+const EstadoAtencionCss = [
+  'css/EstadoAtencion/EstadoAtencion.css',
+];
+
 const modulos = {
   admin: [
-    ...tipoDocumentoCss    
+    ...tipoDocumentoCss,
+    ...UsuarioCss ,
+    ...RolesCss,
+    ...EstadoAtencionCss
   ],
   main: [
    

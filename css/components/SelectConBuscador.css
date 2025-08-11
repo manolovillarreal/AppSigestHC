@@ -1,0 +1,41 @@
+.select-buscador {
+  position: relative;
+  width: 100%;
+}
+
+.select-buscador-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.select-buscador-lista {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.select-buscador-lista.visible {
+  display: block;
+}
+
+.select-buscador-item {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.select-buscador-item:hover {
+  background-color: #f0f0f0;
+}

@@ -3,6 +3,9 @@ import debug from "../helpers/debug.js";
 import contexto from "../contexto/contexto.js";
 import {ListaTipoDocumentos} from './tipoDocumento/ListaTipoDocumento.js'
 import { cargarCSS } from "../helpers/css.js";
+import { ListaUsuarios } from "./usuario/ListaUsuarios.js";
+import { ListaRoles } from "./roles/ListaRoles.js";
+import { ListaEstadosAtencion } from "./estadoAtencion/ListaEstadosAtencion.js";
 
 
 cargarCSS("admin");
@@ -80,6 +83,19 @@ function setModulosAdmin() {
 function configurarEventos() {
   document.getElementById("moduloTipoDocumento")?.addEventListener("click", () => {
     const lista = new ListaTipoDocumentos();
+    lista.mount("vistaContenido");
+  });
+
+  document.getElementById("moduloUsuarios")?.addEventListener("click", () => {
+    const lista = new ListaUsuarios();
+    lista.mount("vistaContenido");
+  });
+   document.getElementById("moduloRoles")?.addEventListener("click", () => {
+    const lista = new ListaRoles();
+    lista.mount("vistaContenido");
+  });
+   document.getElementById("moduloEstados")?.addEventListener("click", () => {
+    const lista = new ListaEstadosAtencion();
     lista.mount("vistaContenido");
   });
 }

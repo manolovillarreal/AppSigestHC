@@ -29,7 +29,7 @@ export class BaseComponent {
 
     if (!cont) throw new Error("Contenedor no encontrado");
 
-    if (!this.element) this.render();
+    this.render();
 
     // Limpiar contenido previo del contenedor
     cont.innerHTML = "";
@@ -38,6 +38,29 @@ export class BaseComponent {
     if (this.element instanceof HTMLElement) {
       cont.appendChild(this.element);
       this.container = cont;
+    } else {
+      console.warn(
+        "⚠️ No se encontró 'this.element' válido al montar el componente."
+      );
+    }
+  }
+  async reMount(load=true ) {
+    // Ejecutar carga de datos si hay un método load
+    if (typeof this.load === "function" && load) {
+      console.log("Cargando datos...");
+      await this.load();
+    }
+
+    if (!this.container) throw new Error("Contenedor no encontrado");
+
+    this.render();
+
+    // Limpiar contenido previo del contenedor
+    this.container.innerHTML = "";
+
+    // Agregar el componente al contenedor
+    if (this.element instanceof HTMLElement) {
+      this.container.appendChild(this.element);
     } else {
       console.warn(
         "⚠️ No se encontró 'this.element' válido al montar el componente."

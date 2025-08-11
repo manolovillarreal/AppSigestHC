@@ -1,14 +1,16 @@
+import { BaseComponent } from "../base/BaseComponent.js";
 
-export class ItemAtencion {
-    constructor(atencion,container,clickHandler) {
+export class ItemAtencion extends BaseComponent{
+
+    constructor(atencion,clickHandler) {
+        super();
         this.atencion = atencion;
-        this.container = container;
         this.clickHandler = clickHandler;
 
     }
 
     render() {
-        const paciente = this.atencion.paciente;
+        const {paciente,ubicacionPaciente} = this.atencion;
         const item = document.createElement('li');
         item.classList.add("atencion-item");
         item.dataset.id = this.atencion.id;
@@ -16,6 +18,7 @@ export class ItemAtencion {
         item.innerHTML = `
                 <div class="paciente-info">
                 <strong>${paciente.primerNombre} ${paciente.primerApellido}</strong>
+                ${ubicacionPaciente ? `<span class="ubicacion">${ubicacionPaciente.codigo}</span>` : ''}
                 </div>
                 <div class="atencion-detalles">
                 <span class="fecha">${new Date(
@@ -23,6 +26,7 @@ export class ItemAtencion {
                 ).toLocaleString()}</span>
                 </div>
             `;
-        this.container.appendChild(item);
+        this.element = item;
     }
+
 }

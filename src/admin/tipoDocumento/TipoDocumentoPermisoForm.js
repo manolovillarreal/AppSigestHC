@@ -4,7 +4,7 @@ import { apiGet, apiPost } from "../../api/api.js";
 /**
  * Formulario para agregar un permiso de rol a un tipo de documento.
  */
-export class AgregarPermisoRolForm extends BaseComponent {
+export class TipoDocumentoPermisoForm  extends BaseComponent {
   /**
    * @param {Object} tipoDocumento - Objeto del tipo de documento.
    * @param {Array} existingPermisos - Lista de permisos actuales (para excluir roles ya asignados).

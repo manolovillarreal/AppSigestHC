@@ -35,7 +35,7 @@
   margin-bottom: 0.2rem;
 }
 
-.tipo-doc-form input
+.tipo-doc-form input,select
 {
   padding: 0.4rem;
   font-size: 1rem;
@@ -78,7 +78,6 @@
 
 .tipo-doc-form.inactivo > *:not(.acciones) {
   opacity: 0.5;
-  pointer-events: none;
   filter: grayscale(0.7);
 }
 

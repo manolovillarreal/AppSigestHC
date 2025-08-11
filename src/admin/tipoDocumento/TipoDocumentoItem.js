@@ -18,6 +18,7 @@ export class TipoDocumentoItem extends BaseComponent {
       esAsistencial,
       permiteMultiples,
       limiteDePaginas,
+      estadoAtencionInicial,
       activo
     } = this.tipoDocumento;
 
@@ -30,6 +31,9 @@ export class TipoDocumentoItem extends BaseComponent {
   <div class="tipo-doc-header">
     <span class="tipo-doc-nombre">${nombre}</span>
     <span class="tipo-doc-id">#${id}-${codigo}</span>
+  </div>
+  <div class="tipo-doc-detalles">
+    <span><strong>Estado Inicial:</strong> ${estadoAtencionInicial.nombre}</span>
   </div>
   <div class="tipo-doc-detalles-linea">
     <span><strong>Ext:</strong> ${extensionPermitida || "N/A"}</span>

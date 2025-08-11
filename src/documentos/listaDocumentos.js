@@ -27,7 +27,6 @@ export class ListaDocumentos {
     const thumbnailRefs = new Map();
     const documentosPorRol = agruparDocumentosPorRol(this.documentos);  
     
-    console.log(documentosPorRol);
     
     Object.entries(documentosPorRol).forEach(([rolNombre,docs]) => {
       const grupo = new GrupoDocumentosPorRol(rolNombre, docs);

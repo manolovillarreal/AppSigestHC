@@ -4,7 +4,8 @@ import { formatearFechaHora,formatearErroresHTML  } from "../helpers/utils.js";
 import { ListaDocumentos } from "../documentos/listaDocumentos.js";
 import contexto from "../contexto/contexto.js"; // Asegúrate de que el perfil esté importado correctamente
 import { ModalAgregarDocumento } from "../documentos/ModalAgregarDocumento.js";
-import {apiPost} from '../api/api.js'
+import {apiPost, apiPut} from '../api/api.js'
+import { PERFILES } from "../config/config.js";
 export class AtencionView {
   constructor() {
     this.atencion = null; // Inicializar atencion como null
@@ -61,9 +62,15 @@ export class AtencionView {
     header.className = "atencion-header";
     header.innerHTML = `
           <div class="atencion-info">
+          <div>
               <strong>Atención ID:</strong> <span id="cabecera-id">${
                 this.atencion.id
-              }</span><br />
+              }</span>
+             <strong style="margin-left: 10px;">Paciente ID:</strong> <span id="cabecera-id">${
+                this.atencion.paciente.id
+              }</span>
+
+          </div>
               <strong>Fecha:</strong> <span id="cabecera-fecha">${formatearFechaHora(
                 this.atencion.fecha
               )}</span><br />
@@ -77,8 +84,12 @@ export class AtencionView {
               <strong>Estado:</strong> <span id="estadoAtencion">${
                 this.atencion.estadoAtencion.nombre
               }</span>
-          </div>       
+              <br />
+          </div>
           `;
+    const tipoAtencionElement = this._setTipoAtencionElement();
+    header.querySelector(".atencion-info").appendChild(tipoAtencionElement);
+
     const btnCerrar = document.createElement("button");
     btnCerrar.id = "btnCerrarPanelAtencion";
     btnCerrar.className = "btn-cerrar-atencion";
@@ -91,7 +102,8 @@ export class AtencionView {
     });
     header.appendChild(btnCerrar);
 
-    if (this.atencion.estadoAtencion.id == 1) {
+    const { perfil } = contexto;
+    if (this.atencion.estadoAtencion.id == 1 && perfil.rol.nombre == PERFILES.ADMISIONES) {
       const btnAnular = document.createElement("button");
       btnAnular.id = "btnAnularAtencion";
       btnAnular.className = "btn-anular-atencion";
@@ -99,7 +111,7 @@ export class AtencionView {
       btnAnular.innerHTML = `<span class="material-icons">delete</span>`;
 
       btnAnular.addEventListener("click", () => {
-        this.anularAtencion(this.atencion.id, () => {
+        this._anularAtencion(this.atencion.id, () => {
           this.contenedor.classList.add("hidden");
         });
       });
@@ -107,6 +119,107 @@ export class AtencionView {
     }
 
     return header;
+  }
+
+  _setTipoAtencionElement() {
+    const tipoAtencionElement = document.createElement("div");
+    tipoAtencionElement.className = "fila-horizontal";
+
+    const {perfil} = contexto
+
+    if (perfil.rol.nombre == PERFILES.ENFERMERIA) {
+      const select = document.createElement("select");
+      select.id = "tipoAtencionSelect";
+      const opciones = [
+        { value: 1, label: "Urgencias" },
+        { value: 2, label: "Hospitalización" }
+      ];
+      opciones.forEach(op => {
+        const option = document.createElement("option");
+        option.value = op.value;
+        option.textContent = op.label;
+        if (this.atencion.tipoAtencionId == op.value) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+      const title = document.createElement("strong");
+      title.textContent = "Tipo Atención:";
+      tipoAtencionElement.appendChild(title);
+      tipoAtencionElement.appendChild(select);
+      const btnGuardar = document.createElement("button");
+      btnGuardar.id = "btnGuardarTipoAtencion";
+      btnGuardar.className = "btn-guardar-tipo-atencion";
+      btnGuardar.title = "Guardar tipo de atención";
+      btnGuardar.innerHTML = `<span class="material-icons">save</span>`;
+      btnGuardar.style.marginLeft = "8px";
+      tipoAtencionElement.appendChild(btnGuardar);
+
+      select.addEventListener("change", () => {
+        console.log("change");
+
+        if (select.value == this.atencion.tipoAtencionId) {
+          btnGuardar.style.display = "none";
+        } else {
+          btnGuardar.style.display = "";
+        }
+      });
+      // Inicializa el estado del botón al cargar
+      if (select.value == this.atencion.tipoAtencionId) {
+        btnGuardar.style.display = "none";
+      }
+
+      btnGuardar.addEventListener("click", async () => {
+        const nuevoTipo = select.value;
+        if (nuevoTipo === this.atencion.tipoAtencionId) return;
+          btnGuardar.style.display = "none";
+        try {
+          const dto = {
+            id: this.atencion.id,
+            tipoAtencionId: nuevoTipo,
+            terceroId: this.atencion.terceroId
+          }
+          const res = await apiPut(`/Atenciones/${this.atencion.id}`, dto);
+          if (res.ok) {
+            this.atencion.tipoAtencionId = nuevoTipo;
+            await Swal.fire({
+              icon: "success",
+              title: "Tipo de atención actualizado",
+              timer: 1200,
+              showConfirmButton: false,
+            });
+           
+            if (this.onSuccess) this.onSuccess();
+          } else {
+            const errores = formatearErroresHTML(res.errorMessages);
+            await Swal.fire({
+              icon: "error",
+              title: res.message || "Error al actualizar tipo de atención",
+              html: errores,
+            });
+            btnGuardar.disabled = false;
+          }
+        } catch (err) {
+          console.log(err);
+          
+          await Swal.fire({
+            icon: "error",
+            title: "Error inesperado",
+            text: "No se pudo actualizar el tipo de atención.",
+          });
+          btnGuardar.disabled = false;
+        }
+      });
+    }
+    else{
+      tipoAtencionElement.innerHTML = `
+      <strong>Tipo Atención:</strong> <span id="tipoAtencion">
+        ${this.atencion.tipoAtencionId == 1 ? "Urgencias" : "Hospitalización"}
+      </span>
+    `;
+    }
+    
+    return tipoAtencionElement;
   }
 
   ConstruirContenedorAvanzar() {
@@ -197,7 +310,7 @@ async AvanzarEstado() {
     });
   }
 }
-async anularAtencion(onSuccess = null) {
+async _anularAtencion(onSuccess = null) {
   const confirmacion = await Swal.fire({
     icon: "warning",
     title: "¿Anular atencion?",

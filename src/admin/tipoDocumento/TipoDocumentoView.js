@@ -1,10 +1,10 @@
 import { BaseComponent } from "../../base/BaseComponent.js";
 import { apiGet } from "../../api/api.js";
 import { EstadoRequeridoForm } from "./EstadoRequeridoForm.js";
-import { PermisoPorRolForm } from "./PermisoPorRolForm.js";
+import { TipoDocumentoPermisoItem } from "./TipoDocumentoPermisoItem.js";
 import { TipoDocumentoForm } from "./TipoDocumentoForm.js";
-import { AgregarPermisoRolForm } from "./AgregarPermisoRolForm .js";
-import { Modal } from "../../modal/modal.js";
+import { TipoDocumentoPermisoForm } from "./TipoDocumentoPermisoForm.js";
+import { Modal } from "../../components/modal.js";
 
 /**
  * Componente que representa la vista de detalles y configuración de un Tipo de Documento.
@@ -33,12 +33,15 @@ export class TipoDocumentoView extends BaseComponent {
 
     if (rolesRes.ok) {
       this.permisos = rolesRes.result;
+      console.log(this.permisos);
+      
     } else {
       console.warn("Error cargando roles:", rolesRes.errorMessages);
     }
 
     if (requeridosRes.ok) {
       this.estadoRequerido = requeridosRes.result;
+      console.log("Estados requeridos cargados:", this.estadoRequerido);
     } else {
       console.warn(
         "Error cargando estados requeridos:",
@@ -51,7 +54,7 @@ export class TipoDocumentoView extends BaseComponent {
    * Renderiza el componente y retorna su elemento principal.
    * @returns {HTMLElement}
    */
-  render() {
+  async render() {
     this.element = document.createElement("div");
     this.element.classList.add("tipo-doc-view");
 
@@ -59,10 +62,12 @@ export class TipoDocumentoView extends BaseComponent {
     const form = new TipoDocumentoForm(this.tipoDocumento, async () => {
       if (this.onClose) this.onClose();
     });
-    form.mount(this.element);
 
+    await form.mount(this.element);
+    
     this._renderPermisos();
 
+    
     // Estado requerido
       const estadoForm = new EstadoRequeridoForm(
         this.estadoRequerido,
@@ -88,7 +93,7 @@ export class TipoDocumentoView extends BaseComponent {
     colapsable.appendChild(permisosContainer);
 
     this.permisos.forEach((permiso) => {
-      const permisoForm = new PermisoPorRolForm(permiso);
+      const permisoForm = new TipoDocumentoPermisoItem(permiso);
       permisoForm.appendTo(permisosContainer);
     });
 
@@ -100,7 +105,7 @@ export class TipoDocumentoView extends BaseComponent {
     btnAgregar.addEventListener("click", () => {
       const modal = new Modal("Agregar Permiso - " + this.tipoDocumento.nombre);
 
-      const form = new AgregarPermisoRolForm(
+      const form = new TipoDocumentoPermisoForm(
         this.tipoDocumento,
         this.permisos,
         async (permiso) => {
@@ -113,8 +118,10 @@ export class TipoDocumentoView extends BaseComponent {
       );
       modal.show(form);
     });
-
+    console.log(colapsable);
+    
     permisosContainer.appendChild(btnAgregar);
     this.element.appendChild(colapsable);
+
   }
 }
