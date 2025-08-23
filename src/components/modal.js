@@ -1,11 +1,11 @@
 
 export class Modal {
-  constructor(title = "") {
+  constructor(title = "", isLarge = false) {
     this.modal = document.createElement("div");
     this.modal.classList.add("modal-overlay");
 
     this.modal.innerHTML = `
-      <div class="modal-content">
+      <div class="modal-content ${isLarge ? "modal-large" : ""}">
         <div class="modal-header">
           <h2 class="modal-title">${title}</h2>
           <button class="modal-close" title="Close">&times;</button>

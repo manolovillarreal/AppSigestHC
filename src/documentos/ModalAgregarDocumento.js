@@ -3,25 +3,29 @@ import contexto from "../contexto/contexto.js";
 import { Modal } from "../modales/modal.js";
 import { apiUpload } from "../api/api.js";
 import { formatearErroresHTML } from "../helpers/utils.js";
+import { Dropzone } from "../components/Dropzone.js";
 
 export class ModalAgregarDocumento extends Modal {
-  constructor(atencionId, onSuccess) {
+  constructor(atencion, onSuccess) {
     super();
-    this.atencionId = atencionId;
-    this.onSuccess = onSuccess; // Callback para recargar lista de documentos u otras acciones
+    this.atencion = atencion;
+    this.onSuccess = onSuccess; 
     this.render();
     this._bindEventos();
     this.cargarTipos();
   }
 
   render() {
+
+    const {paciente} = this.atencion;
     this.modal = document.createElement("div");
     this.modal.classList.add("modal-overlay");
 
     this.modal.innerHTML = `
   <div class="modal-contenido modal-md">
         <button class="btn-cerrar">&times;</button>
-        <h2>Agregar Documento</h2>
+        <h2>Agregar Documento - 
+          ${paciente.primerNombre} ${paciente.primerApellido}</h2>
         <form id="formAgregarDoc">
           <label for="tipoDocumento">Tipo de Documento</label>
           <select id="tipoDocumento" name="tipoDocumentoId" required></select>
@@ -37,10 +41,7 @@ export class ModalAgregarDocumento extends Modal {
           </div>
 
           <label for="archivo">Archivo</label>
-          <div id="dropzone" class="dropzone">Arrastra tu archivo aquí o haz clic para seleccionar</div>
-          <input type="file" id="archivo" name="archivo" />
-          
-
+          <div id="dropzoneContainer"></div>
           <div class="modal-acciones">
             <button type="submit" class="btn-primario">Subir</button>
           </div>
@@ -53,12 +54,18 @@ export class ModalAgregarDocumento extends Modal {
     // Referencias
     this.form = this.modal.querySelector("#formAgregarDoc");
     this.selectTipo = this.modal.querySelector("#tipoDocumento");
-    this.inputArchivo = this.modal.querySelector("#archivo");
+    // this.inputArchivo = this.modal.querySelector("#archivo");
+  // Deshabilitar el input de archivo inicialmente
+    // this.inputArchivo.disabled = true;
     this.inputFecha = this.modal.querySelector("#fecha");
     this.inputRelacion = this.modal.querySelector("#numeroRelacion");
     this.btnCerrar = this.modal.querySelector(".btn-cerrar");
-
     this.inputFecha.valueAsDate = new Date();
+
+    this.dropZoneContainer = this.modal.querySelector("#dropzoneContainer");
+    this.dropZone = new Dropzone();
+    this.dropZoneContainer.appendChild(this.dropZone.render());
+
   }
 
   _bindEventos() {
@@ -70,32 +77,34 @@ export class ModalAgregarDocumento extends Modal {
 
     this.selectTipo?.addEventListener("change", () => {
       const tipo = this.selectTipo.selectedOptions[0];
-      if(!tipo.value)
+      if (!tipo || !tipo.value || tipo.disabled) {
+        this.dropZone.inputFile.value = "";
+        this.dropZone.inputFile.disabled = true;
         return;
-      
-      console.log(tipo.dataset);
-      
+      }
+      this.dropZone.inputFile.disabled = false;
       const extension = tipo?.dataset.extensionPermitida;
-      if (extension) this.inputArchivo.accept = `.${extension}`;
+      if (extension) this.dropZone.inputFile.accept = `.${extension}`;
 
       const requiereRelacion = tipo?.dataset.requiereRelacion === "true";
       const esAsistencial = tipo?.dataset.esAsistencial === "true";
 
-    console.log();
-    
-        // Mostrar u ocultar campos según el tipo
-    this.inputRelacion.closest(".campo-relacion").classList.toggle("hidden", !requiereRelacion);
-    this.inputFecha.closest(".campo-fecha").classList.toggle("hidden", !esAsistencial);
+      // Mostrar u ocultar campos según el tipo
+      this.inputRelacion.closest(".campo-relacion").classList.toggle("hidden", !requiereRelacion);
+      this.inputFecha.closest(".campo-fecha").classList.toggle("hidden", !esAsistencial);
         
       this.inputRelacion.required = requiereRelacion;
       this.inputFecha.required = esAsistencial;
     });
 
     // Submit propio
-    this.form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    this.form.addEventListener("submit",(e) => this.enviarFormulario(e));
+  }
+  async enviarFormulario(e){
+    e.preventDefault();
+      const dropZone = this.dropZone.dropzone;
+      const archivo = this.dropZone.inputFile.files[0];
 
-      const archivo = this.inputArchivo.files[0];
       if (!archivo) {
         dropZone.classList.add("dropzone-error");
         dropZone.textContent = "Debes seleccionar un archivo";
@@ -106,7 +115,7 @@ export class ModalAgregarDocumento extends Modal {
 
 
       const formData = new FormData(this.form);
-      formData.append("atencionId", this.atencionId);
+      formData.append("atencionId", this.atencion.id);
 
       const res = await apiUpload("/Documentos/cargar", formData);
 
@@ -131,47 +140,13 @@ export class ModalAgregarDocumento extends Modal {
         });
          this.cerrar();
       }
-    });
-
-    const dropZone = this.modal.querySelector("#dropzone");
-
-    dropZone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropZone.classList.add("dropzone-hover");
-    });
-
-    dropZone.addEventListener("dragleave", () => {
-      dropZone.classList.remove("dropzone-hover");
-    });
-
-    dropZone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropZone.classList.remove("dropzone-hover");
-
-      const file = e.dataTransfer.files[0];
-      if (file) {
-        this.inputArchivo.files = e.dataTransfer.files;
-        dropZone.textContent = file.name;
-      }
-    });
-
-    dropZone.addEventListener("click", () => {
-      this.inputArchivo.click();
-    });
-
-    this.inputArchivo.addEventListener("change", () => {
-      const file = this.inputArchivo.files[0];
-      if (file) {
-        dropZone.textContent = file.name;
-         dropZone.classList.remove("dropzone-error");
-      }
-    });
-    this.inputArchivo.style.display = "none";
   }
-
   cargarTipos() {
-    const tipos = contexto.tiposDocumentosPermitidos;
-    console.log(tipos);
+    const {tiposDocumentosPermitidos} = contexto;
+
+    const tipos = tiposDocumentosPermitidos.filter(
+      tipo => Number(tipo.estadoAtencionInicialId) <= Number(this.atencion.estadoAtencionId)
+    );
     this.selectTipo.innerHTML = "<option disabled selected>Seleccione un tipo</option>";
     tipos.forEach((tipo) => {
       const opt = document.createElement("option");
@@ -184,7 +159,43 @@ export class ModalAgregarDocumento extends Modal {
     });
 
   }
+  resetDropzone() {
+    const dropZone = this.modal.querySelector("#dropzone");
 
+    dropZone.classList.remove("dropzone-error");
+    dropZone.innerHTML = "Arrastra y suelta un archivo aquí o haz clic para seleccionar uno.";
+    const canvas = document.querySelector(".preview-pdf");
+    if (canvas) {
+      canvas.remove();
+    }
+  }
+//  mostrarPreview(file, container) {
+//       console.log("mostrarPreview");
+
+//       container.innerHTML = "";
+//       if (file.type === "application/pdf") {
+//         // PDF: usar generarThumbnailPdf
+//         const canvas = document.createElement("canvas");
+//         canvas.className = "preview-pdf";
+//         canvas.title = file.name;
+//         container.appendChild(canvas);
+//         const name = document.createElement("div");
+//         name.textContent = file.name;
+//         name.style.textAlign = "center";
+//         name.style.fontSize = "0.9em";
+//         container.appendChild(name);
+//         const reader = new FileReader();
+//         reader.onload = async (e) => {
+//           const blob = new Blob([e.target.result], { type: "application/pdf" });
+//           // importar la función si no está en el scope
+//           const { generarThumbnailPdf } = await import("../helpers/utils.js");
+//           await generarThumbnailPdf(blob, canvas);
+//         };
+//         reader.readAsArrayBuffer(file);
+//       } else {
+//         container.textContent = file.name;
+//       }
+//     }
   cerrar() {
     this.modal.remove(); // Se destruye completamente del DOM
   }

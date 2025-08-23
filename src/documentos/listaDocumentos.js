@@ -1,37 +1,47 @@
 // documentos/listaDocumentos.js
 import { apiGet } from "../api/api.js";
+import { BaseComponent } from "../base/BaseComponent.js";
 import {GrupoDocumentosPorRol} from "./grupoDocumentosPorRol.js"
+import { ItemDocumento } from "./itemDocumento.js";
 
-export class ListaDocumentos {
-  constructor(containerId) {
-    this.containerId = containerId;
+export class ListaDocumentos extends BaseComponent {
+  constructor(atencion,agruparDocumento = true) {
+    super();
+    this.atencion = atencion;
     this.documentos = [];
+    this.agruparDocumento = agruparDocumento;
   }
 
-  async CargaDocumentos(atencion) {
+  async load() {
 
-    const { result: documentos } = await apiGet(`/Documentos/por-atencion/${atencion.id}`);
-    this.documentos = documentos || [];
-    this.render();
+    const { result: documentos } = await apiGet(`/Documentos/por-atencion/${this.atencion.id}`);
+    this.documentos = documentos.map(doc => {
+      doc.atencion = this.atencion;
+      return doc;
+    });
   }
 
 
   render() {
-    const container = document.getElementById(this.containerId);
-    container.innerHTML="";
-    if (!container) {
+    this.element = document.createElement("div");
+    if (!this.element) {
       console.error(`Container with id ${this.containerId} not found`);
       return;
     }
-
-    const thumbnailRefs = new Map();
-    const documentosPorRol = agruparDocumentosPorRol(this.documentos);  
     
-    
-    Object.entries(documentosPorRol).forEach(([rolNombre,docs]) => {
-      const grupo = new GrupoDocumentosPorRol(rolNombre, docs);
-      grupo.render(thumbnailRefs, container);
-    });
+    if (this.agruparDocumento) {
+      const documentosPorRol = agruparDocumentosPorRol(this.documentos);
+      Object.entries(documentosPorRol).forEach(([rolNombre, docs]) => {
+        const grupo = new GrupoDocumentosPorRol(rolNombre, docs);
+        grupo.appendTo(this.element);
+      });
+    } else {
+      this.documentos.forEach(doc => {
+        console.log("1");        
+        const item = new ItemDocumento(doc,true);
+        item.appendTo(this.element);
+      });
+    }
 
   }
 }

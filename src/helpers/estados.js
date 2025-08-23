@@ -26,6 +26,7 @@ const reglasCambioEstado = {
 };
 
 export function puedeAvanzarEstado(estadoId, rolNombre) {
+  
   console.log("estadoId:",estadoId);
   console.log("rolNombre:",rolNombre);
   

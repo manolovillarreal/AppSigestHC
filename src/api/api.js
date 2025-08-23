@@ -10,8 +10,9 @@ export function getTokenHeader() {
  }
 
 async function manejarRespuesta(res) {
-  const data = await res.json();
-
+  try {
+    const data = await res.json();
+  
   if (!res.ok)  {
     const mensaje = data?.mensaje || 'Error desconocido';
     const errores = data?.data?.ErrorMessages || null;
@@ -22,14 +23,26 @@ async function manejarRespuesta(res) {
   }
 
   return data;
+  } catch (error) {
+    console.error('Error al manejar respuesta:', error);
+    return {
+      ok: false,
+      errorMessages: ['Error al procesar la respuesta del servidor']
+    };
+  }
+  
 }
 
 // --- Métodos genéricos --- //
 
-export async function apiGet(path) {
+export async function apiGet(path) {  
   const res = await fetch(`${API_URL}${path}`, {
     headers: getTokenHeader()
   });
+  
+  if(res.error)
+    console.log(res.error);
+  
   
   return await manejarRespuesta(res);
 }
@@ -75,12 +88,14 @@ export async function apiUpload(path, formData) {
   });
   return await manejarRespuesta(res);
 }
-export async function apiDelete(path) {
+export async function apiDelete(path,body) {
   const res = await fetch(API_URL + path, {
     method: 'DELETE',
     headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
   });
    return await manejarRespuesta(res);
 }

@@ -181,7 +181,6 @@ export class ModalNuevaAtencion extends Modal {
   }
   async enviarFormulario() {
     const pacienteId = this.selectPaciente.value;
-
     const terceroId = this.selectAdm.value;
 
     if (!pacienteId || !terceroId) return;
@@ -189,15 +188,14 @@ export class ModalNuevaAtencion extends Modal {
     const payload = {
       pacienteId,
       terceroId,
+      tipoAtencionId: 1
     };
 
     const res = await apiPost("/Atenciones", payload);
 
     if (res.ok) {
-      Swal.fire({ icon: "success", title: "Atención creada" });
-      console.log(this.onSuccess);
-      
-      if (typeof this.onSuccess === "function") this.onSuccess();
+      Swal.fire({ icon: "success", title: "Atención creada" });   
+      if (typeof this.onSuccess === "function") this.onSuccess(res.result);
       this.cerrar();
     } else {
       Swal.fire({

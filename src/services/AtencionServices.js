@@ -1,0 +1,41 @@
+import { apiGet, apiPost, apiPut, apiDelete } from '../api/api.js';
+
+async function obtenerAtenciones(filtros) {
+    const params = new URLSearchParams();
+    if (filtros) {
+        if (filtros.atencionId) params.append('atencionId', filtros.atencionId);
+        if (filtros.estadoAtencionId) params.append('estadoAtencionId', filtros.estadoAtencionId);
+        if (filtros.terceroId) params.append('terceroId', filtros.terceroId);
+        if (filtros.pacienteId) params.append('pacienteId', filtros.pacienteId);
+        if (filtros.fechaInicio) params.append('fechaInicio', filtros.fechaInicio);
+        if (filtros.fechaFin) params.append('fechaFin', filtros.fechaFin);
+        if (filtros.page) params.append('page', filtros.page);
+        if (filtros.pageSize) params.append('pageSize', filtros.pageSize);
+    }
+    return await apiGet(`/atenciones?${params.toString()}`);
+}
+async function obtenerAtencionesVisibles() {    
+  return await apiGet('/atenciones/visibles ');
+}
+
+async function guardarAtencion(atencion) {
+  return await apiPost('/atenciones', atencion);
+}
+
+async function editarAtencion(id, atencion) {
+  return await apiPut(`/atenciones/${id}`, atencion);
+}
+
+async function anularAtencion(id,payload) {
+  return await apiDelete(`/Atenciones/${id}`, payload);
+}
+
+const AtencionService = {
+    obtenerAtenciones,
+    obtenerAtencionesVisibles,
+    guardarAtencion,
+    editarAtencion,
+    anularAtencion
+}
+
+export default AtencionService;

@@ -1,0 +1,39 @@
+/* Estilos para los filtros de buscarAtenciones.js */
+
+.buscador-atenciones-filtros {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0.8rem;
+  background: #f6f8fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 1.2rem;
+}
+
+.buscador-atenciones-filtros label {
+  font-weight: 500;
+  margin-right: 0.5rem;
+  color: #333;
+   font-size: 0.8rem;
+}
+.buscador-atenciones-filtros input{
+    width: 100px;
+}
+.buscador-atenciones-filtros input,
+.buscador-atenciones-filtros select {
+  padding: 0.45rem 0.7rem;
+  border-radius: 5px;
+  border: 1px solid #cfd8dc;
+  font-size: 0.8rem;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.buscador-atenciones-filtros input:focus,
+.buscador-atenciones-filtros select:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+

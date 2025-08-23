@@ -10,7 +10,7 @@ export async function downloadBlobFile(response,doc) {
 
     for (let [key, value] of response.headers.entries()) {
   console.log(`${key}: ${value}`);
-}
+  }
 
 
     // 🔍 Extensiones comunes por tipo MIME
@@ -32,7 +32,9 @@ export async function downloadBlobFile(response,doc) {
     // Si no hay nombre, generamos uno
     if (!filename) {
       const ext = extensionPorTipo[contentType] || "";
-      filename = `documento-${doc.Id}${ext}`;
+      const {tipoDocumento,atencion} = doc;
+      const {paciente} = atencion;
+      filename = `${tipoDocumento.codigo}-${paciente.primerNombre} ${paciente.primerApellido}${ext}`;
     }
 
     const url = window.URL.createObjectURL(blob);

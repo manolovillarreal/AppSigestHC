@@ -1,5 +1,5 @@
 import debug from "../helpers/debug.js";
-import { apiDownloadBlob, apiGet, apiPut, apiDelete } from "../api/api.js";
+import { apiDownloadBlob, apiGet, apiPut, apiDelete, apiPost } from "../api/api.js";
 import {
   formatearFechaHora,
   generarThumbnailPdf,
@@ -7,21 +7,40 @@ import {
   formatearErroresHTML,
 } from "../helpers/utils.js";
 import { downloadBlobFile } from "../helpers/files.js";
+import { BaseComponent } from "../base/BaseComponent.js";
+import contexto from "../contexto/contexto.js";
+import { SolicitudCorreccionItem } from "../solicitudesCorreccion/SolicitudCorreccionItem.js";
+import { puedeSolicitarCorrecion } from "../helpers/correcciones.js";
 
-export class ItemDocumento {
-  constructor(doc, thumbnailRefs, container) {
-    this.doc = doc;
-    this.thumbnailRefs = thumbnailRefs;
-    this.container = container;
-    this.wrapper;
+export class ItemDocumento extends BaseComponent{
+  constructor(documento,esCorreccion=false) {
+    super();
+    console.log(documento);    
+    this.documento = documento;
+    this.esCorreccion = esCorreccion;
+    console.log(esCorreccion);
+    
   }
 
   render() {
-    if (this.wrapper) this.wrapper.innerHTML = "";
+    this.element = document.createElement("div");
+    this.element.classList.add("documento-item");    
 
-    console.log(this.doc);
-    const item = document.createElement("li");
-    item.classList.add("documento-item");
+    this._renderContent();
+
+    if(!this.esCorreccion)
+      this._renderAcciones();   
+    if (this.documento.solicitudesCorreccion.some(sc => sc?.estadoAtencionId != 3)) {      
+      !this.esCorreccion && this.element.classList.add("documento-item-correcciones");
+      this._renderCorrecciones();
+    }
+
+    descargarMiniaturas(this.documento,this.element.querySelector(".thumbnail-container"), this.verDocumento);
+  }
+  _renderContent(){
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("documento-item-wrapper");
+    this.element.appendChild(wrapper);
 
     // Thumbnail (se carga después de forma async)
     const thumbnailContainer = document.createElement("div");
@@ -29,57 +48,62 @@ export class ItemDocumento {
     thumbnailContainer.textContent = "...";
 
     thumbnailContainer.addEventListener("click", () =>
-      this.verDocumento(this.doc.id)
+      this.verDocumento(this.documento.id)
     );
-    this.thumbnailRefs.set(this.doc.id, thumbnailContainer);
-
-    // Detalles
     const detalles = document.createElement("div");
     detalles.classList.add("documento-detalles");
 
     const titulo = document.createElement("div");
     titulo.classList.add("doc-nombre");
-    titulo.textContent = this.doc.tipoDocumento.nombre;
+    titulo.textContent = this.documento.tipoDocumento.nombre;
+    titulo.addEventListener("click", () => {
+        this.verDocumento(this.documento.id);
+      });
     detalles.appendChild(titulo);
 
-    if (this.doc.tipoDocumento.esAsistencial) {
+    if (this.documento.tipoDocumento.esAsistencial) {
       const fechaDoc = document.createElement("div");
       fechaDoc.classList.add("doc-fecha");
       fechaDoc.textContent = `Fecha del documento: ${formatearFecha(
-        this.doc.fecha
+        this.documento.fecha
       )}`;
       detalles.appendChild(fechaDoc);
     }
 
-    if (this.doc.numeroRelacion) {
+    if (this.documento.numeroRelacion) {
       const relacion = document.createElement("div");
       relacion.classList.add("doc-relacion");
-      relacion.textContent = `N° Relación: ${this.doc.numeroRelacion}`;
+      relacion.textContent = `N° Relación: ${this.documento.numeroRelacion}`;
       detalles.appendChild(relacion);
     }
 
     // Metadata del cargue
     const metadata = document.createElement("div");
     metadata.classList.add("doc-meta");
-    const usuario = this.doc.usuario || {};
+    const usuario = this.documento.usuario || {};
     metadata.innerHTML = `
-    <div>Cargado el ${formatearFechaHora(this.doc.fechaCarga)}</div> 
+    <div>Cargado el ${formatearFechaHora(this.documento.fechaCarga)}</div> 
     <div>por ${usuario.nombre || "—"} ${usuario.apellidos || ""}</div>`;
     detalles.appendChild(metadata);
 
+     wrapper.appendChild(thumbnailContainer);
+    wrapper.appendChild(detalles);
+  }
+  _renderAcciones(){
     // Acciones
+    const container = this.element.querySelector(".documento-detalles");
     const acciones = document.createElement("div");
     acciones.classList.add("doc-acciones");
 
     // Botón Eliminar
 
-    if (this.doc.puedeCargar) {
+    if (this.documento.puedeCargar) {
       const btnEliminar = document.createElement("button");
       btnEliminar.classList.add("icon-btn");
       btnEliminar.title = "Eliminar";
       btnEliminar.innerHTML = `<span class="material-icons">delete</span>`;
       btnEliminar.addEventListener("click", async () => {
-        await this.eliminarDocumento(this.doc.id, () => item.remove());
+        await this.eliminarDocumento(this.documento.id, () => this.element.remove());
       });
       acciones.appendChild(btnEliminar);
     }
@@ -90,39 +114,58 @@ export class ItemDocumento {
     btnDescargar.title = "Descargar";
     btnDescargar.innerHTML = `<span class="material-icons">download</span>`;
     btnDescargar.addEventListener("click", () =>
-      this.descargarDocumento(this.doc)
+      this.descargarDocumento(this.documento)
     );
 
     acciones.appendChild(btnDescargar);
 
     // Botón Editar (si aplica)
     if (
-      (this.doc.tipoDocumento.requiereNumeroRelacion ||
-        this.doc.tipoDocumento.esAsistencial) &&
-      this.doc.puedeCargar
+      (this.documento.tipoDocumento.requiereNumeroRelacion ||
+        this.documento.tipoDocumento.esAsistencial) &&
+      this.documento.puedeCargar
     ) {
       const btnEditar = document.createElement("button");
       btnEditar.classList.add("icon-btn");
       btnEditar.title = "Editar";
       btnEditar.innerHTML = `<span class="material-icons">edit</span>`;
       btnEditar.addEventListener("click", () =>
-        this.editarDocumento(this.doc, () => {
+        this.editarDocumento(this.documento, () => {
           this.render();
         })
       );
       acciones.prepend(btnEditar);
     }
+    if (puedeSolicitarCorrecion(this.documento) && !this._tieneSolicitudesPendientes()) {
+      const btnSolicitarCorreccion = document.createElement("button");
+      btnSolicitarCorreccion.classList.add("icon-btn");
+      btnSolicitarCorreccion.title = "Solicitar Corrección";
+      btnSolicitarCorreccion.innerHTML = `<span class="material-symbols-outlined">quick_reference</span>`;
+      btnSolicitarCorreccion.addEventListener("click", async () => {
+      this.solicitarCorreccion();
+      });
+      acciones.appendChild(btnSolicitarCorreccion);
+    }
 
-    detalles.appendChild(acciones);
-    item.appendChild(thumbnailContainer);
-    item.appendChild(detalles);
 
-    this.wrapper = item;
-    this.container.appendChild(item);
+    container.appendChild(acciones);
 
-    descargarMiniaturas(this.doc, this.thumbnailRefs, this.verDocumento);
   }
+  _renderCorrecciones() {
+    const solicitudPendiente = this.documento.solicitudesCorreccion
+                        .find(sc => sc?.estadoCorreccionId != 3);
+   if (solicitudPendiente) {
+    solicitudPendiente.documento = solicitudPendiente.documento || this.documento;
+    const solicitudItem = new SolicitudCorreccionItem(solicitudPendiente,(action)=>{
+     this.element.classList.remove("documento-item-correcciones");
+      this.reMount();
+    });
+    const container = document.createElement("div");
+    solicitudItem.mount(container);
 
+    this.element.appendChild(container);
+   }
+  }
   async verDocumento(docId) {
     console.log("ver");
 
@@ -142,7 +185,6 @@ export class ItemDocumento {
       alert("No se pudo cargar el documento");
     }
   }
-
   async descargarDocumento(doc) {
     console.log("descargar");
     console.log(doc);
@@ -191,7 +233,6 @@ export class ItemDocumento {
       });
     }
   }
-
   async editarDocumento(doc, onSuccess = null) {
     const { result, payload } = await FormularioEditar(doc);
 
@@ -220,6 +261,62 @@ export class ItemDocumento {
       });
     }
   }
+  async solicitarCorreccion() {
+
+    const { value: observacion, isConfirmed } = await Swal.fire({
+      title: "Solicitar Corrección",
+      input: "textarea",
+      inputLabel: "Observación",
+      inputPlaceholder: "Describe el motivo de la corrección...",
+      showCancelButton: true,
+      confirmButtonText: "Solicitar",
+      cancelButtonText: "Cancelar",
+      inputAttributes: {
+        maxlength: 500,
+        autocapitalize: "off",
+        autocorrect: "off"
+      },
+      preConfirm: (value) => {
+        if (!value || value.trim().length < 10) {
+          Swal.showValidationMessage("La observación es obligatoria y debe tener al menos 10 caracteres.");
+          return false;
+        }
+        return value.trim();
+      }
+    });
+
+    if (!isConfirmed || !observacion?.trim() || observacion.trim().length < 10) return;
+
+    const payload = {
+      documentoId: this.documento.id,
+      observacion: observacion.trim()
+    };
+
+    const res = await apiPost("/SolicitudCorreccion/", payload);
+
+    if (res.ok) {
+      await Swal.fire({
+        icon: "success",
+        title: "Solicitud enviada",
+        text: "La corrección fue solicitada correctamente.",
+        timer: 1500,
+        showConfirmButton: false
+      });
+
+      this.documento.solicitudesCorreccion.push(res.result);
+      this.reMount();
+    } else {
+      const errores = formatearErroresHTML(res.errorMessages);
+      await Swal.fire({
+        icon: "error",
+        title: "Error al solicitar corrección",
+        html: errores
+      });
+    }
+  }
+  _tieneSolicitudesPendientes() {
+    return this.documento.solicitudesCorreccion.some(sc => sc?.estadoCorreccionId != 3);
+  }
 }
 
 async function FormularioEditar(doc) {
@@ -244,7 +341,12 @@ async function FormularioEditar(doc) {
     `;
   }
 
-  // 🟢 Aquí declaramos payload afuera y lo llenamos en preConfirm
+  // Campo de observación obligatorio
+  html += `
+    <label for="edit-observacion">Observación</label>
+    <textarea id="edit-observacion" class="swal2-textarea" placeholder="Observación (mínimo 10 caracteres)" style="width:100%;"></textarea>
+  `;
+
   let payload = {};
 
   const result = await Swal.fire({
@@ -257,6 +359,7 @@ async function FormularioEditar(doc) {
     preConfirm: () => {
       const relInput = document.getElementById("edit-relacion");
       const fechaInput = document.getElementById("edit-fecha");
+      const obsInput = document.getElementById("edit-observacion");
 
       if (requiereNumeroRelacion) {
         payload.numeroRelacion = relInput?.value.trim() || null;
@@ -266,50 +369,55 @@ async function FormularioEditar(doc) {
         payload.fecha = fechaInput?.value || null;
       }
 
+      const observacion = obsInput?.value.trim() || "";
+      if (!observacion || observacion.length < 10) {
+        Swal.showValidationMessage("La observación es obligatoria y debe tener al menos 10 caracteres.");
+        return false;
+      }
+      payload.observacion = observacion;
       payload.id = doc.id;
-      return true; // obligamos a que se cierre si no hay errores
+      return true;
     },
   });
 
   return { result, payload };
 }
 
-async function descargarMiniaturas(doc, thumbnailRefs, verDocumento) {
+async function descargarMiniaturas(doc, thumbnailContainer, verDocumento) {
   // Descargar thumbnails en paralelo
-  const thumb = thumbnailRefs.get(doc.id);
+  const thumb = thumbnailContainer;
   if (!thumb) return;
 
   try {
-    const res = await apiDownloadBlob(`/Documentos/ver/${doc.id}`);
-
-    if (!res.ok) {
-      console.log("error");
-
-      thumb.textContent = "[Error]";
-      return;
-    }
-
-    const tipo = res.headers.get("content-type");
-    if (tipo === "application/pdf") {
-      const blob = await res.blob();
-      const canvas = document.createElement("canvas");
-      canvas.classList.add("thumbnail");
-      canvas.title = "Click para ver";
-      canvas.addEventListener("click", () => {
+    // Si el documento es PDF, usa la nueva ruta de miniaturas
+    
+    if (doc.tipoDocumento && doc.tipoDocumento.extensionPermitida === "pdf") {
+      
+      const res = await apiGet(`/Documentos/thumbnails/${doc.id}`);
+      if (!res.ok || !res.result || !Array.isArray(res.result) || res.result.length === 0) {
+        thumb.textContent = "[Error]";
+        return;
+      }
+      // Usamos la primera miniatura (puedes adaptar si hay varias páginas)
+      const base64 = res.result[0];
+      const img = document.createElement("img");
+      img.classList.add("thumbnail");
+      img.title = "Click para ver";
+      img.src = `data:image/png;base64,${base64}`;
+      img.addEventListener("click", () => {
         verDocumento(doc.id);
       });
-      await generarThumbnailPdf(blob, canvas);
-      thumb.replaceWith(canvas);
+      thumb.replaceWith(img);
     } else {
-      thumb.textContent = tipo.includes("xml")
+      // Para otros tipos, sigue mostrando texto
+      thumb.textContent = doc.tipoDocumento?.mimeType?.includes("xml")
         ? "[XML]"
-        : tipo.includes("json")
+        : doc.tipoDocumento?.mimeType?.includes("json")
         ? "[JSON]"
         : "[Archivo]";
     }
   } catch (error) {
     console.log(error);
-
     thumb.textContent = "[Error]";
   }
 }

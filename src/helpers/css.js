@@ -5,6 +5,11 @@ const estilos = [
     "css/components/SelectConBuscador.css"
 ]
 
+const atencionesCss = [
+  'css/atencion/BuscadorAtenciones.css',
+  'css/atencion/ListaAtenciones.css'
+];
+
 const tipoDocumentoCss = [
   'css/tipoDocumento/AgregarPermisosTipoDocumento.css',
   'css/tipoDocumento/EstadoRequeridoForm.css',
@@ -33,7 +38,8 @@ const modulos = {
     ...EstadoAtencionCss
   ],
   main: [
-   
+    ...atencionesCss,
+    'css/SolicitudCorrecion/SolicitudCorrecion.css'
   ]
 };
 

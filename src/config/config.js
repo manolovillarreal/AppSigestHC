@@ -31,5 +31,7 @@ export const PERFILES = {
   ADMISIONES: 'Admisiones',
   MEDICO: 'Medico',
   ENFERMERIA: 'Enfermeria',
+  AUDITORIA: 'Auditoria',
+  FACTURACION: 'Facturacion',
   ADMINISTRADOR: 'Admin'
 };

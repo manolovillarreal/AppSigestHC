@@ -28,6 +28,11 @@
   overflow-y: auto;
   transition: all 0.3s ease;
 }
+/* Tamaños opcionales */
+.modal-md {
+  max-width: 600px;
+}
+
 
 .modal.hidden {
   display: none;
@@ -91,6 +96,22 @@
 /* === CUERPO DEL MODAL === */
 .modal-body {
   padding: 1.5rem;
-  max-height: 70vh;
   overflow-y: auto;
+}
+
+.modal-large{
+  width: 100%;
+  max-width: 1024px;
+  height: 99vh;
+}
+.modal-large .modal-header{
+  padding: 0.5rem;
+}
+.modal-large .modal-body {
+  padding: 5px 1.5rem;
+  height: 90vh;
+}
+.modal-large .modal-body div {
+  height: 100%;
+  width: 100%;
 }

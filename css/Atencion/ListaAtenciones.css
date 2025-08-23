@@ -1,0 +1,79 @@
+/* Estilos para el agrupador de ListaAtenciones (AgrupadorSelect) */
+
+
+.agrupador-atenciones {
+  
+}
+.btn-right-wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#btnNuevaAtencion{
+      height: 35px;
+    padding: 0px 2px;
+    width: 150px;
+}
+.agrupador-atenciones label {
+  font-weight: 500;
+  color: #333;
+}
+
+#agrupador-select {
+  padding: 0.2rem 0.45rem;
+  border-radius: 5px;
+  border: 1px solid #cfd8dc;
+  font-size: 1rem;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+#agrupador-select:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+.atencion-item {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.atencion-item-selected{
+  background-color: #007bff5e !important;
+}
+.atencion-item-correcciones {
+  background-color: antiquewhite;
+}
+.atencion-item:hover {
+  /* background-color: #005bbd5e; */
+  border-left: 4px solid var(--color-primario-hover);
+
+  
+}
+.extra-label{
+    font-size: 0.7rem;
+}
+/*Atencion View*/
+#estadoyTipoContainer{
+  display: flex;
+  gap: 15px;
+
+}
+.paciente-nombre-view {
+    font-weight: bold;
+    color: var(--color-primario-hover);
+}
+.extra-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+#correcciones-pendientes{
+  color: #ec8e00dc;
+}

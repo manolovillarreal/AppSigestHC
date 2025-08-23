@@ -1,16 +1,29 @@
 .documento-item {
+
+  border-bottom: 1px solid #ddd;
+  align-items: flex-start;
+  border-bottom: 1px solid #ddd;
+
+}
+.documento-item-wrapper{
   display: flex;
   gap: 1rem;
-  padding: 1rem 0;
+  padding: 1rem 1rem;
   border-bottom: 1px solid #ddd;
   align-items: flex-start;
 }
 
 .thumbnail, .thumbnail-container {
   width: 100px;
-  height: auto;
+  height: 130px;
   border: 1px solid #ccc;
   cursor: pointer;
+  border-radius: 6px;
+}
+.thumbnail:hover {
+  border: 1px solid #007bff;
+  background: rgba(0, 123, 255, 0.1);
+
 }
 
 .documento-detalles {
@@ -24,6 +37,10 @@
   font-weight: bold;
   font-size: 1rem;
   color: #222;
+  cursor: pointer;
+}
+.doc-nombre:hover {
+  color: #007bff;
 }
 
 .doc-fecha, .doc-relacion {
@@ -55,21 +72,36 @@
   color: #222;
 }
 
-/* Mejorar la apariencia de la zona de drop para agregar documentos */
-.drop-zone {
-  border: 2px dashed #007bff;
-  padding: 20px;
-  text-align: center;
-  border-radius: 10px;
-  margin-top: 10px;
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  color: #777;
+  background-color: #fafafa;
   cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  height: 90px;
+}
+.dropzone canvas{
+        max-width: 100px;
+        max-height: 100px;
+}
+.dropzone:hover {
+  background-color: #eef6ff;
+  border-color: #0077cc;
+  color: #0077cc;
+}
+.dropzone-error {
+  border: 2px dashed rgb(255, 70, 70);
+  color: rgb(255, 75, 75);
+  font-weight: bold;
 }
 
-.drop-zone:hover {
-  background-color: #f1f1f1;
-  border-color: #0056b3; /* Cambio de color al pasar el ratón */
-}
 
 .doc-panel {
   margin-bottom: 1rem;
@@ -101,4 +133,24 @@
 
 #fecha{
   width: 97%;
+}
+
+.documento-item-correcciones {
+  background: antiquewhite;
+}
+.correccion-item{
+  font-style: italic;
+  color: #666;
+  width: 90%;
+  padding: 5px;
+}
+.correccion-header{
+      align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+.correcion-observacion{
+      border: solid 1px lightgray;
+    padding: 1rem;
+    border-radius: 8px;
 }
