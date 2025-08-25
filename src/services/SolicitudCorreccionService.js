@@ -14,10 +14,13 @@ function visualizarCorreccion(solicitudId) {
 function aprobarCorreccion(solicitudId, conservarDocumentoAnterior) {
   return apiPost(`/SolicitudCorreccion/${solicitudId}/aprobar`, { conservarDocumentoAnterior });
 }
-
+function rechazarCorreccion(solicitudId,observacion) {
+  return apiPost(`/SolicitudCorreccion/${solicitudId}/rechazar`,observacion);
+}
 export const SolicitudCorreccionService = {
   obtenerCorreccionesPorRol,
   responderSolicitudCorreccion,
   visualizarCorreccion,
-  aprobarCorreccion
+  aprobarCorreccion,
+  rechazarCorreccion
 };

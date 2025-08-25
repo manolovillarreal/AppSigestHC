@@ -15,11 +15,8 @@ import { puedeSolicitarCorrecion } from "../helpers/correcciones.js";
 export class ItemDocumento extends BaseComponent{
   constructor(documento,esCorreccion=false) {
     super();
-    console.log(documento);    
     this.documento = documento;
-    this.esCorreccion = esCorreccion;
-    console.log(esCorreccion);
-    
+    this.esCorreccion = esCorreccion;    
   }
 
   render() {

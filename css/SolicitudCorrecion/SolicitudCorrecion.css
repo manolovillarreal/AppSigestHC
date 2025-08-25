@@ -87,7 +87,68 @@
     font-size: 1.5rem;
     color: #ffa41c;
 }
+.correciones-item {
+      background: #f8f8f8;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 4px 0;
+}
 .btn-enviar-correccion{
     float: right;
     margin: 8px;
+    font-size: 1rem;
 }
+.estado-correccion-Pendiente{
+  color: #ffa41c;
+}
+.estado-correccion-Respondida{
+  color: #4caf50;
+}
+
+.estado-correccion-Rechazada{
+  color: #f44336;
+}
+.correccion-observacion{
+  color: var(--color-secundario);
+  font-size: 0.97em;
+  margin-top: 8px;
+  padding: 8px;
+    border-radius: 5px;
+    background: #f1f1f1;
+}
+.correccion-item{
+  font-style: italic;
+  color: #666;
+  padding: 8px;
+}
+.correccion-header{
+      align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+.correccion-header .fecha-solicitud{
+  font-size: 0.9rem;
+}
+.correccion-header .material-icons{
+  font-size: 2rem;
+}
+.btn-responder{
+   color: var(--color-primario-hover);
+}
+.btn-eliminar-solicitud{
+   color: darkred;
+}
+.btn-ver-correccion{
+   color: var(--color-primario-hover);
+}
+.btn-aprobar-correccion{
+   color: green;
+}
+.btn-rechazar-correccion{
+   color: darkred
+}
+
+.documento-item-correcciones .correccion-observacion{
+  background-color: rgb(253, 246, 238);
+}
+

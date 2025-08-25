@@ -5,7 +5,7 @@ import { puedeSolicitarCorrecion } from "../helpers/correcciones.js";
 import { formatearErroresHTML, formatearFecha } from "../helpers/utils.js";
 import { SolicitudCorreccionService } from "../services/SolicitudCorreccionService.js";
 
-export class SolicitudCorreccionItem extends BaseComponent {
+export class SolicitudCorreccionItem extends BaseComponent {  
   constructor(solicitudCorreccion, onAction) {
     super();
     console.log(solicitudCorreccion);
@@ -21,15 +21,16 @@ export class SolicitudCorreccionItem extends BaseComponent {
     const solicitudPendiente = this.solicitudCorreccion;
     const item = document.createElement("div");
     item.classList.add("correccion-item");
+
+    const estadoNombre = solicitudPendiente.estadoCorreccion.nombre;
     item.innerHTML = `<div class="correccion-header">
     <div>
-    <strong>
-      Solicitud de Corrección - ${solicitudPendiente.estadoCorreccion.nombre}
-    </strong>
-    <span class="fecha-solicitud">${formatearFecha(solicitudPendiente.fechaSolicitud)}</span>
+    <strong>Solicitud de Corrección -</strong>
+      <span class="fecha-solicitud">${formatearFecha(solicitudPendiente.fechaSolicitud)}</span>      
+    <span class="estado-correccion-${estadoNombre}">${estadoNombre}</span>
     </div>
     </div>
-    <div class="correccion-observacion">${solicitudPendiente.observacion}</div>
+    <div class="correccion-observacion">${this._renderObservacion()}</div>
     `;
     this.element.appendChild(item);
     if (puedeSolicitarCorrecion(solicitudPendiente.documento)) {
@@ -38,6 +39,17 @@ export class SolicitudCorreccionItem extends BaseComponent {
       this._renderAccionesParaNoSolicitante();
     }
   }
+  _renderObservacion() {
+    const observaciones = this.solicitudCorreccion.observacion.split('|');
+    const contenedor = document.createElement('ul');
+    observaciones.forEach(obs => {
+      const item = document.createElement('li');
+      item.classList.add('observacion-item');
+      item.textContent = obs;
+      contenedor.appendChild(item);
+    });
+    return contenedor.outerHTML;
+  }
   _renderAccionesParaSolicitante() {
     const item = this.element.querySelector(".correccion-header");
     switch (this.solicitudCorreccion.estadoCorreccionId) {
@@ -45,7 +57,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
         const btnEliminarCorreccion = document.createElement("button");
         btnEliminarCorreccion.classList.add("icon-btn");
         btnEliminarCorreccion.title = "Eliminar corrección";
-        btnEliminarCorreccion.innerHTML = `<span class="material-icons">delete</span>`;
+        btnEliminarCorreccion.innerHTML = `<span class="material-icons btn-eliminar-solicitud">delete</span>`;
         btnEliminarCorreccion.addEventListener("click", () =>
           this._eliminarSolicitudCorreccion()
         );
@@ -59,14 +71,14 @@ export class SolicitudCorreccionItem extends BaseComponent {
         const btnVerCorreccion = document.createElement("button");
         btnVerCorreccion.classList.add("icon-btn");
         btnVerCorreccion.title = "Ver corrección";
-        btnVerCorreccion.innerHTML = `<span class="material-icons">visibility</span>`;
+        btnVerCorreccion.innerHTML = `<span class="material-icons btn-ver-correccion">visibility</span>`;
         btnVerCorreccion.addEventListener("click", () => this._verCorreccion());
         wrapper.appendChild(btnVerCorreccion);
 
         const btnAprobarCorreccion = document.createElement("button");
         btnAprobarCorreccion.classList.add("icon-btn");
         btnAprobarCorreccion.title = "Aprobar corrección";
-        btnAprobarCorreccion.innerHTML = `<span class="material-icons">check</span>`;
+        btnAprobarCorreccion.innerHTML = `<span class="material-icons btn-aprobar-correccion">check</span>`;
         btnAprobarCorreccion.addEventListener("click", () =>
           this._aprobarCorreccion()
         );
@@ -75,7 +87,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
         const btnRechazarCorreccion = document.createElement("button");
         btnRechazarCorreccion.classList.add("icon-btn");
         btnRechazarCorreccion.title = "Rechazar corrección";
-        btnRechazarCorreccion.innerHTML = `<span class="material-icons">cancel</span>`;
+        btnRechazarCorreccion.innerHTML = `<span class="material-icons btn-rechazar-correccion">cancel</span>`;
         btnRechazarCorreccion.addEventListener("click", () =>
           this._rechazarCorreccion()
         );
@@ -90,7 +102,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
         const btnResponderCorreccion = document.createElement("button");
         btnResponderCorreccion.classList.add("icon-btn");
         btnResponderCorreccion.title = "Responder corrección";
-        btnResponderCorreccion.innerHTML = `<span class="material-icons">reply</span>`;
+        btnResponderCorreccion.innerHTML = `<span class="material-icons btn-responder">reply</span>`;
         btnResponderCorreccion.addEventListener("click", () =>
           this._responderCorreccion(this.solicitudCorreccion)
         );
@@ -277,4 +289,55 @@ export class SolicitudCorreccionItem extends BaseComponent {
       });
     }
   }
+  async _rechazarCorreccion() {
+    const { value: observacion } = await Swal.fire({
+      title: 'Rechazar solicitud de corrección',
+      input: 'textarea',
+      inputLabel: 'Observación',
+      inputPlaceholder: 'Escribe la razón del rechazo...',
+      inputAttributes: {
+        'aria-label': 'Observación',
+        maxlength: 500,
+        rows: 4
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Rechazar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      inputValidator: (value) => {
+        if (!value || value.trim().length < 10) {
+          return 'La observación es obligatoria y debe tener al menos 10 caracteres.';
+        }
+        return null;
+      }
+    });
+
+    if (!observacion) return;
+
+    const res = await SolicitudCorreccionService.rechazarCorreccion(
+      this.solicitudCorreccion.id,
+      observacion
+    );
+    if (res.ok) {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Solicitud rechazada',
+        timer: 1500,
+        showConfirmButton: false
+      });
+      this.solicitudCorreccion.estadoCorreccionId = 4; // Estado rechazado
+      this.solicitudCorreccion.estadoCorreccion = res.result.estadoCorreccion;
+      console.log(res.result);
+      this.reMount();
+    } else {
+      const mensaje = res?.mensaje || 'No se pudo rechazar la solicitud.';
+      const errores = formatearErroresHTML(res.errorMessages);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        html: `<p>${mensaje}</p>${errores}`
+      });
+    }
+  }
+
 }
