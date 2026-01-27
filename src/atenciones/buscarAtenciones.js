@@ -42,9 +42,9 @@ export class BuscarAtenciones extends BaseComponent{
             <div id="panel-vista-atencion">
             </div>
         `;
-        const {estadosAtencion} = contexto;
+        const {estadosAtencionPermitidos} = contexto;
         const estadoSelect = this.element.querySelector("select[name='estadoAtencionId']");
-        estadosAtencion.forEach(estado => {
+        estadosAtencionPermitidos.forEach(estado => {
             const option = document.createElement("option");
             option.value = estado.id;
             option.textContent = estado.nombre;
