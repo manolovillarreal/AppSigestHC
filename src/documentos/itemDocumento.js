@@ -10,7 +10,9 @@ import { downloadBlobFile } from "../helpers/files.js";
 import { BaseComponent } from "../base/BaseComponent.js";
 import contexto from "../contexto/contexto.js";
 import { SolicitudCorreccionItem } from "../solicitudesCorreccion/SolicitudCorreccionItem.js";
-import { puedeSolicitarCorrecion } from "../helpers/correcciones.js";
+import { puedeSolicitarCorrecion, EstadoCorreccion } from "../helpers/correcciones.js";
+import {DocumentoService} from '../services/DocumentoService.js'
+import { firmarPdf } from "../helpers/firmaPdf.js";
 
 export class ItemDocumento extends BaseComponent{
   constructor(documento,esCorreccion=false) {
@@ -133,6 +135,9 @@ export class ItemDocumento extends BaseComponent{
       );
       acciones.prepend(btnEditar);
     }
+   
+    
+    
     if (puedeSolicitarCorrecion(this.documento) && !this._tieneSolicitudesPendientes()) {
       const btnSolicitarCorreccion = document.createElement("button");
       btnSolicitarCorreccion.classList.add("icon-btn");
@@ -144,13 +149,27 @@ export class ItemDocumento extends BaseComponent{
       acciones.appendChild(btnSolicitarCorreccion);
     }
 
+    // Botón Firmar (si el tipo de documento permite firma)
+    if (this.documento.tipoDocumento?.permiteFirma) {
+      const btnFirmar = document.createElement("button");
+      btnFirmar.classList.add("icon-btn");
+      btnFirmar.title = "Firmar";
+      btnFirmar.innerHTML = `<span class="material-symbols-outlined">
+signature
+</span>`;
+      btnFirmar.addEventListener("click", async () => {
+        this.firmarDocumento();
+      });
+      acciones.appendChild(btnFirmar);
+    }
+
 
     container.appendChild(acciones);
 
   }
   _renderCorrecciones() {
     const solicitudPendiente = this.documento.solicitudesCorreccion
-                        .find(sc => sc?.estadoCorreccionId != 3);
+                        .find(sc => sc?.estadoCorreccionId != EstadoCorreccion.ACEPTADA);
    if (solicitudPendiente) {
     solicitudPendiente.documento = solicitudPendiente.documento || this.documento;
     const solicitudItem = new SolicitudCorreccionItem(solicitudPendiente,(action)=>{
@@ -312,7 +331,78 @@ export class ItemDocumento extends BaseComponent{
     }
   }
   _tieneSolicitudesPendientes() {
-    return this.documento.solicitudesCorreccion.some(sc => sc?.estadoCorreccionId != 3);
+    return this.documento.solicitudesCorreccion.some(sc => sc?.estadoCorreccionId != EstadoCorreccion.ACEPTADA);
+  }
+  
+  async firmarDocumento() {
+    const confirmacion = await Swal.fire({
+      icon: "question",
+      title: "Firmar Documento",
+      text: "¿Desea firmar este documento?",
+      showCancelButton: true,
+      confirmButtonText: "Sí, firmar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    try {
+      // Mostrar indicador de carga
+      Swal.fire({
+        title: "Cargando documento...",
+        text: "Por favor espere",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // Descargar el PDF actual
+      const res = await apiDownloadBlob(`/Documentos/ver/${this.documento.id}`);
+
+      if (!res.ok) {
+        throw new Error("No se pudo cargar el documento");
+      }
+
+      const blob = await res.blob();
+
+      // Cerrar el loading
+      Swal.close();
+
+      // Abrir el modal de firma
+      const pdfFirmado = await firmarPdf(blob);
+
+      // Aquí puedes implementar la lógica para subir el PDF firmado
+      // Por ejemplo, usar FormData y enviarlo al servidor
+      const formData = new FormData();
+      formData.append("archivo", pdfFirmado, `${this.documento.tipoDocumento.nombre}_firmado.pdf`);
+      formData.append("documentoId", this.documento.id);
+
+      await Swal.fire({
+        icon: "success",
+        title: "Documento firmado",
+        text: "El documento ha sido firmado correctamente.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      await DocumentoService.EnviarDocumentoFirmado(this.documento.id, formData);
+
+      // Opcional: recargar o actualizar el documento
+      // this.reMount();
+
+    } catch (error) {
+      console.error("Error al firmar documento:", error);
+      
+      // Solo mostrar el error si no fue cancelado por el usuario
+      if (error.message !== "Cancelado por el usuario") {
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message || "No se pudo firmar el documento",
+        });
+      }
+    }
   }
 }
 
