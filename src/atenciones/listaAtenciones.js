@@ -168,7 +168,7 @@ function ordenarPorEstado(atenciones) {
   const grupos = {};
 
   atenciones.forEach((a) => {
-    const estadoId = a.estadoAtencion.id || a.estadoAtencion;
+    const estadoId = a.estadoAtencion.id;
     if (!grupos[estadoId]) grupos[estadoId] = [];
     grupos[estadoId].push(a);
   });

@@ -91,6 +91,7 @@ function InicializarComponentes() {
 
   cargarTiposDocumentoAutorizados();
   cargarEstadosAtencion();
+  cargarEstadosAtencionPermitidos();
 
 
   renderMenu();
@@ -137,7 +138,17 @@ async function cargarTiposDocumentoAutorizados() {
   console.log(contexto);
   
 }
-
+async function cargarEstadosAtencionPermitidos() {
+  //TODO: Esta funcion deberia estar en otro archivo, algo como de Setup General
+  const result = await apiGet("/EstadoAtencion/permitidos");
+  if (!result.ok) {
+    console.error("Error al cargar estados de atención:", result.errorMessages);
+    return;
+  }
+  contexto.estadosAtencionPermitidos = result.result || [];
+  console.log(contexto);
+  
+}
 async function cargarEstadosAtencion() {
   const result = await EstadoAtencionService.obtenerEstadosAtencion();
   if (!result.ok) {

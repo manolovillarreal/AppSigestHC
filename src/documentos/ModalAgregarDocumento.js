@@ -124,9 +124,11 @@ export class ModalAgregarDocumento extends Modal {
           icon: "success",
           title: "Documento cargado",
           text: "El archivo se ha subido correctamente.",
-        });
+        });    
+        console.log("documento cargado",res);
+          
         if (typeof this.onSuccess === "function") {
-          this.onSuccess(); // Recargar documentos, etc.
+          this.onSuccess(res.result); // Recargar documentos, etc.
         }
         this.cerrar();
       } else {

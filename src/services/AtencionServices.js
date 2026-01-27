@@ -21,6 +21,9 @@ async function obtenerAtencionesVisibles() {
 async function guardarAtencion(atencion) {
   return await apiPost('/atenciones', atencion);
 }
+async function avanzarAtencion(payload) {
+  return await apiPost(`/Atenciones/cambiar-estado`, payload);
+}
 
 async function editarAtencion(id, atencion) {
   return await apiPut(`/atenciones/${id}`, atencion);
