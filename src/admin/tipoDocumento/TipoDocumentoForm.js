@@ -48,7 +48,8 @@ export class TipoDocumentoForm extends BaseComponent {
       limiteDePaginas,
       pesoPorPagina,
       activo,
-      estadoAtencionInicialId
+      estadoAtencionInicialId,
+      permiteFirma
     } = this.tipoDocumento;
 
     const form = document.createElement("form");
@@ -112,6 +113,12 @@ export class TipoDocumentoForm extends BaseComponent {
           Permite múltiples
         </label>
       </div>
+      <div class="campo">
+        <label>
+          <input type="checkbox" name="permiteFirma" ${permiteFirma ? "checked" : ""} />
+          Permite Firma
+        </label>
+      </div>
     </div>
     <div class="acciones">
       <div class="acciones-izquierda">
@@ -148,7 +155,8 @@ export class TipoDocumentoForm extends BaseComponent {
       limiteDePaginas: form.limiteDePaginas.value ? parseInt(form.limiteDePaginas.value) : null,
       pesoPorPagina: form.pesoPorPagina.value ? parseInt(form.pesoPorPagina.value) : null,
       activo: this.visible,
-      estadoAtencionInicialId: form.estadoAtencionInicialId.value ? parseInt(form.estadoAtencionInicialId.value) : null
+      estadoAtencionInicialId: form.estadoAtencionInicialId.value ? parseInt(form.estadoAtencionInicialId.value) : null,
+      permiteFirma: form.permiteFirma.checked
     };
 
     if (!dto.nombre) {
@@ -236,7 +244,8 @@ export class TipoDocumentoForm extends BaseComponent {
       limiteDePaginas: null,
       pesoPorPagina: null,
       activo: true,
-      estadoAtencionInicialId: null
+      estadoAtencionInicialId: null,
+      permiteFirma: false
     };
   }
 }
