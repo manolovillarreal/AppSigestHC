@@ -1,19 +1,15 @@
 // src/helpers/estados.js
 
+import contexto from "../contexto/contexto.js";
+
 export const ordenEstados = [1, 2, 3, 4, 5, 6, 7];
 
-export const nombreEstados = {
-  1: 'Admisión',
-  2: 'Consulta',
-  3: 'Ingreso',
-  4: 'Cierre',
-  5: 'Auditoría',
-  6: 'Facturación',
-  7: 'Archivado'
-};
+
 
 export function obtenerNombreEstado(estadoId) {
-  return nombreEstados[estadoId] || 'Desconocido';
+  const {estadosAtencion} = contexto;
+  const estado = estadosAtencion.find(e => e.id === estadoId);
+  return estado ? estado.nombre : 'Desconocido';
 }
 
 const reglasCambioEstado = {
