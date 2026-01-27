@@ -130,7 +130,7 @@ export class AtencionView extends BaseComponent {
     btnAvanzar.appendChild(iconAvanzar);
     btnAvanzar.appendChild(document.createTextNode(" Avanzar Estado"));
     btnAvanzar.addEventListener("click", () => {
-      this.AvanzarEstado();
+      this.PreguntarSiAvanzarEstado();
     });
 
     contenedorAvanzar.appendChild(btnAvanzar);
@@ -153,8 +153,15 @@ export class AtencionView extends BaseComponent {
     btnAgregarDocumento.className = "btn-primary";
     btnAgregarDocumento.textContent = " Agregar Documento";
     btnAgregarDocumento?.addEventListener("click", () => {
-      const modal = new ModalAgregarDocumento(this.atencion, () => {
-          listaDocumentos.reMount();
+      const modal = new ModalAgregarDocumento(this.atencion, (documento) => {
+        listaDocumentos.documentos.push(documento);
+          listaDocumentos.reMount(false); // No recargar desde el servidor
+          console.log(documento);
+          
+          if(documento.tipoDocumento.id==12){ // Si es una Factura
+            this.avanzarEstado('Estado avanzado automáticamente al registrar la factura');
+          }
+          
       });
     });
 
@@ -267,7 +274,7 @@ export class AtencionView extends BaseComponent {
 
     return tipoAtencionElement;
   }
-  async AvanzarEstado() {
+  async PreguntarSiAvanzarEstado() {
     const { isConfirmed, value: observacion } = await Swal.fire({
       icon: "question",
       title: "¿Avanzar estado de esta atención?",
@@ -286,13 +293,19 @@ export class AtencionView extends BaseComponent {
 
     if (!isConfirmed) return;
 
+    this.avanzarEstado(observacion);
+
+    
+  }
+  async avanzarEstado(observacion) {
     const payload = {
       observacion: observacion || null,
       Atencionid: this.atencion.id,
     };
+
     try {
       console.log("payload: ", payload);
-
+  
       const res = await apiPost(`/Atenciones/cambiar-estado`, payload);
 
       if (res.ok) {
@@ -305,7 +318,7 @@ export class AtencionView extends BaseComponent {
             atencionActualizada.estadoAtencion?.nombre || "actualizado"
           }`,
         });
-        console.log(atencionActualizada);
+        console.log("Avanza estado:",atencionActualizada);
 
         this.atencion.estadoAtencion = atencionActualizada.estadoAtencion;
         this.atencion.estadoAtencionId = atencionActualizada.estadoAtencionId;
