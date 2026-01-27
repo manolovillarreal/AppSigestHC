@@ -11,6 +11,8 @@ export function getTokenHeader() {
 
 async function manejarRespuesta(res) {
   try {
+    console.log(res);
+    
     const data = await res.json();
   
   if (!res.ok)  {
@@ -70,6 +72,18 @@ export async function apiPut(path, body) {
   return await manejarRespuesta(res);
 }
 
+export async function apiPatch(path, body) {
+  const res = await fetch(`${API_URL}${path}`, {
+    method:  'PATCH',
+    headers: {
+      ...getTokenHeader(),
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  return await manejarRespuesta(res);
+}
+
 export async function apiDownloadBlob(path) {
     const res = await fetch(`${API_URL}${path}`, {
       headers: getTokenHeader(),
@@ -81,6 +95,8 @@ export async function apiDownloadBlob(path) {
     return res;
 }
 export async function apiUpload(path, formData) {
+  console.log(`${API_URL}${path}`);
+  
   const res = await fetch(`${API_URL}${path}`, {
     method: 'POST',
     headers: getTokenHeader(),

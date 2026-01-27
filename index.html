@@ -15,7 +15,7 @@
     />
     <!-- Script de SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <!-- PDF.js para visualización de PDFs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <script>
@@ -23,6 +23,11 @@
       pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
     </script>
+    <!-- PDF-lib para manipulación de PDFs (firmas) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <!-- SignaturePad para capturar firmas -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad"></script>
+
     <script type="module" src="src/main.js" defer></script>
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
