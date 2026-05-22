@@ -1,3 +1,79 @@
+/* === PACIENTE CARD === */
+.paciente-card {
+  margin-bottom: 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.paciente-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #f0f4ff;
+  border-bottom: 1px solid var(--color-borde);
+  padding: 0.5rem 0.8rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.paciente-card-header .material-icons {
+  font-size: 1.1rem;
+  color: var(--color-primario);
+}
+
+.paciente-card-body {
+  padding: 0.75rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.paciente-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+
+.paciente-fila.ingreso-destacado {
+  grid-template-columns: 1fr;
+  border-top: 1px dashed var(--color-borde);
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.paciente-fila.ingreso-destacado .campo-valor {
+  color: var(--color-primario);
+  font-weight: 600;
+}
+
+.paciente-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.campo-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.campo-valor {
+  font-size: 0.95rem;
+  color: var(--color-texto);
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
 /* Fondo de superposición */
 .modal-overlay {
   position: fixed;

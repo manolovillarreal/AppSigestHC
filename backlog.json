@@ -1,0 +1,573 @@
+{
+  "project": "AppSigestHC",
+  "description": "Refactorización del frontend vanilla (HTML/JS/CSS) del sistema de gestión de atención clínica. Sin frameworks. Sistema debe funcionar en cada paso.",
+  "last_updated": "2026-05-22",
+  "workflow": {
+    "planner": "Claude Code",
+    "executor": "GitHub Copilot Agent mode",
+    "rule": "Antes de cada fase: git commit del estado actual. Después de cada fase: git commit con mensaje 'refactor: fase-X — <descripción breve>' y actualizar el status de esta fase a done."
+  },
+  "conventions": {
+    "files": {
+      "components_classes": "PascalCase.js (ej: ItemDocumento.js)",
+      "services": "camelCase.service.js (ej: atencion.service.js)",
+      "utils": "camelCase.js (ej: date.js, error.js)",
+      "css": "mismo nombre del componente + .css",
+      "tests": "mismo nombre + .test.js"
+    },
+    "functions": {
+      "get_state": "getX() — leer del store (getPerfil, getToken)",
+      "api_read": "fetchX() — llamadas GET a la API",
+      "api_write": "createX(), updateX(), deleteX()",
+      "dom_render": "renderX() — manipulación de DOM",
+      "event_handlers": "handleX() — manejadores de eventos",
+      "domain_actions": "verbos en español del dominio clínico (avanzarAtencion, solicitarCorreccion)"
+    },
+    "api_urls": "PascalCase consistente con el backend .NET: /Atenciones, /Documentos, /Usuarios, /Roles, /TipoDocumento, /EstadoAtencion, /SolicitudCorreccion, /Pacientes",
+    "services_pattern": "Funciones async puras que no tocan el DOM. Siempre retornan { ok: boolean, result?: T, errorMessages?: object }",
+    "error_handling": "Interceptor 401 en api.js → logout + redirect. Notificación al usuario via utils/error.js. Sin fallos silenciosos.",
+    "modules": "ES Modules nativos (import/export estático). CDN globals (SweetAlert2, PDF.js, pdf-lib, JSZip, SignaturePad) permanecen como window.X. Sin bundler."
+  },
+  "target_structure": {
+    "description": "Estructura de carpetas objetivo al finalizar todas las fases",
+    "tree": {
+      "root": ["index.html", "login.html", "admin.html", "package.json"],
+      "src": {
+        "main.js": "entry point",
+        "config": ["config.js"],
+        "api": ["api.js"],
+        "auth": ["auth.js"],
+        "state": ["store.js"],
+        "services": [
+          "atencion.service.js",
+          "documento.service.js",
+          "usuario.service.js",
+          "rol.service.js",
+          "tipoDocumento.service.js",
+          "estadoAtencion.service.js",
+          "solicitudCorreccion.service.js"
+        ],
+        "utils": ["date.js", "error.js", "files.js", "storage.js", "estados.js"],
+        "pdf": [
+          "pdfRenderer.js",
+          "signatureCapture.js",
+          "signaturePositioner.js",
+          "pdfSigner.js",
+          "FirmaPdfModal.js"
+        ],
+        "components": [
+          "BaseComponent.js",
+          "Modal.js",
+          "FiltroLista.js",
+          "SelectConBuscador.js",
+          "Dropzone.js"
+        ],
+        "views": {
+          "app.js": "routing + menu",
+          "login.js": "",
+          "atenciones": [
+            "ListaAtenciones.js",
+            "ItemAtencion.js",
+            "AtencionView.js",
+            "AtencionHeader.js",
+            "AtencionEstado.js",
+            "BuscarAtenciones.js",
+            "ModalNuevaAtencion.js"
+          ],
+          "documentos": {
+            "files": [
+              "ListaDocumentos.js",
+              "GrupoDocumentosPorRol.js",
+              "ItemDocumento.js",
+              "ModalAgregarDocumento.js",
+              "TiposDocumentos.js"
+            ],
+            "acciones": [
+              "DescargarDocumento.js",
+              "EliminarDocumento.js",
+              "EditarDocumento.js"
+            ]
+          },
+          "correcciones": [
+            "ListaSolicitudesCorreccion.js",
+            "SolicitudCorreccionItem.js",
+            "PacienteCorreccionItem.js"
+          ],
+          "admin": {
+            "admin.js": "",
+            "base": ["AdminListaBase.js"],
+            "usuario": ["ListaUsuarios.js", "UsuarioItem.js", "UsuarioView.js", "UsuarioForm.js"],
+            "tipoDocumento": "7 archivos",
+            "roles": "8 archivos",
+            "estadoAtencion": "5 archivos"
+          }
+        },
+        "helpers": ["debug.js (solo este — lo demás migra a utils/)"]
+      },
+      "css": {
+        "variables.css": "NUEVO — todas las variables de color/tipografía",
+        "global.css": "reemplaza estilos.css",
+        "login.css": "",
+        "admin.css": "",
+        "components": ["modal.css (unificado)", "filtroLista.css", "selectConBuscador.css", "dropzone.css"],
+        "views": ["atencionView.css", "documentos.css", "correcciones.css"],
+        "pdf": ["firmaPdf.css (extraído de firmaPdf.js)"]
+      },
+      "tests": {
+        "vitest.config.js": "",
+        "unit": {
+          "utils": ["date.test.js", "error.test.js", "estados.test.js", "files.test.js"],
+          "services": ["atencion.service.test.js", "documento.service.test.js", "solicitudCorreccion.service.test.js"]
+        }
+      }
+    }
+  },
+  "bugs": [
+    {
+      "id": "BUG-001",
+      "file": "src/services/RolesServices.js",
+      "description": "Todos los métodos llaman endpoints /usuarios en vez de /roles (copy-paste)",
+      "impact": "CRÍTICO — panel de roles completamente roto",
+      "fixed_in_phase": "fase-0",
+      "status": "pending"
+    },
+    {
+      "id": "BUG-002",
+      "file": "src/helpers/debug.js",
+      "description": "logWarn y logInfo referencian variable `args` no definida en su scope",
+      "impact": "ALTO — errores en consola en modo debug",
+      "fixed_in_phase": "fase-0",
+      "status": "pending"
+    },
+    {
+      "id": "BUG-003",
+      "file": "src/helpers/files.js",
+      "description": "revokeObjectURL no siempre se llama después de la descarga → memory leak",
+      "impact": "MEDIO — memory leak en descargas frecuentes",
+      "fixed_in_phase": "fase-6",
+      "status": "pending"
+    },
+    {
+      "id": "BUG-004",
+      "file": "src/config/config.js",
+      "description": "API_URL hardcodeada a https://localhost:7138",
+      "impact": "MEDIO — imposible deplegar sin modificar código fuente",
+      "fixed_in_phase": "fase-1",
+      "status": "pending"
+    },
+    {
+      "id": "BUG-005",
+      "file": "src/atenciones/buscarAtenciones.js",
+      "description": "No valida que fechaDesde <= fechaHasta antes de enviar query",
+      "impact": "BAJO — puede enviar queries inválidas al backend",
+      "fixed_in_phase": "fase-11",
+      "status": "pending"
+    },
+    {
+      "id": "BUG-006",
+      "file": "src/helpers/correcciones.js",
+      "description": "Roles y estados hardcodeados en array literal — rompería si se agrega un rol nuevo",
+      "impact": "BAJO",
+      "fixed_in_phase": "fase-14",
+      "status": "pending"
+    }
+  ],
+  "phases": [
+    {
+      "id": "fase-0",
+      "name": "Corrección de Bugs Críticos",
+      "status": "pending",
+      "risk": "BAJO",
+      "objective": "Corregir errores que afectan funcionalidad hoy, sin mover nada de lugar.",
+      "touches_core_flow": false,
+      "requires_manual_test": true,
+      "manual_test_instructions": "Entrar al panel admin → Roles → verificar que carga correctamente y permite crear un rol.",
+      "files_modified": [
+        "src/helpers/debug.js",
+        "src/services/RolesServices.js"
+      ],
+      "files_created": [],
+      "files_deleted": [],
+      "bugs_fixed": ["BUG-001", "BUG-002"],
+      "tests_added": [],
+      "copilot_prompt": "Corrige dos bugs en AppSigestHC sin mover ningún archivo ni cambiar estructura.\n\nBUG 1 — src/helpers/debug.js:\nLas funciones logWarn y logInfo referencian una variable `args` que no está definida en su scope.\nLee el archivo y corrige la referencia para que use el parámetro correcto ya declarado.\n\nBUG 2 — src/services/RolesServices.js:\nTodos los métodos del servicio llaman endpoints `/usuarios` en lugar de `/roles`.\nReemplaza todas las URLs para que apunten a `/roles` (el endpoint correcto del backend).\nNo cambies la lógica, solo las URLs.\n\nDespués de los cambios, reporta exactamente qué líneas modificaste en cada archivo.\nActualiza backlog.json: fase-0 status → done, BUG-001 y BUG-002 status → fixed.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-1",
+      "name": "Configuración de Entorno",
+      "status": "pending",
+      "risk": "BAJO",
+      "objective": "Eliminar API_URL hardcodeada. Establecer patrón de configuración por entorno sin bundler.",
+      "touches_core_flow": false,
+      "requires_manual_test": true,
+      "manual_test_instructions": "Verificar que el app carga correctamente después del cambio. Revisar en DevTools que las requests siguen apuntando a la URL correcta.",
+      "files_modified": [
+        "src/config/config.js",
+        "index.html",
+        "admin.html"
+      ],
+      "files_created": [],
+      "files_deleted": [],
+      "bugs_fixed": ["BUG-004"],
+      "tests_added": [],
+      "copilot_prompt": "En AppSigestHC, elimina el API_URL hardcodeado de src/config/config.js.\n\nEstrategia:\n1. En src/config/config.js, cambia la línea del API_URL para leer de\n   `window.__APP_CONFIG__?.API_URL` con fallback a 'https://localhost:7138'.\n2. En index.html, justo antes del tag <script type=\"module\" src=\"src/main.js\">,\n   agrega un bloque <script> que defina window.__APP_CONFIG__ = { API_URL: 'https://localhost:7138' }.\n3. Haz lo mismo en admin.html.\n4. No cambies ningún otro archivo.\n\nEl resultado: para cambiar la URL en producción basta con modificar el bloque\n<script> del HTML sin tocar el código fuente.\nActualiza backlog.json: fase-1 status → done, BUG-004 status → fixed.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-2",
+      "name": "Eliminación de Archivos Muertos",
+      "status": "pending",
+      "risk": "BAJO",
+      "objective": "Limpiar archivos no utilizados. Identificar duplicados para fases posteriores.",
+      "touches_core_flow": false,
+      "requires_manual_test": false,
+      "manual_test_instructions": "",
+      "files_modified": [],
+      "files_created": [],
+      "files_deleted": [
+        "test.html",
+        "test copy.html"
+      ],
+      "files_to_evaluate": [
+        "pdf-signer.html",
+        "pdf-signer.js",
+        "src/modales/modal.js"
+      ],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "copilot_prompt": "En AppSigestHC, limpia archivos muertos. Antes de eliminar cualquier archivo,\nverifica que no haya ningún import, script src, o referencia en otros archivos.\n\nPasos:\n1. Busca referencias a test.html en todo el proyecto (grep -r \"test.html\" .)\n   Si no hay referencias, elimínalo.\n2. Busca referencias a \"test copy.html\". Si no hay referencias, elimínalo.\n3. Compara src/modales/modal.js con src/components/modal.js.\n   Si son idénticos o uno es subset del otro, determina cuál es el canonical\n   y reporta qué archivos importan cada uno. NO los fusiones aún — solo reporta.\n4. Verifica si pdf-signer.html, pdf-signer.js tienen algún import desde index.html\n   o admin.html. Reporta el resultado.\n\nNo elimines pdf-signer ni el modal todavía. Solo elimina test.html y test copy.html\nsi confirmas que no tienen referencias.\nActualiza backlog.json: fase-2 status → done. Registra hallazgos del punto 3 y 4 en el campo notes de esta fase.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-3",
+      "name": "Unificación del Cliente HTTP",
+      "status": "pending",
+      "risk": "MEDIO",
+      "objective": "Centralizar manejo del token. Agregar interceptor 401 → logout automático. Eliminar duplicación de headers.",
+      "touches_core_flow": true,
+      "requires_manual_test": true,
+      "manual_test_instructions": "1. Login normal → verificar que carga el inicio. 2. Manipular el token en localStorage a un valor inválido → hacer una acción que llame a la API → verificar que redirige a login.html automáticamente.",
+      "files_modified": [
+        "src/api/api.js"
+      ],
+      "files_created": [],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "copilot_prompt": "Refactoriza src/api/api.js en AppSigestHC sin cambiar la interfaz pública\n(los mismos exports: apiGet, apiPost, apiPut, apiPatch, apiDelete, apiUpload,\napiDownloadBlob, manejarRespuesta deben seguir existiendo con la misma firma).\n\nCambios internos:\n1. Extrae la creación del header Authorization a una función privada:\n   function getAuthHeaders() {\n     return { 'Authorization': `Bearer ${localStorage.getItem('token')}` };\n   }\n   Úsala en todos los métodos en vez de repetir la lógica.\n\n2. Agrega un interceptor 401: si cualquier respuesta tiene status 401,\n   importar logout desde '../auth/auth.js', llamarlo, y hacer\n   window.location.href = '/login.html'. Esto debe ocurrir ANTES de\n   llegar a manejarRespuesta.\n\n3. No cambies manejarRespuesta ni los exports.\n4. No toques ningún otro archivo.\n\nVerifica que el interceptor no cause loop infinito cuando login.html\nya está activo (hint: chequear window.location.pathname antes de redirigir).\nActualiza backlog.json: fase-3 status → done.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-4",
+      "name": "Normalización de URLs de Servicios",
+      "status": "pending",
+      "risk": "BAJO-MEDIO",
+      "objective": "Estandarizar todos los endpoints a PascalCase consistente con el backend .NET.",
+      "touches_core_flow": false,
+      "requires_manual_test": true,
+      "manual_test_instructions": "Probar flujo completo: login → lista atenciones → abrir atención → subir documento → buscar atenciones. Verificar en DevTools Network que todas las URLs tienen el casing correcto.",
+      "files_modified": [
+        "src/services/AtencionServices.js",
+        "src/services/DocumentoService.js",
+        "src/services/UsuarioService.js",
+        "src/services/RolesServices.js",
+        "src/services/TipoDocumentoService.js",
+        "src/services/EstadoAtencionService.js",
+        "src/services/SolicitudCorreccionService.js"
+      ],
+      "files_created": [],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "copilot_prompt": "En AppSigestHC, normaliza las URLs de los servicios. El backend .NET usa PascalCase\nen sus rutas. Estandariza todos los endpoints para seguir ese patrón:\n\nConvenciones a aplicar en src/services/:\n- /atenciones → /Atenciones\n- /documentos → /Documentos\n- /usuarios → /Usuarios (excepto endpoints que ya están bien)\n- /roles → /Roles\n- /SolicitudCorreccion → sin cambio (ya correcto)\n- /TipoDocumento → sin cambio\n- /EstadoAtencion → sin cambio\n- /Pacientes → sin cambio\n\nProceso:\n1. Lee cada archivo en src/services/ uno por uno\n2. Identifica y reemplaza solo las URLs que no sigan PascalCase\n3. No cambies la lógica de ningún servicio\n4. Reporta cada cambio: archivo, línea original, línea nueva\n\nNo toques src/api/api.js ni ningún componente.\nActualiza backlog.json: fase-4 status → done.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-5",
+      "name": "Extracción de CSS de firmaPdf.js",
+      "status": "pending",
+      "risk": "BAJO",
+      "objective": "Mover los ~400 líneas de CSS embebidas como strings en firmaPdf.js a un archivo CSS externo.",
+      "touches_core_flow": false,
+      "requires_manual_test": true,
+      "manual_test_instructions": "Abrir una atención con documentos PDF → clic en Firmar → verificar que el modal se ve correctamente (estilos aplicados).",
+      "files_modified": [
+        "src/helpers/firmaPdf.js",
+        "index.html"
+      ],
+      "files_created": [
+        "css/pdf/firmaPdf.css"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "copilot_prompt": "En AppSigestHC, extrae el CSS embebido de src/helpers/firmaPdf.js a un archivo externo.\n\nPasos:\n1. Lee src/helpers/firmaPdf.js y encuentra todas las cadenas de texto que contienen\n   reglas CSS (busca patrones como template literals o strings con `{`, `}`, `margin:`, etc.)\n   que se insertan con innerHTML o style.textContent.\n2. Crea el directorio css/pdf/ si no existe.\n3. Crea css/pdf/firmaPdf.css con todas esas reglas CSS.\n4. En src/helpers/firmaPdf.js, reemplaza las inserciones de CSS por una función loadStyles()\n   que cree un <link> en el <head> si no existe ya (para no duplicar en múltiples llamadas).\n5. Agrega <link rel=\"stylesheet\" href=\"css/pdf/firmaPdf.css\"> en index.html.\n6. No toques la lógica JavaScript de firmaPdf.js, solo el CSS embebido.\n\nActualiza backlog.json: fase-5 status → done.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-6",
+      "name": "Migración de helpers/ a utils/",
+      "status": "pending",
+      "risk": "BAJO",
+      "objective": "Mover funciones puras a src/utils/ con separación por responsabilidad. Corregir memory leak en files.js.",
+      "touches_core_flow": false,
+      "requires_manual_test": true,
+      "manual_test_instructions": "Login → inicio carga lista de atenciones → descargar un documento → verificar descarga exitosa.",
+      "files_modified": [
+        "src/helpers/utils.js",
+        "src/helpers/files.js",
+        "src/helpers/storage.js",
+        "src/helpers/estados.js"
+      ],
+      "files_created": [
+        "src/utils/date.js",
+        "src/utils/error.js",
+        "src/utils/files.js",
+        "src/utils/storage.js",
+        "src/utils/estados.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": ["BUG-003"],
+      "tests_added": [],
+      "deprecation_bridges": "Los archivos originales en helpers/ quedan como re-exports hacia utils/ para no romper imports existentes",
+      "copilot_prompt": "En AppSigestHC, reorganiza las utilidades de src/helpers/ en src/utils/\ncon separación por responsabilidad.\n\nPasos:\n1. Crea src/utils/ si no existe.\n2. Crea src/utils/date.js con las funciones de formateo de fechas y cálculo de edad\n   extraídas de src/helpers/utils.js.\n3. Crea src/utils/error.js con la función de formateo de errores como HTML\n   extraída de src/helpers/utils.js.\n   NOTA: si utils.js también tiene funciones relacionadas con thumbnails de PDF,\n   muévelas a src/utils/pdf.js.\n4. Copia src/helpers/files.js → src/utils/files.js (corrigiendo el memory leak:\n   asegúrate de que revokeObjectURL se llame siempre en el finally/después de la descarga).\n5. Copia src/helpers/storage.js → src/utils/storage.js.\n6. Copia src/helpers/estados.js → src/utils/estados.js.\n7. Para cada archivo movido, actualiza TODOS los imports en el resto del proyecto\n   (busca con grep -r \"helpers/\" . para encontrarlos todos).\n8. NO elimines los archivos originales de src/helpers/ — agrega una línea de re-export\n   en cada uno como deprecation bridge:\n   // DEPRECATED: importar desde '../utils/date.js'\n   export * from '../utils/date.js';\n9. Verifica que el app sigue funcionando (login → inicio).\n\nReporta todos los archivos tocados y los cambios de imports.\nActualiza backlog.json: fase-6 status → done, BUG-003 status → fixed.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-7",
+      "name": "Configuración de Testing (Vitest)",
+      "status": "pending",
+      "risk": "NULO",
+      "objective": "Establecer infraestructura de pruebas unitarias para utils/. No modifica código de producción.",
+      "touches_core_flow": false,
+      "requires_manual_test": false,
+      "manual_test_instructions": "",
+      "prerequisite": "fase-6 completada",
+      "files_modified": [],
+      "files_created": [
+        "package.json",
+        "tests/vitest.config.js",
+        "tests/unit/utils/date.test.js",
+        "tests/unit/utils/error.test.js",
+        "tests/unit/utils/estados.test.js",
+        "tests/unit/utils/files.test.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [
+        "tests/unit/utils/date.test.js",
+        "tests/unit/utils/error.test.js",
+        "tests/unit/utils/estados.test.js",
+        "tests/unit/utils/files.test.js"
+      ],
+      "framework": "Vitest ^2.0.0",
+      "rationale_testing": "Las utilidades en utils/ son funciones puras sin dependencias de DOM. Momento ideal antes de tocar servicios y componentes más complejos.",
+      "copilot_prompt": "En AppSigestHC, configura Vitest para pruebas unitarias de las utilidades.\n\nEl proyecto usa ES Modules nativos sin bundler. No instales nada más que vitest.\n\nPasos:\n1. Si no existe package.json, créalo con:\n   { \"type\": \"module\", \"scripts\": { \"test\": \"vitest run\", \"test:watch\": \"vitest\" },\n     \"devDependencies\": { \"vitest\": \"^2.0.0\" } }\n   Si ya existe package.json, agrega vitest a devDependencies.\n\n2. Crea tests/vitest.config.js:\n   import { defineConfig } from 'vitest/config';\n   export default defineConfig({ test: { environment: 'node' } });\n\n3. Crea tests/unit/utils/date.test.js con pruebas para CADA función exportada\n   de src/utils/date.js. Incluye: casos normales, fechas límite, valores null/undefined.\n\n4. Crea tests/unit/utils/error.test.js con pruebas para la función de formateo de errores.\n   Testea: array de mensajes, objeto de mensajes, valor vacío.\n\n5. Crea tests/unit/utils/estados.test.js con pruebas para:\n   - La función de obtener nombre de estado por ID\n   - La función de verificar si un rol puede avanzar dado un estado\n   - Casos edge: estado inexistente, rol inexistente\n\n6. Crea tests/unit/utils/files.test.js con pruebas para la función\n   que genera nombres de archivos (es función pura, no toca DOM).\n\n7. Ejecuta: npm install && npm test\n   Todos los tests deben pasar. Corrige cualquier fallo antes de reportar éxito.\n\nActualiza backlog.json: fase-7 status → done. Registra en notes el resultado del npm test.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-8",
+      "name": "Tests de Servicios con Mocks",
+      "status": "pending",
+      "risk": "NULO",
+      "objective": "Cubrir la capa de servicios con tests unitarios usando mocks de fetch, antes de refactorizar los componentes que los consumen.",
+      "touches_core_flow": false,
+      "requires_manual_test": false,
+      "prerequisite": "fase-7 completada",
+      "files_modified": [],
+      "files_created": [
+        "tests/unit/services/atencion.service.test.js",
+        "tests/unit/services/documento.service.test.js",
+        "tests/unit/services/solicitudCorreccion.service.test.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [
+        "tests/unit/services/atencion.service.test.js",
+        "tests/unit/services/documento.service.test.js",
+        "tests/unit/services/solicitudCorreccion.service.test.js"
+      ],
+      "copilot_prompt": "En AppSigestHC, escribe tests unitarios para los servicios principales usando\nmocks de fetch. Usa Vitest con vi.stubGlobal o vi.fn() para mockear fetch.\n\nPara cada servicio listado, crea un archivo de test en tests/unit/services/.\nCada test debe:\n- Mockear fetch para retornar una respuesta exitosa y una fallida\n- Verificar que la URL llamada es correcta (casing PascalCase)\n- Verificar que el resultado normalizado tiene la forma { ok, result } esperada\n- No hacer llamadas reales al backend\n\nServicios a testear:\n1. src/services/AtencionServices.js (o el nombre actual) — testear fetchAtenciones y crear atención\n2. src/services/DocumentoService.js — testear carga y eliminación de documento\n3. src/services/SolicitudCorreccionService.js — testear flujo aprobar/rechazar\n\nPatrón de mock:\n  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({\n    ok: true, status: 200,\n    json: async () => ({ data: [] })\n  }));\n\nTambién mockea localStorage.getItem para retornar un token fake 'fake-jwt-token'.\n\nEjecuta npm test al final. Todos deben pasar.\nActualiza backlog.json: fase-8 status → done. Registra en notes cuántos tests pasan.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-9",
+      "name": "Split de itemDocumento.js",
+      "status": "pending",
+      "risk": "ALTO",
+      "objective": "Dividir el componente de 530 líneas en responsabilidades separadas. Extraer acciones a módulos propios.",
+      "touches_core_flow": true,
+      "requires_manual_test": true,
+      "prerequisite": "fase-8 completada",
+      "manual_test_instructions": "1. Abrir una atención → ver lista de documentos → verificar que se renderizan correctamente. 2. Descargar un documento → verificar descarga exitosa. 3. Eliminar un documento → verificar confirmación Swal y actualización de lista. 4. Editar metadatos de documento → verificar guardado.",
+      "files_modified": [
+        "src/documentos/itemDocumento.js"
+      ],
+      "files_created": [
+        "src/documentos/acciones/DescargarDocumento.js",
+        "src/documentos/acciones/EliminarDocumento.js",
+        "src/documentos/acciones/EditarDocumento.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "target_lines": "ItemDocumento.js debe quedar en menos de 200 líneas",
+      "copilot_prompt": "En AppSigestHC, divide src/documentos/itemDocumento.js (530 líneas) en módulos\nmás pequeños sin cambiar el comportamiento observable.\n\nAnálisis previo requerido:\nLee el archivo completo y clasifica cada función/sección como:\nA) Render básico del item (thumbnail, nombre, estado, badges)\nB) Lógica de descarga (individual, como parte de selección múltiple)\nC) Lógica de eliminación (confirmación Swal + apiDelete)\nD) Lógica de edición (form inline)\nE) Lógica de firma (delega a firmaPdf.js)\nF) Lógica de solicitud de corrección (form + POST)\n\nLuego:\n1. Crea src/documentos/acciones/ si no existe\n2. Crea DescargarDocumento.js con la lógica del grupo B\n3. Crea EliminarDocumento.js con la lógica del grupo C\n4. Crea EditarDocumento.js con la lógica del grupo D\n5. Mantén firma/corrección dentro de ItemDocumento.js por ahora\n6. Actualiza ItemDocumento.js para importar y delegar en los nuevos módulos\n7. El componente resultante ItemDocumento.js NO debe superar 200 líneas\n\nPrueba manual OBLIGATORIA antes de reportar éxito (no la automatices — descríbela):\n- Abrir atención → ver documentos → descargar → eliminar → editar\n\nActualiza backlog.json: fase-9 status → done.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-10",
+      "name": "Split de firmaPdf.js",
+      "status": "pending",
+      "risk": "MUY ALTO",
+      "objective": "Dividir el archivo de 1110 líneas en módulos por responsabilidad. La Fase 5 ya extrajo el CSS.",
+      "touches_core_flow": true,
+      "requires_manual_test": true,
+      "prerequisite": "fase-9 completada y probada",
+      "manual_test_instructions": "1. Abrir una atención con documentos PDF. 2. Clic en Firmar en un documento. 3. Navegar por las páginas del PDF. 4. Dibujar una firma en el canvas. 5. Posicionar la firma en una página. 6. Guardar y verificar que el documento firmado se sube y aparece en la lista.",
+      "files_modified": [
+        "src/helpers/firmaPdf.js"
+      ],
+      "files_created": [
+        "src/pdf/pdfRenderer.js",
+        "src/pdf/signatureCapture.js",
+        "src/pdf/signaturePositioner.js",
+        "src/pdf/pdfSigner.js",
+        "src/pdf/FirmaPdfModal.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "critical_constraints": [
+        "PDF.js, pdf-lib, SignaturePad son globals del browser (window.pdfjsLib, etc.) — NO importarlos como módulos ES",
+        "Mantener el contrato público: la función que llama atencionView.js para abrir el modal debe seguir funcionando con los mismos argumentos",
+        "Si un bloque no puede separarse sin romper estado compartido, dejarlo en FirmaPdfModal.js y documentar por qué"
+      ],
+      "copilot_prompt": "En AppSigestHC, divide src/helpers/firmaPdf.js (1110 líneas) en módulos separados.\nEste archivo ya tuvo su CSS extraído en la Fase 5.\n\nAnálisis previo requerido:\nLee el archivo completo e identifica bloques funcionales claros:\n1. Inicialización y gestión del estado del modal (objeto state con 15+ propiedades)\n2. Render de páginas PDF usando PDF.js\n3. Captura de firma con SignaturePad (canvas, clear, guardar imagen)\n4. Posicionamiento de firmas sobre páginas (drag, resize, coordenadas)\n5. Generación del PDF firmado con pdf-lib\n6. Upload del PDF resultante (llamada a la API)\n7. Orquestador del modal (abre, cierra, controla el flujo)\n\nPara cada bloque claramente delimitado:\n- Crea un archivo en src/pdf/ con nombre descriptivo\n- Exporta las funciones necesarias\n- El orquestador FirmaPdfModal.js importa todo y coordina\n\nRestricciones CRÍTICAS:\n- PDF.js, pdf-lib, SignaturePad son globals del browser — NO importarlos como módulos ES\n- Mantén el contrato público: la función de apertura del modal debe seguir funcionando\n  con los mismos argumentos que recibe actualmente\n- Si no puedes separar un bloque sin romper estado compartido, déjalo en FirmaPdfModal.js\n  y documenta con un comentario: // NOTE: no separado porque...\n\nPrueba manual OBLIGATORIA antes de reportar éxito:\nFlujo completo de firma: abrir modal → navegar páginas → dibujar firma → posicionar → guardar → verificar upload.\n\nActualiza backlog.json: fase-10 status → done.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-11",
+      "name": "Split de atencionView.js",
+      "status": "pending",
+      "risk": "ALTO",
+      "objective": "Separar la vista detalle de atención en componentes más pequeños. Eliminar duplicación de checks de rol.",
+      "touches_core_flow": true,
+      "requires_manual_test": true,
+      "prerequisite": "fase-10 completada",
+      "manual_test_instructions": "1. Login con cada rol disponible. 2. Abrir una atención. 3. Verificar que el botón Avanzar aparece/desaparece correctamente según el estado de la atención y el rol del usuario. 4. Avanzar el estado de una atención. 5. Verificar que los documentos siguen siendo accesibles.",
+      "files_modified": [
+        "src/atenciones/atencionView.js",
+        "src/atenciones/buscarAtenciones.js"
+      ],
+      "files_created": [
+        "src/atenciones/AtencionHeader.js",
+        "src/atenciones/AtencionEstado.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": ["BUG-005"],
+      "tests_added": [],
+      "target_lines": "atencionView.js debe quedar en menos de 150 líneas como orquestador",
+      "copilot_prompt": "En AppSigestHC, refactoriza src/atenciones/atencionView.js (479 líneas) extrayendo\nresponsabilidades a componentes separados.\n\nAnálisis previo:\nLee atencionView.js y clasifica cada sección:\nA) Header con datos del paciente (nombre, documento, administradora, tipo atención)\nB) Panel de estado: estado actual + botón Avanzar + lógica de permisos por rol\nC) Lista de documentos (mount de listaDocumentos.js)\nD) Botón Agregar documento + modal\nE) Acciones de cierre/anulación\n\nPasos:\n1. Crea src/atenciones/AtencionHeader.js con el bloque A — solo render, sin lógica de permisos\n2. Crea src/atenciones/AtencionEstado.js con el bloque B\n   — importa puedeAvanzarEstado de src/utils/estados.js\n   — emite onAvanzar(nuevoEstado) como callback al padre\n3. En atencionView.js (orquestador):\n   — Instancia AtencionHeader y AtencionEstado\n   — Maneja las llamadas a la API para avanzar/cerrar/anular\n   — Resultado: menos de 150 líneas\n4. Elimina checks de rol duplicados (usa SOLO puedeAvanzarEstado de utils/estados.js)\n5. En buscarAtenciones.js, agrega validación: fechaDesde debe ser <= fechaHasta antes de enviar\n\nNo cambies listaDocumentos.js ni ModalAgregarDocumento.js en esta fase.\nActualiza backlog.json: fase-11 status → done, BUG-005 status → fixed.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-12",
+      "name": "Consolidación de Estilos CSS",
+      "status": "pending",
+      "risk": "BAJO",
+      "objective": "Crear variables CSS globales. Eliminar colores hardcodeados. Resolver duplicación modal.css/modales.css.",
+      "touches_core_flow": false,
+      "requires_manual_test": true,
+      "manual_test_instructions": "Revisar visualmente: login, lista de atenciones, vista detalle de atención, modales. Verificar que no hay regresión visual.",
+      "files_modified": [
+        "css/estilos.css",
+        "css/admin.css",
+        "css/atencionView.css",
+        "index.html",
+        "admin.html"
+      ],
+      "files_created": [
+        "css/variables.css"
+      ],
+      "files_deleted": [
+        "css/modales.css (si es duplicado confirmado de modal.css)"
+      ],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "copilot_prompt": "En AppSigestHC, consolida los estilos CSS.\n\nPasos:\n1. Crea css/variables.css con variables CSS para todos los colores del proyecto.\n   Busca todos los colores: grep -r \"#[0-9a-fA-F]\\{3,6\\}\" css/\n   Crea variables como:\n   --color-primary: #007bff;\n   --color-danger: #dc3545;\n   --color-success: #28a745;\n   --color-text: #333;\n   --color-bg: #f8f9fa;\n   (ajusta según los colores reales encontrados)\n\n2. Agrega @import './variables.css'; al inicio de css/estilos.css.\n\n3. Reemplaza colores hardcodeados en estilos.css, admin.css y atencionView.css\n   por las variables correspondientes (solo estos 3 archivos en esta fase).\n\n4. Resuelve la duplicación modal:\n   - Compara css/modal.css y css/modales.css línea por línea\n   - Unifica en css/modal.css conservando todas las reglas únicas\n   - Actualiza referencias en los HTML que cargaban modales.css\n\n5. Agrega <link rel=\"stylesheet\" href=\"css/variables.css\"> como primer CSS\n   en index.html y admin.html.\n\nNo toques css/modales/ (subcarpeta) ni archivos de admin/ CSS — iteración posterior.\nActualiza backlog.json: fase-12 status → done.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-13",
+      "name": "Deduplicación del Patrón Admin",
+      "status": "pending",
+      "risk": "MEDIO",
+      "objective": "Extraer el patrón Lista→Item→View→Form repetido en los 24 archivos admin a una clase base.",
+      "touches_core_flow": false,
+      "requires_manual_test": true,
+      "manual_test_instructions": "Entrar al panel admin → módulo Usuarios → probar CRUD completo (crear, editar, eliminar usuario). Si funciona, no tocar los otros módulos hasta validar.",
+      "files_modified": [
+        "src/admin/usuario/ListaUsuarios.js"
+      ],
+      "files_created": [
+        "src/admin/AdminListaBase.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": [],
+      "tests_added": [],
+      "note": "Solo refactorizar ListaUsuarios.js primero. Verificar antes de replicar a los otros 3 módulos.",
+      "copilot_prompt": "En AppSigestHC, analiza los 4 módulos del panel admin y extrae el patrón repetido\na una clase base. Trabaja SOLO con el módulo de Usuarios en esta fase.\n\nAnálisis previo requerido:\n1. Lee ListaUsuarios.js, ListaRoles.js, ListaTipoDocumento.js, ListaEstadosAtencion.js\n2. Identifica el código idéntico o casi idéntico entre ellos\n3. Documenta las diferencias (campos distintos, acciones específicas, relaciones)\n\nLuego:\n1. Crea src/admin/AdminListaBase.js — clase base con patrón común:\n   - constructor(servicio, ItemComponent, ViewComponent)\n   - load() que llama al servicio y renderiza con FiltroLista\n   - handleItemClick(item) que monta el ViewComponent\n   - reload() para refrescar la lista\n\n2. Refactoriza ListaUsuarios.js para extender AdminListaBase\n   — solo debe sobrescribir lo que es específico de usuarios\n\n3. NO refactorices los otros 3 módulos todavía\n\n4. Prueba manual: admin → Usuarios → CRUD completo funciona\n\nSi la clase base no puede cubrir al menos el 60% del código común, reporta por qué\ny propón una alternativa en el campo notes del backlog.\n\nActualiza backlog.json: fase-13 status → done. Registra en notes si el patrón fue viable.",
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": "fase-14",
+      "name": "Refactor del Estado Global (Store)",
+      "status": "pending",
+      "risk": "ALTO",
+      "objective": "Reemplazar el objeto contexto mutable por un store con getters/setters controlados.",
+      "touches_core_flow": true,
+      "requires_manual_test": true,
+      "prerequisite": "Todas las fases anteriores completadas y estabilizadas",
+      "manual_test_instructions": "Login completo → inicio carga lista de atenciones → abrir atención → verificar que los datos del perfil, tipos de documento y estados de atención cargan correctamente.",
+      "files_modified": [
+        "src/contexto/contexto.js",
+        "src/app.js"
+      ],
+      "files_created": [
+        "src/state/store.js"
+      ],
+      "files_deleted": [],
+      "bugs_fixed": ["BUG-006"],
+      "tests_added": [],
+      "copilot_prompt": "En AppSigestHC, reemplaza src/contexto/contexto.js por un store con acceso controlado.\n\nProblema actual: el objeto `contexto` es mutado directamente desde múltiples módulos.\n\nSolución:\n1. Crea src/state/store.js con:\n   - Un objeto privado _state (no exportado directamente)\n   - Getters: getPerfil(), getTiposDocumento(), getEstadosAtencion(), getToken()\n   - Setters: setPerfil(p), setTiposDocumento(t), setEstadosAtencion(e), setToken(t)\n   - setToken(t) guarda en localStorage además de en _state\n   - Exporta también un objeto `contexto` como proxy hacia los getters/setters\n     para mantener retrocompatibilidad:\n     export const contexto = { get perfil() { return getPerfil(); }, ... }\n\n2. Actualiza src/contexto/contexto.js para re-exportar desde store.js:\n   export * from '../state/store.js';\n   // Esto permite migración gradual sin tocar todos los imports\n\n3. Actualiza src/app.js para usar los nuevos setters al inicializar el contexto.\n\n4. NO actualices los demás consumidores ahora — la re-exportación mantiene compatibilidad.\n\n5. Prueba manual: login completo → inicio carga lista → abrir atención.\n\nActualiza backlog.json: fase-14 status → done, BUG-006 status → fixed.",
+      "completed_at": null,
+      "notes": ""
+    }
+  ],
+  "progress": {
+    "total_phases": 14,
+    "completed": 0,
+    "in_progress": 0,
+    "pending": 14,
+    "total_bugs": 6,
+    "bugs_fixed": 0,
+    "total_tests_planned": 7,
+    "tests_created": 0
+  }
+}
