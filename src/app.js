@@ -38,6 +38,14 @@ const opcionesMenuGenerales = [
       permisos: Object.values(PERFILES),
       onclick: () => cargarCorrecciones()
    },
+    { id: "btnAtenciones", 
+    label: "Atenciones", 
+    icon: "settings",
+    onclick: () => window.location.href = "admin.html",
+    permisos: [ 
+            PERFILES.ADMINISTRADOR
+          ]
+   },
 ];
 //patient-list para la viat de triage
 export async function IniciarApp() {
@@ -45,7 +53,6 @@ export async function IniciarApp() {
   configurarVistaPorRol();
   InicializarComponentes();
 }
-
 async function SetAuth() {
   // Configurar autenticación
   const perfil = await auth.iniciar();
@@ -61,7 +68,6 @@ async function SetAuth() {
   debug.log("Perfil cargado:", perfil);
   contexto.perfil = perfil;
 }
-
 function configurarVistaPorRol() {
 
   const { perfil } = contexto;
@@ -86,7 +92,6 @@ function configurarVistaPorRol() {
     // header.insertBefore(btnAdmin, btnLogout);
   }
 }
-
 function InicializarComponentes() {
 
   cargarTiposDocumentoAutorizados();
@@ -101,7 +106,6 @@ function InicializarComponentes() {
     window.location.href = "login.html";
   });
 }
-
 function renderMenu() {
   const container = document.getElementById("menuHeader");
   container.innerHTML = ""; // Limpiar contenido previo
@@ -121,12 +125,10 @@ function renderMenu() {
     container.appendChild(span);
   });
 }
-
 function clearPanels() {
   document.getElementById("sidebar-panel").innerHTML = "";
   document.getElementById("main-content-panel").innerHTML = "";
 }
-
 async function cargarTiposDocumentoAutorizados() {
   //TODO: Esta funcion deberia estar en otro archivo, algo como de Setup General
   const result = await apiGet("/TipoDocumento/Autorizados");

@@ -37,7 +37,10 @@ export class ModalAgregarDocumento extends Modal {
 
           <div class="campo-fecha hidden" >
             <label for="fecha">Fecha del Documento</label>
-            <input type="date" id="fecha" name="fecha" />
+            <div style="display: flex; gap: 10px;">
+              <input type="date" id="fecha" name="fecha" style="flex: 1;" />
+              <input type="time" id="hora" name="hora" style="width: 120px;" />
+            </div>
           </div>
 
           <label for="archivo">Archivo</label>
@@ -58,9 +61,15 @@ export class ModalAgregarDocumento extends Modal {
   // Deshabilitar el input de archivo inicialmente
     // this.inputArchivo.disabled = true;
     this.inputFecha = this.modal.querySelector("#fecha");
+    this.inputHora = this.modal.querySelector("#hora");
     this.inputRelacion = this.modal.querySelector("#numeroRelacion");
     this.btnCerrar = this.modal.querySelector(".btn-cerrar");
-    this.inputFecha.valueAsDate = new Date();
+    
+    // Establecer fecha y hora actual
+    const ahora = new Date();
+    this.inputFecha.valueAsDate = ahora;
+    this.inputHora.value = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+
 
     this.dropZoneContainer = this.modal.querySelector("#dropzoneContainer");
     this.dropZone = new Dropzone();
@@ -95,6 +104,7 @@ export class ModalAgregarDocumento extends Modal {
         
       this.inputRelacion.required = requiereRelacion;
       this.inputFecha.required = esAsistencial;
+      this.inputHora.required = esAsistencial;
     });
 
     // Submit propio
@@ -113,8 +123,15 @@ export class ModalAgregarDocumento extends Modal {
 
       dropZone.classList.remove("dropzone-error");
 
-
       const formData = new FormData(this.form);
+      
+      // Combinar fecha y hora si ambos están presentes
+      if (this.inputFecha.value && this.inputHora.value) {
+        const fechaHora = `${this.inputFecha.value}T${this.inputHora.value}:00`;
+        formData.set("fecha", fechaHora);
+        formData.delete("hora"); // Remover el campo hora separado
+      }
+      
       formData.append("atencionId", this.atencion.id);
 
       const res = await apiUpload("/Documentos/cargar", formData);

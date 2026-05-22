@@ -11,9 +11,9 @@ export function getTokenHeader() {
 
 async function manejarRespuesta(res) {
   try {
-    console.log(res);
-    
+    // console.log(res);    
     const data = await res.json();
+    
   
   if (!res.ok)  {
     const mensaje = data?.mensaje || 'Error desconocido';

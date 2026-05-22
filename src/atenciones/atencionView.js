@@ -14,7 +14,6 @@ export class AtencionView extends BaseComponent {
     this.atencion = atencion;
     this.onSuccess = onSuccess;
   }
-
   render() {
     this.element = document.createElement("div");
     if (!this.atencion) return;
@@ -29,7 +28,6 @@ export class AtencionView extends BaseComponent {
     this._renderPanelDocumentos();
    
   }
-
   _renderCabecera() {
     const header = document.createElement("div");
     header.id = "panel-cabecera-atencion";
@@ -146,6 +144,8 @@ export class AtencionView extends BaseComponent {
     contenedorDocumentos.className = "list-view";
 
     const listaDocumentos = new ListaDocumentos(this.atencion);
+    console.log(listaDocumentos);
+    
     listaDocumentos.mount(contenedorDocumentos);
     
     const btnAgregarDocumento = document.createElement("button");
@@ -158,6 +158,9 @@ export class AtencionView extends BaseComponent {
           listaDocumentos.reMount(false); // No recargar desde el servidor
           console.log(documento);
           
+          //ESTO NO ESTA BIEN, HAY QUE HACER MODIFICACIONES PARA QUE 
+          //NO DEPENDA DE QUE EL DOCUMENTO SEA FACTURA, 
+          //SINO QUE CUALQUIER DOCUMENTO PUEDA AVANZAR EL ESTADO SI ASI LO REQUIERE EL FLUJO
           if(documento.tipoDocumento.id==12){ // Si es una Factura
             this.avanzarEstado('Estado avanzado automáticamente al registrar la factura');
           }
@@ -446,7 +449,6 @@ export class AtencionView extends BaseComponent {
 
     // Enviar motivo y observación junto con la petición
     const payload = {
-      atencionId: this.atencion.id,
       motivoAnulacionAtencionId: result.value.motivo,
       observacion: result.value.observacion
     };

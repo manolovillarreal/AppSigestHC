@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiDelete } from '../api/api.js';
+import { apiGet, apiPost, apiPut } from '../api/api.js';
 
 async function obtenerAtenciones(filtros) {
     const params = new URLSearchParams();
@@ -30,7 +30,7 @@ async function editarAtencion(id, atencion) {
 }
 
 async function anularAtencion(id,payload) {
-  return await apiDelete(`/Atenciones/${id}`, payload);
+  return await apiPost(`/Atenciones/${id}/anular`, payload);
 }
 
 const AtencionService = {

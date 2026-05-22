@@ -5,6 +5,7 @@ import {
   calcularEdadTexto,
   formatearErroresHTML,
   formatearFecha,
+  formatearFechaHora,
 } from "../helpers/utils.js";
 
 export class ModalNuevaAtencion extends Modal {
@@ -43,12 +44,45 @@ export class ModalNuevaAtencion extends Modal {
           </div>
 
           <div id="pacienteInfo" class="hidden">
-            <p><strong>Nombres:</strong> <span id="pacienteNombres"></span></p>
-            <p><strong>Apellidos:</strong> <span id="pacienteApellidos"></span></p>
-            <p><strong>Fecha de Nacimiento:</strong> <span id="pacienteFechaNacimiento"></span> <strong>Edad:</strong> <span id="pacienteEdad"></span></p>
+            <div class="paciente-card">
+              <div class="paciente-card-header">
+                <span class="material-icons">person</span>
+                <span>Información del Paciente</span>
+              </div>
+              <div class="paciente-card-body">
+                <div class="paciente-fila">
+                  <div class="paciente-campo">
+                    <span class="campo-label">Nombres</span>
+                    <span class="campo-valor" id="pacienteNombres"></span>
+                  </div>
+                  <div class="paciente-campo">
+                    <span class="campo-label">Apellidos</span>
+                    <span class="campo-valor" id="pacienteApellidos"></span>
+                  </div>
+                </div>
+                <div class="paciente-fila">
+                  <div class="paciente-campo">
+                    <span class="campo-label">Fecha de Nacimiento</span>
+                    <span class="campo-valor" id="pacienteFechaNacimiento"></span>
+                  </div>
+                  <div class="paciente-campo">
+                    <span class="campo-label">Edad</span>
+                    <span class="campo-valor" id="pacienteEdad"></span>
+                  </div>
+                </div>
+                <div class="paciente-fila ingreso-destacado">
+                  <div class="paciente-campo">
+                    <span class="campo-label">Ingreso a Urgencias</span>
+                    <span class="campo-valor" id="pacienteFechaIngreso"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <label for="administradoraSelect"><strong>Administradora:</strong></label>
-            <select id="administradoraSelect" name="terceroId" required></select>
+            <div class="campo-grupo">
+              <label for="administradoraSelect">Administradora</label>
+              <select id="administradoraSelect" name="terceroId" required></select>
+            </div>
           </div>
 
           <div class="modal-acciones">
@@ -71,6 +105,7 @@ export class ModalNuevaAtencion extends Modal {
     this.apellidoSpan = this.modal.querySelector("#pacienteApellidos");
     this.nacimientoSpan = this.modal.querySelector("#pacienteFechaNacimiento");
     this.edadSpan = this.modal.querySelector("#pacienteEdad");
+    this.ingresoSpan = this.modal.querySelector("#pacienteFechaIngreso");
     this.selectAdm = this.modal.querySelector("#administradoraSelect");
 
     this.btnCerrar = this.modal.querySelector(".btn-cerrar");
@@ -101,23 +136,26 @@ export class ModalNuevaAtencion extends Modal {
         title: "Error al cargar pacientes recientes",
       });
     }
-    const pacientes = result.result || [];
+    const ingresos = result.result || [];
+    this.ingresos = ingresos;
     
     this.selectPaciente.innerHTML =
       '<option value="" disabled selected>— Selecciona —</option>';
-    pacientes.forEach((p) => {
+    ingresos.forEach((ingreso) => {
+      const paciente = ingreso.paciente || {};
       const opt = document.createElement("option");
-      opt.value = p.id;
-      opt.textContent = `${p.primerNombre} ${p.primerApellido} (${p.id})`;
+      opt.value = ingreso.id;
+      opt.textContent = `${paciente.primerNombre || ""} ${paciente.primerApellido || ""} (${paciente.id || ""})`;
       this.selectPaciente.appendChild(opt);
     });
 
     this.selectPaciente.addEventListener("change", async () => {
-      const pacienteId = this.selectPaciente.value;
-      if (pacienteId) {
-        const paciente = pacientes.find((p) => p.id == pacienteId);
-        if (paciente) {
-          this.cargarPacienteEnFormulario(paciente);
+      const ingresoId = this.selectPaciente.value;
+      if (ingresoId) {
+        const ingreso = ingresos.find((item) => item.id == ingresoId);
+        if (ingreso) {
+          this.ingresoSeleccionado = ingreso;
+          this.cargarPacienteEnFormulario(ingreso);
         } else {
           Swal.fire({ icon: "error", title: "Paciente no encontrado" });
         }
@@ -128,25 +166,22 @@ export class ModalNuevaAtencion extends Modal {
   async cargarUltimoPaciente() {
     const respuesta = await apiGet("/Pacientes/ultimo");
 
-    if (respuesta.ok) { 
-      
-      
-      const paciente = respuesta.result;
-        if (paciente) {
-          this.cargarPacienteEnFormulario(paciente);
-          this.selectPaciente.innerHTML = `<option selected value="${paciente.id}">${paciente.primerNombre} ${paciente.primerApellido} - ${paciente.id}</option>`;
-        }
-        else{
-          Swal.fire({
-            icon: "info",
-            title: "No hay pacientes recuentes",
-            html: erroresHtml,
-          });
-        }
-     
+    if (respuesta.ok) {
+      const ingreso = respuesta.result;
+      if (ingreso) {
+        const paciente = ingreso.paciente || {};
+        this.ingresoSeleccionado = ingreso;
+        this.cargarPacienteEnFormulario(ingreso);
+        this.selectPaciente.innerHTML = `<option selected value="${ingreso.id}">${paciente.primerNombre || ""} ${paciente.primerApellido || ""} - ${paciente.id || ""}</option>`;
+      } else {
+        Swal.fire({
+          icon: "info",
+          title: "No hay pacientes recuentes",
+        });
+      }
     } else {
-      const erroresHtml = res.errorMessages
-        ? formatearErroresHTML(res.errorMessages)
+      const erroresHtml = respuesta.errorMessages
+        ? formatearErroresHTML(respuesta.errorMessages)
         : "";
       Swal.fire({
         icon: "error",
@@ -160,17 +195,22 @@ export class ModalNuevaAtencion extends Modal {
     this.infoPaciente.classList.add("hidden");
     this.btnLimpiar.classList.add("hidden");
     this.selectAdm.innerHTML = "";
+    this.ingresoSeleccionado = null;
     this.cargarPacientes();
   }
 
-  cargarPacienteEnFormulario(paciente) {
+  cargarPacienteEnFormulario(ingreso) {
+    const paciente = ingreso.paciente || {};
     this.infoPaciente.classList.remove("hidden");
     this.nombreSpan.textContent = paciente.primerNombre;
     this.apellidoSpan.textContent = paciente.primerApellido;
     this.nacimientoSpan.textContent = formatearFecha(paciente.fechaNacimiento);
     this.edadSpan.textContent = calcularEdadTexto(paciente.fechaNacimiento);
+    this.ingresoSpan.textContent = formatearFechaHora(
+      ingreso.fechaIngreso || ingreso.fecha
+    );
     this.selectAdm.innerHTML = "";
-    paciente.administradoras.forEach((adm) => {
+    (paciente.administradoras || []).forEach((adm) => {
       const opt = document.createElement("option");
       opt.value = adm.nit;
       opt.textContent = adm.nombre;
@@ -180,13 +220,13 @@ export class ModalNuevaAtencion extends Modal {
     this.btnLimpiar.classList.remove("hidden");
   }
   async enviarFormulario() {
-    const pacienteId = this.selectPaciente.value;
+    const ingresoId = this.selectPaciente.value;
     const terceroId = this.selectAdm.value;
 
-    if (!pacienteId || !terceroId) return;
+    if (!ingresoId || !terceroId || !this.ingresoSeleccionado) return;
 
     const payload = {
-      pacienteId,
+      pacienteId: this.ingresoSeleccionado.pacienteId || this.ingresoSeleccionado.paciente?.id,
       terceroId,
       tipoAtencionId: 1
     };

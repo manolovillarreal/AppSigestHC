@@ -25,6 +25,9 @@ export class ItemDocumento extends BaseComponent{
     this.element = document.createElement("div");
     this.element.classList.add("documento-item");    
 
+    if(!this.esCorreccion)
+      this._renderCheckbox();
+
     this._renderContent();
 
     if(!this.esCorreccion)
@@ -36,6 +39,22 @@ export class ItemDocumento extends BaseComponent{
 
     descargarMiniaturas(this.documento,this.element.querySelector(".thumbnail-container"), this.verDocumento);
   }
+  _renderCheckbox() {
+    const checkboxContainer = document.createElement("div");
+    checkboxContainer.classList.add("documento-checkbox-container");
+    
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("documento-checkbox");
+    checkbox.id = `doc-checkbox-${this.documento.id}`;
+    checkbox.addEventListener("change", (e) => {
+      this.onSelectionChange && this.onSelectionChange(this.documento, e.target.checked);
+    });
+    
+    checkboxContainer.appendChild(checkbox);
+    this.element.appendChild(checkboxContainer);
+  }
+
   _renderContent(){
     const wrapper = document.createElement("div");
     wrapper.classList.add("documento-item-wrapper");
@@ -63,7 +82,7 @@ export class ItemDocumento extends BaseComponent{
     if (this.documento.tipoDocumento.esAsistencial) {
       const fechaDoc = document.createElement("div");
       fechaDoc.classList.add("doc-fecha");
-      fechaDoc.textContent = `Fecha del documento: ${formatearFecha(
+      fechaDoc.textContent = `Fecha del documento: ${formatearFechaHora(
         this.documento.fecha
       )}`;
       detalles.appendChild(fechaDoc);
