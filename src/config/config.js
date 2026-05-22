@@ -1,7 +1,7 @@
 // src/config.js
 
 // ✅ URL base de la API
-export const API_URL = 'https://localhost:7138/api'; // Cambiar en producción
+export const API_URL = window.__APP_CONFIG__?.API_URL || 'https://localhost:7138';
 
 // ✅ Flag de debug
 export const DEBUG_MODE = true;

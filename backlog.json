@@ -175,7 +175,7 @@
       "description": "API_URL hardcodeada a https://localhost:7138",
       "impact": "MEDIO — imposible deplegar sin modificar código fuente",
       "fixed_in_phase": "fase-1",
-      "status": "pending"
+      "status": "fixed"
     },
     {
       "id": "BUG-005",
@@ -219,7 +219,7 @@
     {
       "id": "fase-1",
       "name": "Configuración de Entorno",
-      "status": "pending",
+      "status": "done",
       "risk": "BAJO",
       "objective": "Eliminar API_URL hardcodeada. Establecer patrón de configuración por entorno sin bundler.",
       "touches_core_flow": false,
@@ -235,8 +235,8 @@
       "bugs_fixed": ["BUG-004"],
       "tests_added": [],
       "copilot_prompt": "En AppSigestHC, elimina el API_URL hardcodeado de src/config/config.js.\n\nEstrategia:\n1. En src/config/config.js, cambia la línea del API_URL para leer de\n   `window.__APP_CONFIG__?.API_URL` con fallback a 'https://localhost:7138'.\n2. En index.html, justo antes del tag <script type=\"module\" src=\"src/main.js\">,\n   agrega un bloque <script> que defina window.__APP_CONFIG__ = { API_URL: 'https://localhost:7138' }.\n3. Haz lo mismo en admin.html.\n4. No cambies ningún otro archivo.\n\nEl resultado: para cambiar la URL en producción basta con modificar el bloque\n<script> del HTML sin tocar el código fuente.\nActualiza backlog.json: fase-1 status → done, BUG-004 status → fixed.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-22",
+      "notes": "Se reemplazó API_URL hardcodeada por window.__APP_CONFIG__?.API_URL con fallback en src/config/config.js y se agregó window.__APP_CONFIG__ en index.html y admin.html antes de los scripts de módulo. Cambios: config.js línea 4, index.html líneas 35-38, admin.html líneas 11-14. Sin desvíos del plan y sin tests nuevos en esta fase."
     },
     {
       "id": "fase-2",
@@ -584,11 +584,11 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 1,
+    "completed": 2,
     "in_progress": 0,
-    "pending": 13,
+    "pending": 12,
     "total_bugs": 6,
-    "bugs_fixed": 2,
+    "bugs_fixed": 3,
     "total_tests_planned": 7,
     "tests_created": 0
   }
