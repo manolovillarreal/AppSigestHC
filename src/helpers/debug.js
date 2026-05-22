@@ -18,13 +18,13 @@ if (DEBUG_MODE) {
  function logWarn(message,obj) {
     if (DEBUG_MODE) {
          const caller = getCallerLineInfo();
-        console.warn("%c[WARN]", "color: orange", ...args, `\n→ ${caller}`);
+        console.warn("%c[WARN]", "color: orange", message, obj, `\n→ ${caller}`);
     }
 }   
  function logInfo(message,obj) {
     if (DEBUG_MODE) {
          const caller = getCallerLineInfo();
-         console.info("%c[INFO]", "color: orange", ...args, `\n→ ${caller}`);
+         console.info("%c[INFO]", "color: orange", message, obj, `\n→ ${caller}`);
     }
 }
 

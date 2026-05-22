@@ -129,7 +129,7 @@
       "description": "Todos los métodos llaman endpoints /usuarios en vez de /roles (copy-paste)",
       "impact": "CRÍTICO — panel de roles completamente roto",
       "fixed_in_phase": "fase-0",
-      "status": "pending"
+      "status": "fixed"
     },
     {
       "id": "BUG-002",
@@ -137,7 +137,7 @@
       "description": "logWarn y logInfo referencian variable `args` no definida en su scope",
       "impact": "ALTO — errores en consola en modo debug",
       "fixed_in_phase": "fase-0",
-      "status": "pending"
+      "status": "fixed"
     },
     {
       "id": "BUG-003",
@@ -191,7 +191,7 @@
       "bugs_fixed": ["BUG-001", "BUG-002"],
       "tests_added": [],
       "copilot_prompt": "Corrige dos bugs en AppSigestHC sin mover ningún archivo ni cambiar estructura.\n\nBUG 1 — src/helpers/debug.js:\nLas funciones logWarn y logInfo referencian una variable `args` que no está definida en su scope.\nLee el archivo y corrige la referencia para que use el parámetro correcto ya declarado.\n\nBUG 2 — src/services/RolesServices.js:\nTodos los métodos del servicio llaman endpoints `/usuarios` en lugar de `/roles`.\nReemplaza todas las URLs para que apunten a `/roles` (el endpoint correcto del backend).\nNo cambies la lógica, solo las URLs.\n\nDespués de los cambios, reporta exactamente qué líneas modificaste en cada archivo.\nActualiza backlog.json: fase-0 status → done, BUG-001 y BUG-002 status → fixed.",
-      "completed_at": null,
+      "completed_at": "2026-05-22",
       "notes": ""
     },
     {
