@@ -192,7 +192,7 @@
       "tests_added": [],
       "copilot_prompt": "Corrige dos bugs en AppSigestHC sin mover ningún archivo ni cambiar estructura.\n\nBUG 1 — src/helpers/debug.js:\nLas funciones logWarn y logInfo referencian una variable `args` que no está definida en su scope.\nLee el archivo y corrige la referencia para que use el parámetro correcto ya declarado.\n\nBUG 2 — src/services/RolesServices.js:\nTodos los métodos del servicio llaman endpoints `/usuarios` en lugar de `/roles`.\nReemplaza todas las URLs para que apunten a `/roles` (el endpoint correcto del backend).\nNo cambies la lógica, solo las URLs.\n\nDespués de los cambios, reporta exactamente qué líneas modificaste en cada archivo.\nActualiza backlog.json: fase-0 status → done, BUG-001 y BUG-002 status → fixed.",
       "completed_at": "2026-05-22",
-      "notes": ""
+      "notes": "Corregí el uso de args indefinido en src/helpers/debug.js y reemplacé los endpoints /usuarios por /roles en src/services/RolesServices.js. Cambios en debug.js: líneas 18-27; RolesServices.js: líneas 1-16. No hubo desvíos del plan original y no se crearon tests."
     },
     {
       "id": "fase-1",
@@ -562,11 +562,11 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 0,
+    "completed": 1,
     "in_progress": 0,
-    "pending": 14,
+    "pending": 13,
     "total_bugs": 6,
-    "bugs_fixed": 0,
+    "bugs_fixed": 2,
     "total_tests_planned": 7,
     "tests_created": 0
   }
