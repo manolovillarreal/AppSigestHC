@@ -7,6 +7,28 @@
     "executor": "GitHub Copilot Agent mode",
     "rule": "Antes de cada fase: git commit del estado actual. Después de cada fase: git commit con mensaje 'refactor: fase-X — <descripción breve>' y actualizar el status de esta fase a done."
   },
+  "copilot_instructions": {
+    "on_session_start": "Lee este backlog.json completo antes de hacer cualquier cosa. Identifica la primera fase con status 'pending' y espera confirmación antes de ejecutar.",
+    "on_phase_complete": [
+      "Cambia status de la fase a 'done'",
+      "Escribe completed_at con la fecha de hoy en formato YYYY-MM-DD",
+      "Escribe en notes un resumen de qué hiciste, qué líneas cambiaste y cualquier decisión que se desvíe del plan",
+      "Actualiza status de los bugs listados en bugs_fixed a 'fixed'",
+      "Incrementa progress.completed en 1",
+      "Decrementa progress.pending en 1",
+      "Incrementa progress.bugs_fixed por cada bug cerrado",
+      "Haz git commit con el mensaje: refactor: fase-X — nombre de la fase"
+    ],
+    "on_phase_start": [
+      "Haz git commit del estado actual antes de tocar cualquier archivo",
+      "Si requires_manual_test es true, detente al terminar y avisa al usuario antes de continuar"
+    ],
+    "restrictions": [
+      "Sin frameworks de UI (React, Vue, Angular, etc.)",
+      "El sistema debe funcionar después de cada fase",
+      "No ejecutar más de una fase por instrucción salvo indicación explícita"
+    ]
+  },
   "conventions": {
     "files": {
       "components_classes": "PascalCase.js (ej: ItemDocumento.js)",
@@ -176,7 +198,7 @@
     {
       "id": "fase-0",
       "name": "Corrección de Bugs Críticos",
-      "status": "pending",
+      "status": "done",
       "risk": "BAJO",
       "objective": "Corregir errores que afectan funcionalidad hoy, sin mover nada de lugar.",
       "touches_core_flow": false,
