@@ -267,7 +267,7 @@
     {
       "id": "fase-3",
       "name": "Unificación del Cliente HTTP",
-      "status": "pending",
+      "status": "done",
       "risk": "MEDIO",
       "objective": "Centralizar manejo del token. Agregar interceptor 401 → logout automático. Eliminar duplicación de headers.",
       "touches_core_flow": true,
@@ -281,8 +281,8 @@
       "bugs_fixed": [],
       "tests_added": [],
       "copilot_prompt": "Refactoriza src/api/api.js en AppSigestHC sin cambiar la interfaz pública\n(los mismos exports: apiGet, apiPost, apiPut, apiPatch, apiDelete, apiUpload,\napiDownloadBlob, manejarRespuesta deben seguir existiendo con la misma firma).\n\nCambios internos:\n1. Extrae la creación del header Authorization a una función privada:\n   function getAuthHeaders() {\n     return { 'Authorization': `Bearer ${localStorage.getItem('token')}` };\n   }\n   Úsala en todos los métodos en vez de repetir la lógica.\n\n2. Agrega un interceptor 401: si cualquier respuesta tiene status 401,\n   importar logout desde '../auth/auth.js', llamarlo, y hacer\n   window.location.href = '/login.html'. Esto debe ocurrir ANTES de\n   llegar a manejarRespuesta.\n\n3. No cambies manejarRespuesta ni los exports.\n4. No toques ningún otro archivo.\n\nVerifica que el interceptor no cause loop infinito cuando login.html\nya está activo (hint: chequear window.location.pathname antes de redirigir).\nActualiza backlog.json: fase-3 status → done.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-27",
+      "notes": "Refactor interno en src/api/api.js sin cambiar firmas públicas: se extrajo getAuthHeaders() y se reutilizó en apiGet/apiPost/apiPut/apiPatch/apiDelete/apiUpload/apiDownloadBlob/buscarPacienteAPI. Se agregó interceptor de 401 previo a manejarRespuesta mediante handleUnauthorized(), llamando auth.logout() y redirigiendo a /login.html cuando no está activa login.html para evitar loop de redirección. Cambios principales en api.js: líneas 1-45 (helpers/interceptor), 47-145 (métodos HTTP), 150-166 (buscarPacienteAPI). Sin desvíos del plan y sin tests nuevos en esta fase."
     },
     {
       "id": "fase-4",
@@ -584,9 +584,9 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 3,
+    "completed": 4,
     "in_progress": 0,
-    "pending": 11,
+    "pending": 10,
     "total_bugs": 6,
     "bugs_fixed": 3,
     "total_tests_planned": 7,

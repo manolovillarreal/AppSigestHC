@@ -1,13 +1,31 @@
 import { API_URL } from '../config/config.js';
+import auth from '../auth/auth.js';
 
 
+function getAuthHeaders() {
+  return { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
+}
 
 export function getTokenHeader() {
-  const token = localStorage.getItem('token');
-   return {
-     'Authorization': `Bearer ${token}`
-};
- }
+  return getAuthHeaders();
+}
+
+function isLoginPage() {
+  return window.location.pathname.endsWith('/login.html') || window.location.pathname.endsWith('login.html');
+}
+
+function handleUnauthorized(res) {
+  if (res.status !== 401) {
+    return false;
+  }
+
+  if (!isLoginPage()) {
+    auth.logout();
+    window.location.href = '/login.html';
+  }
+
+  return true;
+}
 
 async function manejarRespuesta(res) {
   try {
@@ -39,8 +57,12 @@ async function manejarRespuesta(res) {
 
 export async function apiGet(path) {  
   const res = await fetch(`${API_URL}${path}`, {
-    headers: getTokenHeader()
+    headers: getAuthHeaders()
   });
+
+  if (handleUnauthorized(res)) {
+    return { ok: false, errorMessages: ['No autorizado'] };
+  }
   
   if(res.error)
     console.log(res.error);
@@ -53,22 +75,32 @@ export async function apiPost(path, body ) {
   const res = await fetch(`${API_URL}${path}`, {
     method: 'POST',
     headers: {
-      ...getTokenHeader(),
+      ...getAuthHeaders(),
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
   });
+
+  if (handleUnauthorized(res)) {
+    return { ok: false, errorMessages: ['No autorizado'] };
+  }
+
   return await manejarRespuesta(res);
 }
 export async function apiPut(path, body) {
   const res = await fetch(`${API_URL}${path}`, {
     method:  'PUT',
     headers: {
-      ...getTokenHeader(),
+      ...getAuthHeaders(),
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
   });
+
+  if (handleUnauthorized(res)) {
+    return { ok: false, errorMessages: ['No autorizado'] };
+  }
+
   return await manejarRespuesta(res);
 }
 
@@ -76,19 +108,29 @@ export async function apiPatch(path, body) {
   const res = await fetch(`${API_URL}${path}`, {
     method:  'PATCH',
     headers: {
-      ...getTokenHeader(),
+      ...getAuthHeaders(),
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
   });
+
+  if (handleUnauthorized(res)) {
+    return { ok: false, errorMessages: ['No autorizado'] };
+  }
+
   return await manejarRespuesta(res);
 }
 
 export async function apiDownloadBlob(path) {
     const res = await fetch(`${API_URL}${path}`, {
-      headers: getTokenHeader(),
+      headers: getAuthHeaders(),
       mode: 'cors'
     });
+
+    if (handleUnauthorized(res)) {
+      return res;
+    }
+
     if (!res.ok) 
       debug.log(res.error)
 
@@ -99,20 +141,30 @@ export async function apiUpload(path, formData) {
   
   const res = await fetch(`${API_URL}${path}`, {
     method: 'POST',
-    headers: getTokenHeader(),
+    headers: getAuthHeaders(),
     body: formData
   });
+
+  if (handleUnauthorized(res)) {
+    return { ok: false, errorMessages: ['No autorizado'] };
+  }
+
   return await manejarRespuesta(res);
 }
 export async function apiDelete(path,body) {
   const res = await fetch(API_URL + path, {
     method: 'DELETE',
     headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      ...getAuthHeaders(),
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
   });
+
+  if (handleUnauthorized(res)) {
+    return { ok: false, errorMessages: ['No autorizado'] };
+  }
+
    return await manejarRespuesta(res);
 }
 
@@ -120,8 +172,12 @@ export async function apiDelete(path,body) {
 
 export async function buscarPacienteAPI(pacienteId) {
   const res = await fetch(`${API_URL}/api/Pacientes?pacienteId=${pacienteId}`, {
-    headers: getTokenHeader()
+    headers: getAuthHeaders()
   });
+
+  if (handleUnauthorized(res)) {
+    return null;
+  }
 
   const data = await res.json();
   if (!res.ok && DEBUG_API) {
