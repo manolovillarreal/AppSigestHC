@@ -241,7 +241,7 @@
     {
       "id": "fase-2",
       "name": "Eliminación de Archivos Muertos",
-      "status": "pending",
+      "status": "done",
       "risk": "BAJO",
       "objective": "Limpiar archivos no utilizados. Identificar duplicados para fases posteriores.",
       "touches_core_flow": false,
@@ -261,8 +261,8 @@
       "bugs_fixed": [],
       "tests_added": [],
       "copilot_prompt": "En AppSigestHC, limpia archivos muertos. Antes de eliminar cualquier archivo,\nverifica que no haya ningún import, script src, o referencia en otros archivos.\n\nPasos:\n1. Busca referencias a test.html en todo el proyecto (grep -r \"test.html\" .)\n   Si no hay referencias, elimínalo.\n2. Busca referencias a \"test copy.html\". Si no hay referencias, elimínalo.\n3. Compara src/modales/modal.js con src/components/modal.js.\n   Si son idénticos o uno es subset del otro, determina cuál es el canonical\n   y reporta qué archivos importan cada uno. NO los fusiones aún — solo reporta.\n4. Verifica si pdf-signer.html, pdf-signer.js tienen algún import desde index.html\n   o admin.html. Reporta el resultado.\n\nNo elimines pdf-signer ni el modal todavía. Solo elimina test.html y test copy.html\nsi confirmas que no tienen referencias.\nActualiza backlog.json: fase-2 status → done. Registra hallazgos del punto 3 y 4 en el campo notes de esta fase.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-27",
+      "notes": "Se eliminaron test.html y test copy.html tras validar que no tenían referencias de uso (solo apariciones en backlog.json). Evaluación modales: src/modales/modal.js y src/components/modal.js NO son idénticos ni subset directo; usan contratos distintos. Importadores de src/modales/modal.js: src/atenciones/modalNuevaAtencion.js y src/documentos/ModalAgregarDocumento.js. Importadores de src/components/modal.js: src/solicitudesCorreccion/SolicitudCorreccionItem.js y módulos admin (estadoAtencion, roles, tipoDocumento, usuario). pdf-signer.html/pdf-signer.js no están referenciados desde index.html ni admin.html; solo vínculo interno en pdf-signer.html. Cambios de archivos en esta fase: eliminación total de test.html (líneas 1-fin) y test copy.html (líneas 1-fin). Sin desvíos del plan."
     },
     {
       "id": "fase-3",
@@ -584,9 +584,9 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 2,
+    "completed": 3,
     "in_progress": 0,
-    "pending": 12,
+    "pending": 11,
     "total_bugs": 6,
     "bugs_fixed": 3,
     "total_tests_planned": 7,
