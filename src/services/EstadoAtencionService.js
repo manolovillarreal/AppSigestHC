@@ -1,7 +1,7 @@
 import { apiGet, apiPost, apiPut, apiDelete } from '../api/api.js';
 
 async function obtenerEstadosAtencion() {
-  return await apiGet('/estadoAtencion');
+  return await apiGet('/EstadoAtencion');
 }
 
 

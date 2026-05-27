@@ -29,8 +29,18 @@ function handleUnauthorized(res) {
 
 async function manejarRespuesta(res) {
   try {
-    // console.log(res);    
-    const data = await res.json();
+    // console.log(res);
+    const contentLength = res.headers.get('Content-Length');
+    if (res.status === 204 || contentLength === '0') {
+      return { ok: true, result: null };
+    }
+
+    const raw = await res.text();
+    if (!raw || !raw.trim()) {
+      return { ok: true, result: null };
+    }
+
+    const data = JSON.parse(raw);
     
   
   if (!res.ok)  {

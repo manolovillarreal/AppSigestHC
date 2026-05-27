@@ -199,7 +199,7 @@
       "description": "manejarRespuesta llama .json() sin verificar si el body tiene contenido. Si el backend devuelve 204 o un body vacío, lanza SyntaxError: Unexpected end of JSON input. Reproducible al cargar correcciones cuando el endpoint /SolicitudCorreccion/por-rol devuelve respuesta vacía.",
       "impact": "MEDIO — la sección de correcciones falla visualmente aunque el backend responda correctamente",
       "fixed_in_phase": "fase-4",
-      "status": "pending"
+      "status": "fixed"
     }
   ],
   "phases": [
@@ -295,7 +295,7 @@
     {
       "id": "fase-4",
       "name": "Normalización de URLs de Servicios",
-      "status": "pending",
+      "status": "done",
       "risk": "BAJO-MEDIO",
       "objective": "Estandarizar todos los endpoints a PascalCase consistente con el backend .NET.",
       "touches_core_flow": false,
@@ -315,8 +315,8 @@
       "bugs_fixed": ["BUG-007"],
       "tests_added": [],
       "copilot_prompt": "En AppSigestHC, normaliza las URLs de los servicios. El backend .NET usa PascalCase\nen sus rutas. Estandariza todos los endpoints para seguir ese patrón:\n\nConvenciones a aplicar en src/services/:\n- /atenciones → /Atenciones\n- /documentos → /Documentos\n- /usuarios → /Usuarios (excepto endpoints que ya están bien)\n- /roles → /Roles\n- /SolicitudCorreccion → sin cambio (ya correcto)\n- /TipoDocumento → sin cambio\n- /EstadoAtencion → sin cambio\n- /Pacientes → sin cambio\n\nProceso:\n1. Lee cada archivo en src/services/ uno por uno\n2. Identifica y reemplaza solo las URLs que no sigan PascalCase\n3. No cambies la lógica de ningún servicio\n4. Reporta cada cambio: archivo, línea original, línea nueva\n\nNo toques src/api/api.js ni ningún componente.\nActualiza backlog.json: fase-4 status → done.\n\nAdemás, en src/api/api.js, corrige manejarRespuesta para que verifique \nsi la respuesta tiene contenido antes de llamar .json(). \nSi el status es 204 o el Content-Length es 0, retorna { ok: true, result: null }\nsin intentar parsear el body.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-27",
+      "notes": "Se normalizaron endpoints a PascalCase en servicios: AtencionServices (/atenciones* -> /Atenciones*), UsuarioService (/usuarios* -> /Usuarios*), RolesServices (/roles* -> /Roles*), EstadoAtencionService (/estadoAtencion -> /EstadoAtencion). Además, en src/api/api.js se corrigió manejarRespuesta para no parsear JSON en respuestas sin contenido (status 204, Content-Length 0 o body vacío), retornando { ok: true, result: null }. Líneas tocadas aprox.: AtencionServices 16-30, UsuarioService 4-16, RolesServices 4-16, EstadoAtencionService 3-5, api.js 27-40. Sin desvíos del plan y sin tests nuevos en esta fase."
     },
     {
       "id": "fase-5",
@@ -592,11 +592,11 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 4,
+    "completed": 5,
     "in_progress": 0,
-    "pending": 10,
+    "pending": 9,
     "total_bugs": 6,
-    "bugs_fixed": 3,
+    "bugs_fixed": 4,
     "total_tests_planned": 7,
     "tests_created": 0
   }

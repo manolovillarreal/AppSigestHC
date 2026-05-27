@@ -12,21 +12,21 @@ async function obtenerAtenciones(filtros) {
         if (filtros.page) params.append('page', filtros.page);
         if (filtros.pageSize) params.append('pageSize', filtros.pageSize);
     }
-    return await apiGet(`/atenciones?${params.toString()}`);
+    return await apiGet(`/Atenciones?${params.toString()}`);
 }
 async function obtenerAtencionesVisibles() {    
-  return await apiGet('/atenciones/visibles ');
+  return await apiGet('/Atenciones/visibles');
 }
 
 async function guardarAtencion(atencion) {
-  return await apiPost('/atenciones', atencion);
+  return await apiPost('/Atenciones', atencion);
 }
 async function avanzarAtencion(payload) {
   return await apiPost(`/Atenciones/cambiar-estado`, payload);
 }
 
 async function editarAtencion(id, atencion) {
-  return await apiPut(`/atenciones/${id}`, atencion);
+  return await apiPut(`/Atenciones/${id}`, atencion);
 }
 
 async function anularAtencion(id,payload) {
