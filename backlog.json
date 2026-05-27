@@ -192,6 +192,14 @@
       "impact": "BAJO",
       "fixed_in_phase": "fase-14",
       "status": "pending"
+    },
+    {
+      "id": "BUG-007",
+      "file": "src/api/api.js",
+      "description": "manejarRespuesta llama .json() sin verificar si el body tiene contenido. Si el backend devuelve 204 o un body vacío, lanza SyntaxError: Unexpected end of JSON input. Reproducible al cargar correcciones cuando el endpoint /SolicitudCorreccion/por-rol devuelve respuesta vacía.",
+      "impact": "MEDIO — la sección de correcciones falla visualmente aunque el backend responda correctamente",
+      "fixed_in_phase": "fase-4",
+      "status": "pending"
     }
   ],
   "phases": [
@@ -304,9 +312,9 @@
       ],
       "files_created": [],
       "files_deleted": [],
-      "bugs_fixed": [],
+      "bugs_fixed": ["BUG-007"],
       "tests_added": [],
-      "copilot_prompt": "En AppSigestHC, normaliza las URLs de los servicios. El backend .NET usa PascalCase\nen sus rutas. Estandariza todos los endpoints para seguir ese patrón:\n\nConvenciones a aplicar en src/services/:\n- /atenciones → /Atenciones\n- /documentos → /Documentos\n- /usuarios → /Usuarios (excepto endpoints que ya están bien)\n- /roles → /Roles\n- /SolicitudCorreccion → sin cambio (ya correcto)\n- /TipoDocumento → sin cambio\n- /EstadoAtencion → sin cambio\n- /Pacientes → sin cambio\n\nProceso:\n1. Lee cada archivo en src/services/ uno por uno\n2. Identifica y reemplaza solo las URLs que no sigan PascalCase\n3. No cambies la lógica de ningún servicio\n4. Reporta cada cambio: archivo, línea original, línea nueva\n\nNo toques src/api/api.js ni ningún componente.\nActualiza backlog.json: fase-4 status → done.",
+      "copilot_prompt": "En AppSigestHC, normaliza las URLs de los servicios. El backend .NET usa PascalCase\nen sus rutas. Estandariza todos los endpoints para seguir ese patrón:\n\nConvenciones a aplicar en src/services/:\n- /atenciones → /Atenciones\n- /documentos → /Documentos\n- /usuarios → /Usuarios (excepto endpoints que ya están bien)\n- /roles → /Roles\n- /SolicitudCorreccion → sin cambio (ya correcto)\n- /TipoDocumento → sin cambio\n- /EstadoAtencion → sin cambio\n- /Pacientes → sin cambio\n\nProceso:\n1. Lee cada archivo en src/services/ uno por uno\n2. Identifica y reemplaza solo las URLs que no sigan PascalCase\n3. No cambies la lógica de ningún servicio\n4. Reporta cada cambio: archivo, línea original, línea nueva\n\nNo toques src/api/api.js ni ningún componente.\nActualiza backlog.json: fase-4 status → done.\n\nAdemás, en src/api/api.js, corrige manejarRespuesta para que verifique \nsi la respuesta tiene contenido antes de llamar .json(). \nSi el status es 204 o el Content-Length es 0, retorna { ok: true, result: null }\nsin intentar parsear el body.",
       "completed_at": null,
       "notes": ""
     },
