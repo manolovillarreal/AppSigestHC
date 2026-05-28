@@ -3,10 +3,10 @@ import { Modal } from "../modales/modal.js";
 import { apiPost, apiGet } from "../api/api.js";
 import {
   calcularEdadTexto,
-  formatearErroresHTML,
   formatearFecha,
   formatearFechaHora,
-} from "../helpers/utils.js";
+} from "../utils/date.js";
+import { formatearErroresHTML } from "../utils/error.js";
 
 export class ModalNuevaAtencion extends Modal {
   constructor(onSuccess) {

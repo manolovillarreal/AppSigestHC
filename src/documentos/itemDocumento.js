@@ -2,11 +2,11 @@ import debug from "../helpers/debug.js";
 import { apiDownloadBlob, apiGet, apiPut, apiDelete, apiPost } from "../api/api.js";
 import {
   formatearFechaHora,
-  generarThumbnailPdf,
   formatearFecha,
-  formatearErroresHTML,
-} from "../helpers/utils.js";
-import { downloadBlobFile } from "../helpers/files.js";
+} from "../utils/date.js";
+import { formatearErroresHTML } from "../utils/error.js";
+import { generarThumbnailPdf } from "../utils/pdf.js";
+import { downloadBlobFile } from "../utils/files.js";
 import { BaseComponent } from "../base/BaseComponent.js";
 import contexto from "../contexto/contexto.js";
 import { SolicitudCorreccionItem } from "../solicitudesCorreccion/SolicitudCorreccionItem.js";

@@ -133,7 +133,7 @@ export class Dropzone extends BaseComponent {
         reader.onload = async (e) => {
           const blob = new Blob([e.target.result], { type: "application/pdf" });
           // importar la función si no está en el scope
-          const { generarThumbnailPdf } = await import("../helpers/utils.js");
+          const { generarThumbnailPdf } = await import("../utils/pdf.js");
           await generarThumbnailPdf(blob, canvas);
         };
         reader.readAsArrayBuffer(this.file);

@@ -1,6 +1,6 @@
 import debug from "../helpers/debug.js";
 import { apiGet } from "../api/api.js";
-import { ordenEstados, obtenerNombreEstado } from "../helpers/estados.js";
+import { ordenEstados, obtenerNombreEstado } from "../utils/estados.js";
 import { ItemAtencion } from "./itemAtencion.js";
 import { AtencionView } from "./AtencionView.js";
 import { ModalNuevaAtencion } from "./modalNuevaAtencion.js";

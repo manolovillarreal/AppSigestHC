@@ -1,6 +1,7 @@
 import debug from "../helpers/debug.js";
-import { puedeAvanzarEstado } from "../helpers/estados.js";
-import { formatearFechaHora, formatearErroresHTML } from "../helpers/utils.js";
+import { puedeAvanzarEstado } from "../utils/estados.js";
+import { formatearFechaHora } from "../utils/date.js";
+import { formatearErroresHTML } from "../utils/error.js";
 import { ListaDocumentos } from "../documentos/listaDocumentos.js";
 import contexto from "../contexto/contexto.js"; // Asegúrate de que el perfil esté importado correctamente
 import { ModalAgregarDocumento } from "../documentos/ModalAgregarDocumento.js";

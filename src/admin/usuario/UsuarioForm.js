@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../base/BaseComponent.js";
 import { apiPost, apiPut, apiGet } from "../../api/api.js";
-import { formatearErroresHTML } from "../../helpers/utils.js";
+import { formatearErroresHTML } from "../../utils/error.js";
 import usuarioService from '../../services/UsuarioService.js'
 
 export class UsuarioForm extends BaseComponent {

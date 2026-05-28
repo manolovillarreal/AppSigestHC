@@ -2,7 +2,7 @@
 import contexto from "../contexto/contexto.js";
 import { Modal } from "../modales/modal.js";
 import { apiUpload } from "../api/api.js";
-import { formatearErroresHTML } from "../helpers/utils.js";
+import { formatearErroresHTML } from "../utils/error.js";
 import { Dropzone } from "../components/Dropzone.js";
 
 export class ModalAgregarDocumento extends Modal {
@@ -207,7 +207,7 @@ export class ModalAgregarDocumento extends Modal {
 //         reader.onload = async (e) => {
 //           const blob = new Blob([e.target.result], { type: "application/pdf" });
 //           // importar la función si no está en el scope
-//           const { generarThumbnailPdf } = await import("../helpers/utils.js");
+//           const { generarThumbnailPdf } = await import("../utils/pdf.js");
 //           await generarThumbnailPdf(blob, canvas);
 //         };
 //         reader.readAsArrayBuffer(file);

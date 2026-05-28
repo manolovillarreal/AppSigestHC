@@ -1,5 +1,5 @@
 import { BaseComponent } from "../base/BaseComponent.js";
-import {calcularEdad} from '../helpers/utils.js'
+import { calcularEdad } from '../utils/date.js';
 
 export class ItemAtencion extends BaseComponent{
 

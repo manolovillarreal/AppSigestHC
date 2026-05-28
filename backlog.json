@@ -167,7 +167,7 @@
       "description": "revokeObjectURL no siempre se llama después de la descarga → memory leak",
       "impact": "MEDIO — memory leak en descargas frecuentes",
       "fixed_in_phase": "fase-6",
-      "status": "pending"
+      "status": "fixed"
     },
     {
       "id": "BUG-004",
@@ -344,7 +344,7 @@
     {
       "id": "fase-6",
       "name": "Migración de helpers/ a utils/",
-      "status": "pending",
+      "status": "done",
       "risk": "BAJO",
       "objective": "Mover funciones puras a src/utils/ con separación por responsabilidad. Corregir memory leak en files.js.",
       "touches_core_flow": false,
@@ -368,8 +368,8 @@
       "tests_added": [],
       "deprecation_bridges": "Los archivos originales en helpers/ quedan como re-exports hacia utils/ para no romper imports existentes",
       "copilot_prompt": "En AppSigestHC, reorganiza las utilidades de src/helpers/ en src/utils/\ncon separación por responsabilidad.\n\nPasos:\n1. Crea src/utils/ si no existe.\n2. Crea src/utils/date.js con las funciones de formateo de fechas y cálculo de edad\n   extraídas de src/helpers/utils.js.\n3. Crea src/utils/error.js con la función de formateo de errores como HTML\n   extraída de src/helpers/utils.js.\n   NOTA: si utils.js también tiene funciones relacionadas con thumbnails de PDF,\n   muévelas a src/utils/pdf.js.\n4. Copia src/helpers/files.js → src/utils/files.js (corrigiendo el memory leak:\n   asegúrate de que revokeObjectURL se llame siempre en el finally/después de la descarga).\n5. Copia src/helpers/storage.js → src/utils/storage.js.\n6. Copia src/helpers/estados.js → src/utils/estados.js.\n7. Para cada archivo movido, actualiza TODOS los imports en el resto del proyecto\n   (busca con grep -r \"helpers/\" . para encontrarlos todos).\n8. NO elimines los archivos originales de src/helpers/ — agrega una línea de re-export\n   en cada uno como deprecation bridge:\n   // DEPRECATED: importar desde '../utils/date.js'\n   export * from '../utils/date.js';\n9. Verifica que el app sigue funcionando (login → inicio).\n\nReporta todos los archivos tocados y los cambios de imports.\nActualiza backlog.json: fase-6 status → done, BUG-003 status → fixed.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-27",
+      "notes": "Se crearon src/utils/date.js, error.js, pdf.js, files.js, storage.js y estados.js; se migraron funciones desde helpers, incluyendo thumbnail PDF y utilidades de fecha/error. Se corrigió BUG-003 en src/utils/files.js: downloadBlobFile ahora revoca ObjectURL siempre en finally y limpia el anchor del DOM. Se actualizaron imports en componentes, vistas y servicios para usar utils/* (incluyendo import dinamico de Dropzone), y se dejaron bridges deprecados en src/helpers/utils.js, files.js, storage.js y estados.js con re-exports para retrocompatibilidad. Cambios de imports aplicados en atenciones, documentos, solicitudesCorreccion, admin/usuario y services/DocumentoService. Sin desvíos del plan y sin tests nuevos en esta fase."
     },
     {
       "id": "fase-7",
@@ -592,11 +592,11 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 6,
+    "completed": 7,
     "in_progress": 0,
-    "pending": 8,
+    "pending": 7,
     "total_bugs": 6,
-    "bugs_fixed": 4,
+    "bugs_fixed": 5,
     "total_tests_planned": 7,
     "tests_created": 0
   }

@@ -2,7 +2,8 @@ import { BaseComponent } from "../base/BaseComponent.js";
 import { Modal } from "../components/modal.js";
 import { Dropzone } from "../components/Dropzone.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../helpers/correcciones.js";
-import { formatearErroresHTML, formatearFecha } from "../helpers/utils.js";
+import { formatearFecha } from "../utils/date.js";
+import { formatearErroresHTML } from "../utils/error.js";
 import { SolicitudCorreccionService } from "../services/SolicitudCorreccionService.js";
 
 export class SolicitudCorreccionItem extends BaseComponent {  

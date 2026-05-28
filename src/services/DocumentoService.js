@@ -1,5 +1,5 @@
 import { apiDownloadBlob, apiGet,apiPut,apiPost, apiUpload } from "../api/api.js";
-import { downloadBlobFile, generarNombreArchivo } from "../helpers/files.js";
+import { downloadBlobFile, generarNombreArchivo } from "../utils/files.js";
 
 function EnviarDocumentoFirmado(documentId, data) {
     return apiUpload(`/Documentos/firmar/${documentId}`, data);
