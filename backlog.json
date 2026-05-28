@@ -374,7 +374,7 @@
     {
       "id": "fase-7",
       "name": "Configuración de Testing (Vitest)",
-      "status": "pending",
+      "status": "done",
       "risk": "NULO",
       "objective": "Establecer infraestructura de pruebas unitarias para utils/. No modifica código de producción.",
       "touches_core_flow": false,
@@ -401,8 +401,8 @@
       "framework": "Vitest ^2.0.0",
       "rationale_testing": "Las utilidades en utils/ son funciones puras sin dependencias de DOM. Momento ideal antes de tocar servicios y componentes más complejos.",
       "copilot_prompt": "En AppSigestHC, configura Vitest para pruebas unitarias de las utilidades.\n\nEl proyecto usa ES Modules nativos sin bundler. No instales nada más que vitest.\n\nPasos:\n1. Si no existe package.json, créalo con:\n   { \"type\": \"module\", \"scripts\": { \"test\": \"vitest run\", \"test:watch\": \"vitest\" },\n     \"devDependencies\": { \"vitest\": \"^2.0.0\" } }\n   Si ya existe package.json, agrega vitest a devDependencies.\n\n2. Crea tests/vitest.config.js:\n   import { defineConfig } from 'vitest/config';\n   export default defineConfig({ test: { environment: 'node' } });\n\n3. Crea tests/unit/utils/date.test.js con pruebas para CADA función exportada\n   de src/utils/date.js. Incluye: casos normales, fechas límite, valores null/undefined.\n\n4. Crea tests/unit/utils/error.test.js con pruebas para la función de formateo de errores.\n   Testea: array de mensajes, objeto de mensajes, valor vacío.\n\n5. Crea tests/unit/utils/estados.test.js con pruebas para:\n   - La función de obtener nombre de estado por ID\n   - La función de verificar si un rol puede avanzar dado un estado\n   - Casos edge: estado inexistente, rol inexistente\n\n6. Crea tests/unit/utils/files.test.js con pruebas para la función\n   que genera nombres de archivos (es función pura, no toca DOM).\n\n7. Ejecuta: npm install && npm test\n   Todos los tests deben pasar. Corrige cualquier fallo antes de reportar éxito.\n\nActualiza backlog.json: fase-7 status → done. Registra en notes el resultado del npm test.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-27",
+      "notes": "Se creó package.json (type module, scripts test/test:watch, vitest ^2.0.0), tests/vitest.config.js y 4 suites en tests/unit/utils/ (date, error, estados, files). Se ejecutó npm install && npm test con resultado: 4 archivos de test pasando, 18 tests pasando, 0 fallos. No hubo desvíos del plan y no se tocó código de producción."
     },
     {
       "id": "fase-8",
@@ -592,12 +592,12 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 7,
+    "completed": 8,
     "in_progress": 0,
-    "pending": 7,
+    "pending": 6,
     "total_bugs": 6,
     "bugs_fixed": 5,
     "total_tests_planned": 7,
-    "tests_created": 0
+    "tests_created": 4
   }
 }
