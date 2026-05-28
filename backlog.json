@@ -321,7 +321,7 @@
     {
       "id": "fase-5",
       "name": "Extracción de CSS de firmaPdf.js",
-      "status": "pending",
+      "status": "done",
       "risk": "BAJO",
       "objective": "Mover los ~400 líneas de CSS embebidas como strings en firmaPdf.js a un archivo CSS externo.",
       "touches_core_flow": false,
@@ -338,8 +338,8 @@
       "bugs_fixed": [],
       "tests_added": [],
       "copilot_prompt": "En AppSigestHC, extrae el CSS embebido de src/helpers/firmaPdf.js a un archivo externo.\n\nPasos:\n1. Lee src/helpers/firmaPdf.js y encuentra todas las cadenas de texto que contienen\n   reglas CSS (busca patrones como template literals o strings con `{`, `}`, `margin:`, etc.)\n   que se insertan con innerHTML o style.textContent.\n2. Crea el directorio css/pdf/ si no existe.\n3. Crea css/pdf/firmaPdf.css con todas esas reglas CSS.\n4. En src/helpers/firmaPdf.js, reemplaza las inserciones de CSS por una función loadStyles()\n   que cree un <link> en el <head> si no existe ya (para no duplicar en múltiples llamadas).\n5. Agrega <link rel=\"stylesheet\" href=\"css/pdf/firmaPdf.css\"> en index.html.\n6. No toques la lógica JavaScript de firmaPdf.js, solo el CSS embebido.\n\nActualiza backlog.json: fase-5 status → done.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-27",
+      "notes": "Se extrajo el bloque <style> embebido en src/helpers/firmaPdf.js a css/pdf/firmaPdf.css. En firmaPdf.js se agregó loadStyles() con inserción de <link> idempotente y se removió la inyección inline de CSS del template del modal. Además se añadió <link rel=\"stylesheet\" href=\"css/pdf/firmaPdf.css\"> en index.html. Cambios principales: firmaPdf.js líneas 75-96 (loadStyles) y eliminación de líneas 87-396 (style inline), index.html línea 11, nuevo archivo css/pdf/firmaPdf.css líneas 1-337. Sin desvíos del plan y sin tests nuevos en esta fase."
     },
     {
       "id": "fase-6",
@@ -592,9 +592,9 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 5,
+    "completed": 6,
     "in_progress": 0,
-    "pending": 9,
+    "pending": 8,
     "total_bugs": 6,
     "bugs_fixed": 4,
     "total_tests_planned": 7,
