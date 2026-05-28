@@ -460,7 +460,7 @@
     {
       "id": "fase-10",
       "name": "Split de firmaPdf.js",
-      "status": "pending",
+      "status": "done",
       "risk": "MUY ALTO",
       "objective": "Dividir el archivo de 1110 líneas en módulos por responsabilidad. La Fase 5 ya extrajo el CSS.",
       "touches_core_flow": true,
@@ -486,8 +486,8 @@
         "Si un bloque no puede separarse sin romper estado compartido, dejarlo en FirmaPdfModal.js y documentar por qué"
       ],
       "copilot_prompt": "En AppSigestHC, divide src/helpers/firmaPdf.js (1110 líneas) en módulos separados.\nEste archivo ya tuvo su CSS extraído en la Fase 5.\n\nAnálisis previo requerido:\nLee el archivo completo e identifica bloques funcionales claros:\n1. Inicialización y gestión del estado del modal (objeto state con 15+ propiedades)\n2. Render de páginas PDF usando PDF.js\n3. Captura de firma con SignaturePad (canvas, clear, guardar imagen)\n4. Posicionamiento de firmas sobre páginas (drag, resize, coordenadas)\n5. Generación del PDF firmado con pdf-lib\n6. Upload del PDF resultante (llamada a la API)\n7. Orquestador del modal (abre, cierra, controla el flujo)\n\nPara cada bloque claramente delimitado:\n- Crea un archivo en src/pdf/ con nombre descriptivo\n- Exporta las funciones necesarias\n- El orquestador FirmaPdfModal.js importa todo y coordina\n\nRestricciones CRÍTICAS:\n- PDF.js, pdf-lib, SignaturePad son globals del browser — NO importarlos como módulos ES\n- Mantén el contrato público: la función de apertura del modal debe seguir funcionando\n  con los mismos argumentos que recibe actualmente\n- Si no puedes separar un bloque sin romper estado compartido, déjalo en FirmaPdfModal.js\n  y documenta con un comentario: // NOTE: no separado porque...\n\nPrueba manual OBLIGATORIA antes de reportar éxito:\nFlujo completo de firma: abrir modal → navegar páginas → dibujar firma → posicionar → guardar → verificar upload.\n\nActualiza backlog.json: fase-10 status → done.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-28",
+      "notes": "Se dividio src/helpers/firmaPdf.js en modulos por responsabilidad dentro de src/pdf/: pdfRenderer.js (carga/render de paginas y miniaturas), signatureCapture.js (recorte de firma del canvas), signaturePositioner.js (dibujo y finalizacion de edicion), pdfSigner.js (generacion del PDF firmado con pdf-lib) y FirmaPdfModal.js (orquestador del modal y flujo completo). Se mantuvo el contrato publico mediante bridge en src/helpers/firmaPdf.js que reexporta firmarPdf desde src/pdf/FirmaPdfModal.js con la misma firma de entrada/salida. Restricciones criticas respetadas: uso de globals del browser (window.PDFLib, window.pdfjsLib, window.SignaturePad) sin imports de librerias externas. Se dejo documentado en FirmaPdfModal.js un bloque no separado por depender de estado UI compartido. Validacion automatica: npm test -> 7 archivos de test pasando, 24 tests pasando, 0 fallos."
     },
     {
       "id": "fase-11",
@@ -593,9 +593,9 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 10,
+    "completed": 11,
     "in_progress": 0,
-    "pending": 4,
+    "pending": 3,
     "total_bugs": 6,
     "bugs_fixed": 5,
     "total_tests_planned": 7,
