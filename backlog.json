@@ -407,7 +407,7 @@
     {
       "id": "fase-8",
       "name": "Tests de Servicios con Mocks",
-      "status": "pending",
+      "status": "done",
       "risk": "NULO",
       "objective": "Cubrir la capa de servicios con tests unitarios usando mocks de fetch, antes de refactorizar los componentes que los consumen.",
       "touches_core_flow": false,
@@ -427,8 +427,8 @@
         "tests/unit/services/solicitudCorreccion.service.test.js"
       ],
       "copilot_prompt": "En AppSigestHC, escribe tests unitarios para los servicios principales usando\nmocks de fetch. Usa Vitest con vi.stubGlobal o vi.fn() para mockear fetch.\n\nPara cada servicio listado, crea un archivo de test en tests/unit/services/.\nCada test debe:\n- Mockear fetch para retornar una respuesta exitosa y una fallida\n- Verificar que la URL llamada es correcta (casing PascalCase)\n- Verificar que el resultado normalizado tiene la forma { ok, result } esperada\n- No hacer llamadas reales al backend\n\nServicios a testear:\n1. src/services/AtencionServices.js (o el nombre actual) — testear fetchAtenciones y crear atención\n2. src/services/DocumentoService.js — testear carga y eliminación de documento\n3. src/services/SolicitudCorreccionService.js — testear flujo aprobar/rechazar\n\nPatrón de mock:\n  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({\n    ok: true, status: 200,\n    json: async () => ({ data: [] })\n  }));\n\nTambién mockea localStorage.getItem para retornar un token fake 'fake-jwt-token'.\n\nEjecuta npm test al final. Todos deben pasar.\nActualiza backlog.json: fase-8 status → done. Registra en notes cuántos tests pasan.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-27",
+      "notes": "Se crearon tests unitarios con mocks de fetch y localStorage para servicios en tests/unit/services/atencion.service.test.js, documento.service.test.js y solicitudCorreccion.service.test.js. Cada suite valida URL en PascalCase y forma de resultado { ok, result } para casos exitosos y fallidos. Ejecucion final: npm test -> 7 archivos de test pasando, 24 tests pasando, 0 fallos. Sin desvíos del plan y sin cambios en código de producción."
     },
     {
       "id": "fase-9",
@@ -592,12 +592,12 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 8,
+    "completed": 9,
     "in_progress": 0,
-    "pending": 6,
+    "pending": 5,
     "total_bugs": 6,
     "bugs_fixed": 5,
     "total_tests_planned": 7,
-    "tests_created": 4
+    "tests_created": 7
   }
 }
