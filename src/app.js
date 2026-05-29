@@ -197,7 +197,7 @@ async function cargarCorrecciones() {
     return;
   }
   console.log("Solicitudes de corrección cargadas:", resSolicitudesCorreccion.result);
-  const documentos = new ListaSolicitudesCorreccion(resSolicitudesCorreccion.result);
+  const documentos = new ListaSolicitudesCorreccion(resSolicitudesCorreccion.result || []);
   documentos.mount("sidebar-panel");
 }
 

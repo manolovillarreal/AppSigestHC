@@ -208,6 +208,14 @@
       "impact": "BAJO — visual, no afecta funcionalidad",
       "fixed_in_phase": "fase-10",
       "status": "fixed"
+    },
+    {
+      "id": "BUG-010",
+      "file": "Backend — endpoint /SolicitudCorreccion/por-rol",
+      "description": "El endpoint devuelve HTTP 500 con body vacío cuando se consulta por rol. El frontend ahora maneja el null con fallback a array vacío, pero el backend debería retornar 200 con array vacío [] cuando no hay correcciones para el rol.",
+      "impact": "MEDIO — la sección de correcciones muestra lista vacía en vez de las correcciones reales del rol",
+      "fixed_in_phase": "pendiente-backend",
+      "status": "pending"
     }
   ],
   "phases": [
@@ -527,7 +535,7 @@
     {
       "id": "fase-12",
       "name": "Consolidación de Estilos CSS",
-      "status": "pending",
+      "status": "done",
       "risk": "BAJO",
       "objective": "Crear variables CSS globales. Eliminar colores hardcodeados. Resolver duplicación modal.css/modales.css.",
       "touches_core_flow": false,
@@ -549,13 +557,13 @@
       "bugs_fixed": [],
       "tests_added": [],
       "copilot_prompt": "En AppSigestHC, consolida los estilos CSS.\n\nPasos:\n1. Crea css/variables.css con variables CSS para todos los colores del proyecto.\n   Busca todos los colores: grep -r \"#[0-9a-fA-F]\\{3,6\\}\" css/\n   Crea variables como:\n   --color-primary: #007bff;\n   --color-danger: #dc3545;\n   --color-success: #28a745;\n   --color-text: #333;\n   --color-bg: #f8f9fa;\n   (ajusta según los colores reales encontrados)\n\n2. Agrega @import './variables.css'; al inicio de css/estilos.css.\n\n3. Reemplaza colores hardcodeados en estilos.css, admin.css y atencionView.css\n   por las variables correspondientes (solo estos 3 archivos en esta fase).\n\n4. Resuelve la duplicación modal:\n   - Compara css/modal.css y css/modales.css línea por línea\n   - Unifica en css/modal.css conservando todas las reglas únicas\n   - Actualiza referencias en los HTML que cargaban modales.css\n\n5. Agrega <link rel=\"stylesheet\" href=\"css/variables.css\"> como primer CSS\n   en index.html y admin.html.\n\nNo toques css/modales/ (subcarpeta) ni archivos de admin/ CSS — iteración posterior.\nActualiza backlog.json: fase-12 status → done.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-28",
+      "notes": "Variables CSS creadas y aplicadas; css/atencionView.css convertido a variables; css/modal.css unificado con reglas únicas de css/modales.css; index.html actualiza carga a css/modal.css y css/modales.css fue removido."
     },
     {
       "id": "fase-13",
       "name": "Deduplicación del Patrón Admin",
-      "status": "pending",
+      "status": "done",
       "risk": "MEDIO",
       "objective": "Extraer el patrón Lista→Item→View→Form repetido en los 24 archivos admin a una clase base.",
       "touches_core_flow": false,
@@ -572,8 +580,8 @@
       "tests_added": [],
       "note": "Solo refactorizar ListaUsuarios.js primero. Verificar antes de replicar a los otros 3 módulos.",
       "copilot_prompt": "En AppSigestHC, analiza los 4 módulos del panel admin y extrae el patrón repetido\na una clase base. Trabaja SOLO con el módulo de Usuarios en esta fase.\n\nAnálisis previo requerido:\n1. Lee ListaUsuarios.js, ListaRoles.js, ListaTipoDocumento.js, ListaEstadosAtencion.js\n2. Identifica el código idéntico o casi idéntico entre ellos\n3. Documenta las diferencias (campos distintos, acciones específicas, relaciones)\n\nLuego:\n1. Crea src/admin/AdminListaBase.js — clase base con patrón común:\n   - constructor(servicio, ItemComponent, ViewComponent)\n   - load() que llama al servicio y renderiza con FiltroLista\n   - handleItemClick(item) que monta el ViewComponent\n   - reload() para refrescar la lista\n\n2. Refactoriza ListaUsuarios.js para extender AdminListaBase\n   — solo debe sobrescribir lo que es específico de usuarios\n\n3. NO refactorices los otros 3 módulos todavía\n\n4. Prueba manual: admin → Usuarios → CRUD completo funciona\n\nSi la clase base no puede cubrir al menos el 60% del código común, reporta por qué\ny propón una alternativa en el campo notes del backlog.\n\nActualiza backlog.json: fase-13 status → done. Registra en notes si el patrón fue viable.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-29",
+      "notes": "Creada clase AdminListaBase para el patrón Lista→Item→View→Form. Refactorizado ListaUsuarios.js para usar la base y separar la carga de roles. Patrón listo para replicar en otros módulos."
     },
     {
       "id": "fase-14",
@@ -602,9 +610,9 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 12,
+    "completed": 14,
     "in_progress": 0,
-    "pending": 3,
+    "pending": 1,
     "total_bugs": 8,
     "bugs_fixed": 7,
     "total_tests_planned": 7,

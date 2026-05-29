@@ -12,7 +12,7 @@
   align-items: center;
   gap: 0.8rem;
   padding: 0.7rem 1rem;
-  background-color: #f5f5f5;
+  background-color: var(--color-surface);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -21,12 +21,12 @@
 }
 
 .modulo-card:hover {
-  background-color: #e0e0e0;
+  background-color: var(--color-surface-tertiary);
 }
 
 .modulo-card .material-icons {
   font-size: 1.5rem;
-  color: #444;
+  color: var(--color-text-dark);
 }
 
 
@@ -46,8 +46,8 @@
 
 
 .tipo-doc-item {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-borde-claro);
   border-radius: 8px;
   padding: 0.75rem 1rem;
   margin-bottom: 0.8rem;
@@ -56,7 +56,7 @@
 }
 
 .tipo-doc-item:hover {
-  background: #f1f1f1;
+  background: var(--color-superficie-secondary);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
 }
 
@@ -69,19 +69,19 @@
 
 .tipo-doc-nombre {
   font-weight: 600;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .tipo-doc-id {
   font-size: 0.85rem;
-  color: #888;
+  color: var(--color-text-muted-strong);
 }
 
 .tipo-doc-detalles-linea {
   display: flex;
   gap: 1rem;
   font-size: 0.85rem;
-  color: #555;
+  color: var(--color-text-secondary);
   flex-wrap: wrap;
   align-items: center;
 }
@@ -89,11 +89,11 @@
 .tipo-doc-item.inactivo {
   opacity: 0.6;
   filter: grayscale(0.5);
-  background-color: #f9f9f9;
+  background-color: var(--color-surface-alt);
   position: relative;
 }
 .tipo-doc-item.inactivo:hover {
-  background: #dbdada;
+  background: var(--color-surface-tertiary);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -104,8 +104,8 @@
   position: absolute;
   bottom: 8px;
   right: 15px;
-  background: #e74c3c;
-  color: white;
+  background: var(--color-danger-alt);
+  color: var(--color-blanco);
   padding: 2px 6px;
   font-size: 0.7rem;
   border-radius: 3px;
@@ -115,10 +115,10 @@
 
 .permisos-colapsable {
   margin-top: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-borde-suave);
   border-radius: 4px;
   padding: 0.5rem;
-  background-color: #f9f9f9;
+  background-color: var(--color-surface-alt);
 }
 
 .permisos-colapsable summary {

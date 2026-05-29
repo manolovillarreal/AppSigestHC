@@ -1,22 +1,5 @@
 
-:root {
-  --color-primario: #007bff;
-  --color-primario-hover: #0056b3;
-
-  --color-secundario: #6c757d;
-  --color-success: #28a745;
-  --color-danger: #dc3545;
-  --color-warning: #ffc107;
-  --color-info: #17a2b8;
-
-  --color-texto: #212529;
-  --color-fondo: #ffffff;
-  --color-borde: #dee2e6;
-
-  --color-icono-verde: #28a745;
-  --color-icono-rojo: #dc3545;
-}
-
+@import './variables.css';
 
 body {
     font-family: Arial, sans-serif;
@@ -34,7 +17,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 300px;
-  background-color: #f4f4f4;
+  background-color: var(--color-superficie-secondary);
   padding: 10px;
   height: 100vh;
   z-index: 1;
@@ -50,7 +33,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--color-borde-suave);
   margin-bottom: 15px;
 }
 .usuario-info-container{
@@ -66,7 +49,7 @@ body {
   padding-left: 8px;
 }
 #menuHeader span:hover{
-  color: #007bff;
+  color: var(--color-primario);
   cursor: pointer;
 }
 .sidebar h2 {
@@ -82,23 +65,23 @@ body {
   align-items: center;
   gap: 0.5rem;
   font-weight: bold;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .perfil-icon {
   font-size: 1.8rem;
-  color: #555;
+  color: var(--color-text-secondary);
 }
 .btn-icon {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 1.3rem;
-  color: #777;
+  color: var(--color-text-muted);
 }
 
 .btn-icon:hover {
-  color: #000;
+  color: var(--color-negro);
 }
 
 .main-content {
@@ -107,8 +90,8 @@ body {
 }
 
 .btn {
-    background-color: #007bff;
-    color: #fff;
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -118,7 +101,7 @@ body {
 }
 
 .btn:hover {
-    background-color: #0056b3;
+    background-color: var(--color-primario-hover);
 }
 
 #atenciones-container {
@@ -142,13 +125,13 @@ body {
     justify-content: space-between; /* separa nombre y ubicación */
     align-items: center;            /* centra verticalmente */
     font-size: 1em;
-    color: #333;
+    color: var(--color-texto);
     margin-bottom: 5px;
 }
 
 .ubicacion {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.85em;
@@ -158,7 +141,7 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 0.9em;
-    color: #666;
+    color: var(--color-text-muted);
   }
   
   .fecha {
@@ -167,7 +150,7 @@ body {
   
   .estado {
     font-style: italic;
-    color: #007bff;
+    color: var(--color-primario);
   }
   /* Layout */
 .flex-container {
@@ -193,8 +176,8 @@ body {
 
 
 .btn-primary {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
@@ -202,7 +185,7 @@ body {
   transition: background-color 0.3s;
 }
 .btn-primary:hover {
-  background-color: #0056b3;
+  background-color: var(--color-primario-hover);
 }
 
 /* Modal */
@@ -230,18 +213,18 @@ body {
   right: 20px;
   cursor: pointer;
   font-size: 2em; /* Aumentar tamaño del icono de cerrar */
-  color: #007bff; /* Cambiar color del icono */
+  color: var(--color-primario); /* Cambiar color del icono */
   transition: color 0.3s ease; /* Agregar transición */
 }
 
 .close:hover {
-  color: #0056b3; /* Color al pasar el ratón */
+  color: var(--color-primario-hover); /* Color al pasar el ratón */
 }
   
 .swal-errores {
   margin-top: 0.5rem;
   font-size: 0.9rem;
-  color: #a00;
+  color: var(--color-danger);
 }
 
 .paciente-select-group {
@@ -269,11 +252,11 @@ body {
   cursor: pointer;
   padding: 0.3rem;
   font-size: 1.2rem;
-  color: #555;
+  color: var(--color-text-secondary);
 }
 
 .icon-btn:hover {
-  color: #000;
+  color: var(--color-negro);
 }
 
 .hidden {
@@ -283,7 +266,7 @@ body {
 .estado-section{
   margin: 8px 0;
     font-size: 20px;
-    color: #003670;
+    color: var(--color-azul-oscuro);
     font-weight: bold;
 }
 
@@ -296,5 +279,5 @@ body {
 
 .menu-icon {
 font-size: 32px!important;
-color: #003670; 
+color: var(--color-azul-oscuro); 
 }

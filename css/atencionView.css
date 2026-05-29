@@ -2,29 +2,29 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background: #f5f5f5;
+  background: var(--color-surface);
   padding: 1rem;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--color-borde-suave);
 }
 
 .atencion-info {
   font-size: 0.9rem;
-  color: #333;
+  color: var(--color-texto);
   line-height: 1.4;
 }
 
 .btn-secundario {
   background: none;
-  border: 1px solid #aaa;
+  border: 1px solid var(--color-borde-oscuro);
   padding: 0.3rem 0.7rem;
   font-size: 0.9rem;
   cursor: pointer;
-  color: #444;
+  color: var(--color-text-dark);
   border-radius: 4px;
 }
 
 .btn-secundario:hover {
-  background-color: #e2e2e2;
+  background-color: var(--color-surface-tertiary);
 }
 
 #panel-cabecera-atencion button + button {
@@ -35,8 +35,8 @@
 .atencion-header {
   position: relative;
   padding: 1rem;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ccc;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-borde-suave);
   margin-bottom: 1rem;
 }
 
@@ -48,12 +48,12 @@
   background: none;
   border: none;
   font-size: 1.4rem;
-  color: #777;
+  color: var(--color-text-muted);
   cursor: pointer;
 }
 
 .btn-cerrar-atencion:hover {
-  color: #000;
+  color: var(--color-negro);
 }
 
 /* Botón cerrar en esquina superior derecha */
@@ -64,11 +64,11 @@
   background: none;
   border: none;
   font-size: 1.4rem;
-  color: #777;
+  color: var(--color-text-muted);
   cursor: pointer;
 }
 .btn-anular-atencion:hover {
-  color: #940505;
+  color: var(--color-danger-dark);
 }
 
 /* Contenedor botón avanzar */
@@ -76,13 +76,13 @@
   display: flex;
   justify-content: flex-end;
   padding: 1rem;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--color-borde-claro);
   gap:25px
 }
 
 .btn-avanzar {
-  background-color: #0069d9;
-  color: white;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
   border: none;
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
@@ -94,11 +94,11 @@
 }
 
 .btn-avanzar:hover {
-  background-color: #0054b4;
+  background-color: var(--color-primario-dark);
 }
 .btn-salida {
-  background-color: #d9b100;
-  color: white;
+  background-color: var(--color-warning-alt);
+  color: var(--color-blanco);
   border: none;
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
@@ -110,7 +110,7 @@
 }
 
 .btn-salida:hover {
-  background-color: #a78800;
+  background-color: var(--color-warning-dark);
 }
 
 #obs-cambio-estado{
