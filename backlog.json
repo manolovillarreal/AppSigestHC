@@ -604,7 +604,7 @@
     "total_phases": 14,
     "completed": 12,
     "in_progress": 0,
-    "pending": 2,
+    "pending": 3,
     "total_bugs": 8,
     "bugs_fixed": 7,
     "total_tests_planned": 7,
