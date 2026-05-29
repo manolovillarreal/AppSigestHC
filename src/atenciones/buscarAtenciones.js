@@ -62,6 +62,15 @@ export class BuscarAtenciones extends BaseComponent{
         const estadoAtencionId = this.element.querySelector("select[name='estadoAtencionId']").value;
         const terceroId = this.element.querySelector("input[name='terceroId']").value;
 
+        if (fechaInicial && fechaFinal && fechaInicial > fechaFinal) {
+            await Swal.fire({
+                icon: "error",
+                title: "Fechas inválidas",
+                text: "La fecha inicial debe ser anterior o igual a la fecha final.",
+            });
+            return;
+        }
+
         // búsqueda
         const resAtenciones = await AtencionService.obtenerAtenciones({
             pacienteId,

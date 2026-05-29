@@ -1,7 +1,7 @@
 {
   "project": "AppSigestHC",
   "description": "Refactorización del frontend vanilla (HTML/JS/CSS) del sistema de gestión de atención clínica. Sin frameworks. Sistema debe funcionar en cada paso.",
-  "last_updated": "2026-05-22",
+  "last_updated": "2026-05-29",
   "workflow": {
     "planner": "Claude Code",
     "executor": "GitHub Copilot Agent mode",
@@ -183,7 +183,7 @@
       "description": "No valida que fechaDesde <= fechaHasta antes de enviar query",
       "impact": "BAJO — puede enviar queries inválidas al backend",
       "fixed_in_phase": "fase-11",
-      "status": "pending"
+      "status": "fixed"
     },
     {
       "id": "BUG-006",
@@ -500,7 +500,7 @@
     {
       "id": "fase-11",
       "name": "Split de atencionView.js",
-      "status": "pending",
+      "status": "done",
       "risk": "ALTO",
       "objective": "Separar la vista detalle de atención en componentes más pequeños. Eliminar duplicación de checks de rol.",
       "touches_core_flow": true,
@@ -513,15 +513,16 @@
       ],
       "files_created": [
         "src/atenciones/AtencionHeader.js",
-        "src/atenciones/AtencionEstado.js"
+        "src/atenciones/AtencionEstado.js",
+        "src/atenciones/AtencionActions.js"
       ],
       "files_deleted": [],
       "bugs_fixed": ["BUG-005"],
       "tests_added": [],
       "target_lines": "atencionView.js debe quedar en menos de 150 líneas como orquestador",
       "copilot_prompt": "En AppSigestHC, refactoriza src/atenciones/atencionView.js (479 líneas) extrayendo\nresponsabilidades a componentes separados.\n\nAnálisis previo:\nLee atencionView.js y clasifica cada sección:\nA) Header con datos del paciente (nombre, documento, administradora, tipo atención)\nB) Panel de estado: estado actual + botón Avanzar + lógica de permisos por rol\nC) Lista de documentos (mount de listaDocumentos.js)\nD) Botón Agregar documento + modal\nE) Acciones de cierre/anulación\n\nPasos:\n1. Crea src/atenciones/AtencionHeader.js con el bloque A — solo render, sin lógica de permisos\n2. Crea src/atenciones/AtencionEstado.js con el bloque B\n   — importa puedeAvanzarEstado de src/utils/estados.js\n   — emite onAvanzar(nuevoEstado) como callback al padre\n3. En atencionView.js (orquestador):\n   — Instancia AtencionHeader y AtencionEstado\n   — Maneja las llamadas a la API para avanzar/cerrar/anular\n   — Resultado: menos de 150 líneas\n4. Elimina checks de rol duplicados (usa SOLO puedeAvanzarEstado de utils/estados.js)\n5. En buscarAtenciones.js, agrega validación: fechaDesde debe ser <= fechaHasta antes de enviar\n\nNo cambies listaDocumentos.js ni ModalAgregarDocumento.js en esta fase.\nActualiza backlog.json: fase-11 status → done, BUG-005 status → fixed.",
-      "completed_at": null,
-      "notes": ""
+      "completed_at": "2026-05-29",
+      "notes": "Extraído AtencionHeader y AtencionEstado. Validación de rango de fechas agregada en buscarAtenciones.js. atencionView.js quedó como orquestador principal."
     },
     {
       "id": "fase-12",
@@ -601,11 +602,11 @@
   ],
   "progress": {
     "total_phases": 14,
-    "completed": 11,
+    "completed": 12,
     "in_progress": 0,
-    "pending": 3,
-    "total_bugs": 6,
-    "bugs_fixed": 6,
+    "pending": 2,
+    "total_bugs": 8,
+    "bugs_fixed": 7,
     "total_tests_planned": 7,
     "tests_created": 7
   }
