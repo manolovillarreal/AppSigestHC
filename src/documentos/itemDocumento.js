@@ -78,10 +78,10 @@ export class ItemDocumento extends BaseComponent {
 
   async solicitarCorreccion() {
     const { value: observacion, isConfirmed } = await Swal.fire({
-      title: "Solicitar Corrección",
+      title: "Solicitar Correcciï¿½n",
       input: "textarea",
-      inputLabel: "Observación",
-      inputPlaceholder: "Describe el motivo de la corrección...",
+      inputLabel: "Observaciï¿½n",
+      inputPlaceholder: "Describe el motivo de la correcciï¿½n...",
       showCancelButton: true,
       confirmButtonText: "Solicitar",
       cancelButtonText: "Cancelar",
@@ -92,7 +92,7 @@ export class ItemDocumento extends BaseComponent {
       },
       preConfirm: (value) => {
         if (!value || value.trim().length < 10) {
-          Swal.showValidationMessage("La observación es obligatoria y debe tener al menos 10 caracteres.");
+          Swal.showValidationMessage("La observaciï¿½n es obligatoria y debe tener al menos 10 caracteres.");
           return false;
         }
         return value.trim();
@@ -112,7 +112,7 @@ export class ItemDocumento extends BaseComponent {
       await Swal.fire({
         icon: "success",
         title: "Solicitud enviada",
-        text: "La corrección fue solicitada correctamente.",
+        text: "La correcciï¿½n fue solicitada correctamente.",
         timer: 1500,
         showConfirmButton: false,
       });
@@ -125,7 +125,7 @@ export class ItemDocumento extends BaseComponent {
     const errores = formatearErroresHTML(res.errorMessages);
     await Swal.fire({
       icon: "error",
-      title: "Error al solicitar corrección",
+      title: "Error al solicitar correcciï¿½n",
       html: errores,
     });
   }
@@ -140,9 +140,9 @@ export class ItemDocumento extends BaseComponent {
     const confirmacion = await Swal.fire({
       icon: "question",
       title: "Firmar Documento",
-      text: "¿Desea firmar este documento?",
+      text: "Â¿Desea firmar este documento?",
       showCancelButton: true,
-      confirmButtonText: "Sí, firmar",
+      confirmButtonText: "SÃ­, firmar",
       cancelButtonText: "Cancelar",
     });
 

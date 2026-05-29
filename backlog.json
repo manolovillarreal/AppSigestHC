@@ -200,6 +200,14 @@
       "impact": "MEDIO — la sección de correcciones falla visualmente aunque el backend responda correctamente",
       "fixed_in_phase": "fase-4",
       "status": "fixed"
+    },
+    {
+      "id": "BUG-009",
+      "file": "src/documentos/itemDocumento.js",
+      "description": "confirmButtonText del Swal de firma tenía carácter de encoding roto: 'S\uFFFD, firmar'. Corregido a 'Sí, firmar'. Archivo guardado en UTF-8.",
+      "impact": "BAJO — visual, no afecta funcionalidad",
+      "fixed_in_phase": "fase-10",
+      "status": "fixed"
     }
   ],
   "phases": [
@@ -597,7 +605,7 @@
     "in_progress": 0,
     "pending": 3,
     "total_bugs": 6,
-    "bugs_fixed": 5,
+    "bugs_fixed": 6,
     "total_tests_planned": 7,
     "tests_created": 7
   }
