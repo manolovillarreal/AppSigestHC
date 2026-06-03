@@ -1,5 +1,5 @@
 
-import { apiGet, apiPost, apiPut, apiDelete } from './api.js';
+import { apiGet, apiPost, apiPut, apiDelete } from '../core/api.js';
 
 async function obtenerTodos() {
   return await apiGet('/TipoDocumento');

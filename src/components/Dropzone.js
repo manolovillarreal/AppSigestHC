@@ -1,4 +1,4 @@
-import { BaseComponent } from "../base/BaseComponent.js";
+import { BaseComponent } from "./BaseComponent.js";
 
 export class Dropzone extends BaseComponent {
   constructor(disable=true) {

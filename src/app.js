@@ -1,15 +1,15 @@
-import { ListaAtenciones } from "./atenciones/listaAtenciones.js";
-import { apiGet } from "./api/api.js";
-import auth from "./auth/auth.js";
-import debug from "./helpers/debug.js";
+import { ListaAtenciones } from "./views/atenciones/listaAtenciones.js";
+import { apiGet } from "./core/api.js";
+import auth from "./core/auth.js";
+import debug from "./utils/debug.js";
 import contexto from "./contexto/contexto.js";
-import { BuscarAtenciones } from "./atenciones/buscarAtenciones.js";
-import { cargarCSS } from "./helpers/css.js";
+import { BuscarAtenciones } from "./views/atenciones/buscarAtenciones.js";
+import { cargarCSS } from "./utils/css.js";
 import AtencionService from "./api/atencion.api.js";
 import EstadoAtencionService from './api/estadoAtencion.api.js';
-import { PERFILES } from "./config/config.js";
+import { PERFILES } from "./core/config.js";
 import { SolicitudCorreccionService } from "./api/solicitudCorreccion.api.js";
-import { ListaSolicitudesCorreccion } from "./solicitudesCorreccion/ListaSolicitudesCorreccion.js";
+import { ListaSolicitudesCorreccion } from "./views/correcciones/ListaSolicitudesCorreccion.js";
 
 cargarCSS("main");
 

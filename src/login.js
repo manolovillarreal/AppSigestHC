@@ -1,4 +1,4 @@
-import { apiPost } from "./api/api.js";
+import { apiPost } from "./core/api.js";
 
 
 

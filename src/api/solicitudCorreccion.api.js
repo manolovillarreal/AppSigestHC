@@ -1,4 +1,4 @@
-import { apiDownloadBlob, apiGet, apiPost, apiUpload } from "./api.js";
+import { apiDownloadBlob, apiGet, apiPost, apiUpload } from "../core/api.js";
 
 function obtenerCorreccionesPorRol() {
   return apiGet("/SolicitudCorreccion/por-rol");

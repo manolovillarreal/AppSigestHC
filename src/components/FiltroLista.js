@@ -1,4 +1,4 @@
-import { BaseComponent } from "../base/BaseComponent.js";
+import { BaseComponent } from "./BaseComponent.js";
 
 export class FiltroLista extends BaseComponent {
   constructor(config) {
