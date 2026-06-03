@@ -1,9 +1,8 @@
 import { API_URL } from './config.js';
 import auth from './auth.js';
 
-
 function getAuthHeaders() {
-  return { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
+  return { Authorization: `Bearer ${localStorage.getItem('token')}` };
 }
 
 export function getTokenHeader() {
@@ -11,7 +10,10 @@ export function getTokenHeader() {
 }
 
 function isLoginPage() {
-  return window.location.pathname.endsWith('/login.html') || window.location.pathname.endsWith('login.html');
+  return (
+    window.location.pathname.endsWith('/login.html') ||
+    window.location.pathname.endsWith('login.html')
+  );
 }
 
 function handleUnauthorized(res) {
@@ -29,7 +31,6 @@ function handleUnauthorized(res) {
 
 async function manejarRespuesta(res) {
   try {
-    // console.log(res);
     const contentLength = res.headers.get('Content-Length');
     if (res.status === 204 || contentLength === '0') {
       const response = { ok: true, result: null };
@@ -48,60 +49,53 @@ async function manejarRespuesta(res) {
     }
 
     const data = JSON.parse(raw);
-    
-  
-  if (!res.ok)  {
-    const mensaje = data?.mensaje || 'Error desconocido';
-    const errores = data?.data?.ErrorMessages || null;
 
-   
-    console.warn(`❗ Error API: ${mensaje}`);
-    if (errores) console.warn('Detalles:', errores);
-  }
+    if (!res.ok) {
+      const mensaje = data?.message || data?.mensaje || 'Error desconocido';
+      const errores = data?.data?.ErrorMessages || null;
 
-  Object.defineProperty(data, 'status', {
-    value: res.status,
-    enumerable: false,
-    configurable: true,
-    writable: true,
-  });
-  return data;
+      console.warn(`Error API: ${mensaje}`);
+      if (errores) console.warn('Detalles:', errores);
+    }
+
+    Object.defineProperty(data, 'status', {
+      value: res.status,
+      enumerable: false,
+      configurable: true,
+      writable: true,
+    });
+    return data;
   } catch (error) {
     console.error('Error al manejar respuesta:', error);
     return {
       ok: false,
-      errorMessages: ['Error al procesar la respuesta del servidor']
+      errorMessages: ['Error al procesar la respuesta del servidor'],
     };
   }
-  
 }
 
-// --- Métodos genéricos --- //
-
-export async function apiGet(path) {  
+export async function apiGet(path) {
   const res = await fetch(`${API_URL}${path}`, {
-    headers: getAuthHeaders()
+    headers: getAuthHeaders(),
   });
 
   if (handleUnauthorized(res)) {
     return { ok: false, errorMessages: ['No autorizado'] };
   }
-  
-  if(res.error)
-    console.log(res.error);
-  
-  
+
+  if (res.error) console.log(res.error);
+
   return await manejarRespuesta(res);
 }
 
-export async function apiPost(path, body ) {
+export async function apiPost(path, body) {
   const res = await fetch(`${API_URL}${path}`, {
     method: 'POST',
     headers: {
       ...getAuthHeaders(),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 
   if (handleUnauthorized(res)) {
@@ -110,14 +104,15 @@ export async function apiPost(path, body ) {
 
   return await manejarRespuesta(res);
 }
+
 export async function apiPut(path, body) {
   const res = await fetch(`${API_URL}${path}`, {
-    method:  'PUT',
+    method: 'PUT',
     headers: {
       ...getAuthHeaders(),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 
   if (handleUnauthorized(res)) {
@@ -129,12 +124,12 @@ export async function apiPut(path, body) {
 
 export async function apiPatch(path, body) {
   const res = await fetch(`${API_URL}${path}`, {
-    method:  'PATCH',
+    method: 'PATCH',
     headers: {
       ...getAuthHeaders(),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 
   if (handleUnauthorized(res)) {
@@ -145,27 +140,25 @@ export async function apiPatch(path, body) {
 }
 
 export async function apiDownloadBlob(path) {
-    const res = await fetch(`${API_URL}${path}`, {
-      headers: getAuthHeaders(),
-      mode: 'cors'
-    });
+  const res = await fetch(`${API_URL}${path}`, {
+    headers: getAuthHeaders(),
+    mode: 'cors',
+  });
 
-    if (handleUnauthorized(res)) {
-      return res;
-    }
-
-    if (!res.ok) 
-      debug.log(res.error)
-
+  if (handleUnauthorized(res)) {
     return res;
+  }
+
+  if (!res.ok) console.warn('Error en descarga:', res.status);
+
+  return res;
 }
+
 export async function apiUpload(path, formData) {
-  console.log(`${API_URL}${path}`);
-  
   const res = await fetch(`${API_URL}${path}`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    body: formData
+    body: formData,
   });
 
   if (handleUnauthorized(res)) {
@@ -174,46 +167,20 @@ export async function apiUpload(path, formData) {
 
   return await manejarRespuesta(res);
 }
-export async function apiDelete(path,body) {
+
+export async function apiDelete(path, body) {
   const res = await fetch(API_URL + path, {
     method: 'DELETE',
     headers: {
       ...getAuthHeaders(),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   });
 
   if (handleUnauthorized(res)) {
     return { ok: false, errorMessages: ['No autorizado'] };
   }
 
-   return await manejarRespuesta(res);
-}
-
-// --- Funciones específicas --- //
-
-export async function buscarPacienteAPI(pacienteId) {
-  const res = await fetch(`${API_URL}/api/Pacientes?pacienteId=${pacienteId}`, {
-    headers: getAuthHeaders()
-  });
-
-  if (handleUnauthorized(res)) {
-    return null;
-  }
-
-  const data = await res.json();
-  if (!res.ok && DEBUG_API) {
-    console.warn('❗ Error al buscar paciente:', data?.ErrorMessages || 'Sin mensaje');
-  }
-
-  return res.ok ? data.result : null;
-}
-
-export async function crearAtencionAPI(pacienteId,terceroId) {
-  const payload = {
-    pacienteId,
-    terceroId
-  };
-  return await apiPost('/api/Atenciones', payload);
+  return await manejarRespuesta(res);
 }
