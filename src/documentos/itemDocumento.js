@@ -19,10 +19,11 @@ import { editarDocumento as editarDocumentoAccion } from "./acciones/EditarDocum
 import { EstadoCorreccion } from "../helpers/correcciones.js";
 
 export class ItemDocumento extends BaseComponent {
-  constructor(documento, esCorreccion = false) {
+  constructor(documento, esCorreccion = false, onEliminarSuccess = null) {
     super();
     this.documento = documento;
     this.esCorreccion = esCorreccion;
+    this.onEliminarSuccess = onEliminarSuccess;
   }
 
   render() {
@@ -39,7 +40,10 @@ export class ItemDocumento extends BaseComponent {
       renderAcciones({
         element: this.element,
         documento: this.documento,
-        onEliminar: async () => this.eliminarDocumento(this.documento.id, () => this.element.remove()),
+        onEliminar: async () => this.eliminarDocumento(this.documento.id, async () => {
+          this.element.remove();
+          if (this.onEliminarSuccess) await this.onEliminarSuccess();
+        }),
         onDescargar: () => this.descargarDocumento(this.documento),
         onEditar: () => this.editarDocumento(this.documento, () => this.render()),
         onSolicitarCorreccion: () => this.solicitarCorreccion(),

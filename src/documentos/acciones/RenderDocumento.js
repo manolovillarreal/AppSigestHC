@@ -1,5 +1,5 @@
 import { apiGet } from "../../api/api.js";
-import { formatearFechaHora } from "../../utils/date.js";
+import { formatearFecha, formatearFechaHora } from "../../utils/date.js";
 import { SolicitudCorreccionItem } from "../../solicitudesCorreccion/SolicitudCorreccionItem.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../helpers/correcciones.js";
 
@@ -34,14 +34,14 @@ export function renderContent(element, documento, onVerDocumento) {
 
   const titulo = document.createElement("div");
   titulo.classList.add("doc-nombre");
-  titulo.textContent = documento.tipoDocumento.nombre;
+  titulo.textContent = documento.tipoDocumento?.nombre || "Documento";
   titulo.addEventListener("click", () => onVerDocumento(documento.id));
   detalles.appendChild(titulo);
 
-  if (documento.tipoDocumento.esAsistencial) {
+  if (documento.tipoDocumento?.esAsistencial) {
     const fechaDoc = document.createElement("div");
     fechaDoc.classList.add("doc-fecha");
-    fechaDoc.textContent = `Fecha del documento: ${formatearFechaHora(documento.fecha)}`;
+    fechaDoc.textContent = `Fecha del documento: ${formatearFecha(documento.fecha)}`;
     detalles.appendChild(fechaDoc);
   }
 
@@ -143,14 +143,19 @@ export function renderCorrecciones(element, documento, onReMount) {
 }
 
 export async function descargarMiniaturas(doc, thumbnailContainer, onVerDocumento) {
+  console.log('descargarMiniaturas llamado con doc.id:', doc?.id);
+  console.log('thumbnailContainer:', thumbnailContainer);
+
   const thumb = thumbnailContainer;
   if (!thumb) return;
 
   try {
     if (doc.tipoDocumento && doc.tipoDocumento.extensionPermitida === "pdf") {
       const res = await apiGet(`/Documentos/thumbnails/${doc.id}`);
+      console.log('respuesta API thumbnail:', res);
       if (!res.ok || !res.result || !Array.isArray(res.result) || res.result.length === 0) {
         thumb.textContent = "[Error]";
+        console.error('Respuesta de API no válida para miniatura:', res);
         return;
       }
 

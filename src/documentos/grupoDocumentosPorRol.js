@@ -4,10 +4,11 @@ import { ItemDocumento } from "./itemDocumento.js";
 
 
 export class GrupoDocumentosPorRol extends BaseComponent {
-  constructor(rolNombre,documentos) {
+  constructor(rolNombre, documentos, onEliminarSuccess = null) {
     super();
     this.rolNombre = rolNombre;
     this.documentos = documentos;
+    this.onEliminarSuccess = onEliminarSuccess;
   }
   render() {
 
@@ -28,8 +29,7 @@ export class GrupoDocumentosPorRol extends BaseComponent {
     
     // Renderizar los documentos de este grupo
     this.documentos.forEach(doc => {
-      
-      const item = new ItemDocumento(doc);
+      const item = new ItemDocumento(doc, false, this.onEliminarSuccess);
       item.appendTo(contenido);
     });
 

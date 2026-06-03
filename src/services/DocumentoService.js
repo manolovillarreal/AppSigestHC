@@ -176,10 +176,20 @@ function obtenerExtension(doc) {
     return 'bin'; // Extensión genérica
 }
 
+async function obtenerPapelera(atencionId) {
+    return apiGet(`/Documentos/papelera/${atencionId}`);
+}
+
+async function restaurarDocumento(id) {
+    return apiPost(`/Documentos/${id}/restaurar`, {});
+}
+
 export const DocumentoService = {
     EnviarDocumentoFirmado,
     descargarMultiples,
     descargarSeparados,
     descargarComoZip,
-    descargarComoPdf
+    descargarComoPdf,
+    obtenerPapelera,
+    restaurarDocumento
 };  

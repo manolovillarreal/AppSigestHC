@@ -31,6 +31,15 @@ export async function eliminarDocumento(docId, onSuccess = null) {
   const mensaje = res?.mensaje || "No se pudo eliminar el documento.";
   const errores = formatearErroresHTML(res.errorMessages);
 
+  if (res.status === 400) {
+    await Swal.fire({
+      icon: "error",
+      title: "Error",
+      html: `<p>${mensaje}</p>${errores}`,
+    });
+    return;
+  }
+
   await Swal.fire({
     icon: "error",
     title: "Error",

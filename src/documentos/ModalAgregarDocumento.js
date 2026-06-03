@@ -1,6 +1,6 @@
 // modalAgregarDocumento.js
 import contexto from "../contexto/contexto.js";
-import { Modal } from "../modales/modal.js";
+import { Modal } from "../components/modal.js";
 import { apiUpload } from "../api/api.js";
 import { formatearErroresHTML } from "../utils/error.js";
 import { Dropzone } from "../components/Dropzone.js";

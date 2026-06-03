@@ -16,10 +16,9 @@ describe('utils/date', () => {
     vi.useRealTimers();
   });
 
-  it('formatearFecha retorna string para fecha valida', () => {
+  it('formatearFecha retorna solo fecha sin hora', () => {
     const result = formatearFecha('2026-05-27T00:00:00Z');
-    expect(typeof result).toBe('string');
-    expect(result.length).toBeGreaterThan(0);
+    expect(result).toBe('26/05/2026');
   });
 
   it('formatearFecha y formatearFechaHora no lanzan con null/undefined', () => {

@@ -1,5 +1,5 @@
 // modalNuevaAtencion.js
-import { Modal } from "../modales/modal.js";
+import { Modal } from "../components/modal.js";
 import { apiPost, apiGet } from "../api/api.js";
 import {
   calcularEdadTexto,

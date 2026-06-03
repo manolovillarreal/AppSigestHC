@@ -6,12 +6,13 @@ import { ItemDocumento } from "./itemDocumento.js";
 import { DocumentoService } from "../services/DocumentoService.js";
 
 export class ListaDocumentos extends BaseComponent {
-  constructor(atencion,agruparDocumento = true) {
+  constructor(atencion, agruparDocumento = true, onEliminarSuccess = null) {
     super();
     this.atencion = atencion;
     this.documentos = [];
     this.agruparDocumento = agruparDocumento;
     this.documentosSeleccionados = new Set();
+    this.onEliminarSuccess = onEliminarSuccess;
   }
 
   async load() {
@@ -37,13 +38,12 @@ export class ListaDocumentos extends BaseComponent {
     if (this.agruparDocumento) {
       const documentosPorRol = agruparDocumentosPorRol(this.documentos);
       Object.entries(documentosPorRol).forEach(([rolNombre, docs]) => {
-        const grupo = new GrupoDocumentosPorRol(rolNombre, docs);
+        const grupo = new GrupoDocumentosPorRol(rolNombre, docs, this.onEliminarSuccess);
         grupo.appendTo(this.element);
       });
     } else {
       this.documentos.forEach(doc => {
-        console.log("1");        
-        const item = new ItemDocumento(doc,true);
+        const item = new ItemDocumento(doc, true, this.onEliminarSuccess);
         item.appendTo(this.element);
       });
     }

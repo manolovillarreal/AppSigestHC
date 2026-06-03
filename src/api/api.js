@@ -32,12 +32,19 @@ async function manejarRespuesta(res) {
     // console.log(res);
     const contentLength = res.headers.get('Content-Length');
     if (res.status === 204 || contentLength === '0') {
-      return { ok: true, result: null };
+      const response = { ok: true, result: null };
+      Object.defineProperty(response, 'status', {
+        value: res.status,
+        enumerable: false,
+        configurable: true,
+        writable: true,
+      });
+      return response;
     }
 
     const raw = await res.text();
     if (!raw || !raw.trim()) {
-      return { ok: true, result: null };
+      return { ok: true, result: null, status: res.status };
     }
 
     const data = JSON.parse(raw);
@@ -52,6 +59,12 @@ async function manejarRespuesta(res) {
     if (errores) console.warn('Detalles:', errores);
   }
 
+  Object.defineProperty(data, 'status', {
+    value: res.status,
+    enumerable: false,
+    configurable: true,
+    writable: true,
+  });
   return data;
   } catch (error) {
     console.error('Error al manejar respuesta:', error);

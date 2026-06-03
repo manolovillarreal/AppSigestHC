@@ -5,6 +5,7 @@ import contexto from "../contexto/contexto.js";
 import { PERFILES } from "../config/config.js";
 import { AtencionHeader } from "./AtencionHeader.js";
 import { AtencionEstado } from "./AtencionEstado.js";
+import { PapeleraDocumentos } from "../documentos/PapeleraDocumentos.js";
 import {
   avanzarEstado,
   cerrarAtencion,
@@ -65,13 +66,25 @@ export class AtencionView extends BaseComponent {
     contenedorDocumentos.id = "documentos-list";
     contenedorDocumentos.className = "list-view";
 
-    const listaDocumentos = new ListaDocumentos(this.atencion);
+    const listaDocumentos = new ListaDocumentos(this.atencion, true, async () => {
+      await listaDocumentos.reMount();
+      if (this.papeleraDocumentos) await this.papeleraDocumentos.reMount();
+    });
     listaDocumentos.mount(contenedorDocumentos);
 
     const btnAgregarDocumento = document.createElement("button");
     btnAgregarDocumento.id = "btn-agregar-documento";
     btnAgregarDocumento.className = "btn-primary";
     btnAgregarDocumento.textContent = " Agregar Documento";
+
+    const papeleraContainer = document.createElement("div");
+    papeleraContainer.id = "papelera-documentos-container";
+
+    this.papeleraDocumentos = new PapeleraDocumentos(this.atencion.id, async () => {
+      await listaDocumentos.reMount();
+      if (this.papeleraDocumentos) await this.papeleraDocumentos.reMount();
+    });
+    this.papeleraDocumentos.mount(papeleraContainer);
     btnAgregarDocumento.addEventListener("click", () => {
       new ModalAgregarDocumento(this.atencion, (documento) => {
         listaDocumentos.documentos.push(documento);
@@ -90,6 +103,7 @@ export class AtencionView extends BaseComponent {
 
     this.element.appendChild(btnAgregarDocumento);
     this.element.appendChild(contenedorDocumentos);
+    this.element.appendChild(papeleraContainer);
   }
 
   _onSuccess(accion) {
