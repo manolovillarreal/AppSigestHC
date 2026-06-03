@@ -1,4 +1,4 @@
-import contexto from '../contexto/contexto.js';
+import contexto from '../core/store.js';
 
 export const ordenEstados = [1, 2, 3, 4, 5, 6, 7];
 

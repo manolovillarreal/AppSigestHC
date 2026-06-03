@@ -2,7 +2,7 @@ import { ListaAtenciones } from "./views/atenciones/listaAtenciones.js";
 import { apiGet } from "./core/api.js";
 import auth from "./core/auth.js";
 import debug from "./utils/debug.js";
-import contexto from "./contexto/contexto.js";
+import contexto from "./core/store.js";
 import { BuscarAtenciones } from "./views/atenciones/buscarAtenciones.js";
 import { cargarCSS } from "./utils/css.js";
 import AtencionService from "./api/atencion.api.js";

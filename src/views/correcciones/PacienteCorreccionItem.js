@@ -1,5 +1,5 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
-import contexto from "../../contexto/contexto.js";
+import contexto from "../../core/store.js";
 import { formatearFecha } from '../../utils/date.js';
 
 export class PacienteCorreccionItem extends BaseComponent {

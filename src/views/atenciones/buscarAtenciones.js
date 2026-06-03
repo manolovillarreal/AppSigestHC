@@ -1,5 +1,5 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
-import contexto from "../../contexto/contexto.js";
+import contexto from "../../core/store.js";
 import AtencionService from "../../api/atencion.api.js";
 import { ListaAtenciones } from "./listaAtenciones.js";
 

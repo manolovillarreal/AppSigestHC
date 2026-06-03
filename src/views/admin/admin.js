@@ -1,6 +1,6 @@
 import auth from "../../core/auth.js";
 import debug from "../../utils/debug.js";
-import contexto from "../../contexto/contexto.js";
+import contexto from "../../core/store.js";
 import {ListaTipoDocumentos} from './tipoDocumento/ListaTipoDocumento.js'
 import { cargarCSS } from "../../utils/css.js";
 import { ListaUsuarios } from "./usuario/ListaUsuarios.js";

@@ -1,5 +1,5 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
-import contexto from "../../contexto/contexto.js";
+import contexto from "../../core/store.js";
 import { formatearFechaHora } from "../../utils/date.js";
 import { PERFILES } from "../../core/config.js";
 import { apiPut } from "../../core/api.js";

@@ -1,5 +1,5 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
-import contexto from "../../contexto/contexto.js";
+import contexto from "../../core/store.js";
 import { puedeAvanzarEstado } from "../../utils/estados.js";
 import { PERFILES } from "../../core/config.js";
 

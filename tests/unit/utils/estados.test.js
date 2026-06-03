@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('../../../src/contexto/contexto.js', () => ({
+vi.mock('../../../src/core/store.js', () => ({
   default: {
     estadosAtencion: [
       { id: 1, nombre: 'Registrada' },

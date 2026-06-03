@@ -1,4 +1,4 @@
-import contexto from "../contexto/contexto.js";
+import contexto from "../core/store.js";
 
 export const EstadoCorreccion = {
   PENDIENTE: 1,

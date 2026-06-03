@@ -5,7 +5,7 @@ import { ItemAtencion } from "./itemAtencion.js";
 import { AtencionView } from "./AtencionView.js";
 import { ModalNuevaAtencion } from "./modalNuevaAtencion.js";
 import { BaseComponent } from "../../components/BaseComponent.js";
-import contexto from "../../contexto/contexto.js";
+import contexto from "../../core/store.js";
 import { PERFILES } from "../../core/config.js";
 
 export class ListaAtenciones extends BaseComponent {

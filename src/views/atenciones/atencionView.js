@@ -1,7 +1,7 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
 import { ListaDocumentos } from "../documentos/listaDocumentos.js";
 import { ModalAgregarDocumento } from "../documentos/ModalAgregarDocumento.js";
-import contexto from "../../contexto/contexto.js";
+import contexto from "../../core/store.js";
 import { PERFILES } from "../../core/config.js";
 import { AtencionHeader } from "./AtencionHeader.js";
 import { AtencionEstado } from "./AtencionEstado.js";
