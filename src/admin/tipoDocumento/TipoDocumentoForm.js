@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../base/BaseComponent.js";
 import { apiPost,apiPut,apiDelete, apiGet } from "../../api/api.js";
-import tipoDocumentoService from '../../services/TipoDocumentoService.js';    
+import tipoDocumentoService from '../../api/tipoDocumento.api.js';    
 
 
 /**

@@ -1,7 +1,7 @@
 import { BaseComponent } from "../../base/BaseComponent.js";
 import { apiPost, apiPut, apiGet } from "../../api/api.js";
 import { formatearErroresHTML } from "../../utils/error.js";
-import usuarioService from '../../services/UsuarioService.js'
+import usuarioService from '../../api/usuario.api.js'
 
 export class UsuarioForm extends BaseComponent {
   constructor(usuario, onSave) {

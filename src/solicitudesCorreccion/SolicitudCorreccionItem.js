@@ -4,7 +4,7 @@ import { Dropzone } from "../components/Dropzone.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../helpers/correcciones.js";
 import { formatearFecha } from "../utils/date.js";
 import { formatearErroresHTML } from "../utils/error.js";
-import { SolicitudCorreccionService } from "../services/SolicitudCorreccionService.js";
+import { SolicitudCorreccionService } from "../api/solicitudCorreccion.api.js";
 
 export class SolicitudCorreccionItem extends BaseComponent {  
   constructor(solicitudCorreccion, onAction) {

@@ -1,5 +1,5 @@
 import { apiPost } from "../api/api.js";
-import atencionesService from "../services/AtencionServices.js";
+import atencionesService from "../api/atencion.api.js";
 import { formatearErroresHTML } from "../utils/error.js";
 
 export async function preguntarSiAvanzarEstado(onConfirm) {

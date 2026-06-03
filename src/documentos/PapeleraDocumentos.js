@@ -1,5 +1,5 @@
 import { BaseComponent } from "../base/BaseComponent.js";
-import { DocumentoService } from "../services/DocumentoService.js";
+import { DocumentoService } from "../api/documento.api.js";
 import { formatearFechaHora } from "../utils/date.js";
 import { descargarMiniaturas, renderContent } from "./acciones/RenderDocumento.js";
 import { verDocumento, descargarDocumento } from "./acciones/DescargarDocumento.js";

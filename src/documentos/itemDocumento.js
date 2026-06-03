@@ -1,7 +1,7 @@
 import { apiDownloadBlob, apiPost } from "../api/api.js";
 import { formatearErroresHTML } from "../utils/error.js";
 import { BaseComponent } from "../base/BaseComponent.js";
-import { DocumentoService } from "../services/DocumentoService.js";
+import { DocumentoService } from "../api/documento.api.js";
 import { firmarPdf } from "../helpers/firmaPdf.js";
 import {
   renderCheckbox,

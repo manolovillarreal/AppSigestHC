@@ -23,7 +23,7 @@ function mockBlobResponse({ ok = true, status = 200 } = {}) {
   };
 }
 
-describe('services/DocumentoService', () => {
+describe('api/documento.api', () => {
   let DocumentoService;
 
   beforeEach(async () => {
@@ -51,7 +51,7 @@ describe('services/DocumentoService', () => {
 
     vi.stubGlobal('fetch', vi.fn());
 
-    ({ DocumentoService } = await import('../../../src/services/DocumentoService.js'));
+    ({ DocumentoService } = await import('../../../src/api/documento.api.js'));
   });
 
   afterEach(() => {

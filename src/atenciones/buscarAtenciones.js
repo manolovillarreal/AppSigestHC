@@ -1,6 +1,6 @@
 import { BaseComponent } from "../base/BaseComponent.js";
 import contexto from "../contexto/contexto.js";
-import AtencionService from "../services/AtencionServices.js";
+import AtencionService from "../api/atencion.api.js";
 import { ListaAtenciones } from "./listaAtenciones.js";
 
 export class BuscarAtenciones extends BaseComponent{

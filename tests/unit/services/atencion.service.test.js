@@ -11,7 +11,7 @@ function mockResponse({ ok = true, status = 200, body = { ok: true, result: [] }
   };
 }
 
-describe('services/AtencionServices', () => {
+describe('api/atencion.api', () => {
   let AtencionService;
 
   beforeEach(async () => {
@@ -30,7 +30,7 @@ describe('services/AtencionServices', () => {
 
     vi.stubGlobal('fetch', vi.fn());
 
-    ({ default: AtencionService } = await import('../../../src/services/AtencionServices.js'));
+    ({ default: AtencionService } = await import('../../../src/api/atencion.api.js'));
   });
 
   afterEach(() => {

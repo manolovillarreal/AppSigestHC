@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut } from '../api/api.js';
+import { apiGet, apiPost, apiPut } from './api.js';
 
 async function obtenerAtenciones(filtros) {
     const params = new URLSearchParams();

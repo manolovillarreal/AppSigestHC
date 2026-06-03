@@ -5,10 +5,10 @@ import debug from "./helpers/debug.js";
 import contexto from "./contexto/contexto.js";
 import { BuscarAtenciones } from "./atenciones/buscarAtenciones.js";
 import { cargarCSS } from "./helpers/css.js";
-import AtencionService from "./services/AtencionServices.js";
-import EstadoAtencionService from './services/EstadoAtencionService.js';
+import AtencionService from "./api/atencion.api.js";
+import EstadoAtencionService from './api/estadoAtencion.api.js';
 import { PERFILES } from "./config/config.js";
-import { SolicitudCorreccionService } from "./services/SolicitudCorreccionService.js";
+import { SolicitudCorreccionService } from "./api/solicitudCorreccion.api.js";
 import { ListaSolicitudesCorreccion } from "./solicitudesCorreccion/ListaSolicitudesCorreccion.js";
 
 cargarCSS("main");

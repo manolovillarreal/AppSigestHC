@@ -3,7 +3,7 @@ import { apiGet } from "../api/api.js";
 import { BaseComponent } from "../base/BaseComponent.js";
 import {GrupoDocumentosPorRol} from "./grupoDocumentosPorRol.js"
 import { ItemDocumento } from "./itemDocumento.js";
-import { DocumentoService } from "../services/DocumentoService.js";
+import { DocumentoService } from "../api/documento.api.js";
 
 export class ListaDocumentos extends BaseComponent {
   constructor(atencion, agruparDocumento = true, onEliminarSuccess = null) {
