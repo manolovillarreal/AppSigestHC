@@ -6,6 +6,7 @@ import { cargarCSS } from "../../utils/css.js";
 import { ListaUsuarios } from "./usuario/ListaUsuarios.js";
 import { ListaRoles } from "./roles/ListaRoles.js";
 import { ListaEstadosAtencion } from "./estadoAtencion/ListaEstadosAtencion.js";
+import { ConfiguracionView } from "./configuracion/ConfiguracionView.js";
 
 
 cargarCSS("admin");
@@ -15,6 +16,7 @@ const modulos = [
   { id: "moduloUsuarios", nombre: "Usuarios", icono: "person" },
   { id: "moduloRoles", nombre: "Roles", icono: "shield" },
   { id: "moduloEstados", nombre: "Estados", icono: "timeline" },
+  { id: "moduloConfiguracion", nombre: "Configuración", icono: "settings" },
 ];
 
 
@@ -97,5 +99,9 @@ function configurarEventos() {
    document.getElementById("moduloEstados")?.addEventListener("click", () => {
     const lista = new ListaEstadosAtencion();
     lista.mount("vistaContenido");
+  });
+  document.getElementById("moduloConfiguracion")?.addEventListener("click", () => {
+    const vista = new ConfiguracionView();
+    vista.mount("vistaContenido");
   });
 }

@@ -30,12 +30,17 @@ const EstadoAtencionCss = [
   'css/EstadoAtencion/EstadoAtencion.css',
 ];
 
+const ConfiguracionCss = [
+  'css/admin/configuracion.css',
+];
+
 const modulos = {
   admin: [
     ...tipoDocumentoCss,
     ...UsuarioCss ,
     ...RolesCss,
-    ...EstadoAtencionCss
+    ...EstadoAtencionCss,
+    ...ConfiguracionCss
   ],
   main: [
     ...atencionesCss,
