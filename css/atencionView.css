@@ -154,3 +154,50 @@
   width: 360px;
   font-size: 17px;
 }
+
+/* Sobrescribiendo Header con Diseño Objetivo Exacto */
+.atencion-header-card {
+  border: 0.5px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 16px 24px !important;
+  box-shadow: none !important;
+}
+.grid-label {
+  font-size: 12px !important;
+  color: #94a3b8 !important; /* Gris */
+  font-weight: 400 !important;
+}
+.grid-valor {
+  font-size: 12px !important;
+  color: #1e293b !important; /* Oscuro */
+  font-weight: 500 !important;
+}
+.paciente-link {
+  font-size: 14px !important;
+  color: #185FA5 !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+}
+.btn-cerrar-atencion {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  color: rgba(0,0,0,0.3) !important;
+}
+.btn-cerrar-atencion:hover {
+  color: rgba(0,0,0,0.6) !important;
+}
+
+/* Badges de Estado */
+.badge-estado {
+  padding: 4px 10px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  margin-left: 0 !important;
+}
+.estado-admision { background-color: #E6F1FB !important; color: #185FA5 !important; }
+.estado-ingreso { background-color: #EAF3DE !important; color: #3B6D11 !important; }
+.estado-consulta { background-color: #E6F1FB !important; color: #185FA5 !important; }
+.estado-cierre { background-color: #F1EFE8 !important; color: #5F5E5A !important; }
+.estado-anulado { background-color: #FCEBEB !important; color: #A32D2D !important; }
