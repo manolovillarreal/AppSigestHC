@@ -1,0 +1,91 @@
+<USER_REQUEST>
+En AppSigestHC, mejora el diseño visual general del app principal.
+No cambies lógica de negocio, solo CSS y estructura HTML de los componentes.
+
+El sistema ya tiene css/variables.css con variables de color.
+Úsalas y extiéndelas si necesitas nuevos tokens.
+
+═══════════════════════════════════════
+SIDEBAR Y MENÚ DE NAVEGACIÓN
+═══════════════════════════════════════
+
+En css/estilos.css (o el archivo CSS del sidebar):
+
+1. Sidebar principal:
+   - Fondo: gradiente sutil de #0C447C a #042C53 (top a bottom)
+   - Ancho: 300px fijo
+   - Agregar una línea divisora sutil (1px rgba(255,255,255,0.08)) 
+     entre el header del sidebar y la lista de atenciones
+
+2. Header del sidebar (nombre de usuario + logout):
+   - Avatar circular con iniciales del usuario (extraer del nombre)
+   - Nombre de usuario en blanco con peso 500
+   - Botón logout como ícono discreto a la derecha
+
+3. Iconos del menú de navegación:
+   - Tamaño ligeramente mayor (28px)
+   - Estado activo: fondo rgba(255,255,255,0.12) + borde izquierdo 
+     3px solid #5DCAA5 (cyan)
+   - Hover: fondo rgba(255,255,255,0.07) con transición suave
+   - Tooltip con el nombre al hacer hover
+
+4. Tarjetas de atención en el sidebar:
+   - Más respiro: padding 12px 16px
+   - Nombre del paciente: 14px, peso 600, blanco
+   - Fecha y EPS: 11px, rgba(255,255,255,0.55)
+   - Estado activo (seleccionada): fondo rgba(255,255,255,0.1) + 
+     borde izquierdo 3px solid #5DCAA5
+   - Hover: fondo rgba(255,255,255,0.06)
+   - Badge de estado (PROC, 12B, etc): pill redondeado con color 
+     según estado — azul claro, verde, amarillo
+
+5. Separadores de grupo (Admision, Consulta, Ingreso):
+   - Texto 10px uppercase, letter-spacing 1.5px, 
+     color rgba(255,255,255,0.4)
+   - Sin fondo — solo texto con línea decorativa
+
+═════════════════════════════
+<truncated 1825 bytes>
+ gris pequeño
+   - Chevron animado al colapsar/expandir
+
+4. Item de documento:
+   - Card blanca con borde sutil
+   - Thumbnail más grande: 80x100px con border-radius 6px
+   - Nombre del tipo de documento: 14px, peso 600
+   - Metadatos (fecha, cargado por): 12px, gris
+   - Acciones (botones): alineados abajo a la derecha, 
+     ícono 20px con color semántico (rojo para eliminar, 
+     azul para descargar, verde para firmar)
+   - Hover en el card: sombra sutil + borde azul claro
+
+═══════════════════════════════════════
+RESTRICCIONES
+═══════════════════════════════════════
+- Sin frameworks CSS externos
+- Usar variables CSS existentes en variables.css — 
+  agregar nuevas variables si necesitas tokens que no existen
+- No cambiar lógica JavaScript, solo CSS y estructura HTML mínima
+- Mantener responsive — sidebar se oculta en móvil
+- Ejecutar npm test al finalizar — 24/24 deben pasar
+- Hacer git commit por área: 
+  "feat: mejora visual sidebar"
+  "feat: mejora visual header paciente"  
+  "feat: mejora visual documentos"
+- Detente después de cada commit y avísame para revisar visualmente
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-06T22:46:38-05:00.
+
+The user's current state is as follows:
+Active Document: m:\Dev\Apps\SigestHC_JS\login.html (LANGUAGE_HTML)
+Cursor is on line: 1
+Other open documents:
+- m:\Dev\Apps\SigestHC_JS\login.html (LANGUAGE_HTML)
+Browser State:
+  Page C466BB5DBCA73EB4FBC96E982C9C904C (localhost) - chrome-error://chromewebdata/ [ACTIVE]
+    Viewport: 1278x944, Page Height: 944
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.5 Flash (Medium) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

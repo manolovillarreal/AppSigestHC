@@ -171,9 +171,8 @@ export class SolicitudCorreccionItem extends BaseComponent {
 
     if (!confirmacion.isConfirmed) return;
 
-    const res = await apiDelete(
-      `/SolicitudCorreccion/${this.solicitudCorreccion.id}`
-    );
+    const res = await SolicitudCorreccionService.eliminarSolicitudCorreccion(this.solicitudCorreccion.id);
+    
     if (res.ok) {
       await Swal.fire({
         icon: "success",
@@ -291,6 +290,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
       this.solicitudCorreccion.id,
       conservarDocumentoAnterior
     );
+
     if (res.ok) {
       await Swal.fire({
         icon: "success",

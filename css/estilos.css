@@ -360,3 +360,120 @@ body {
   background-color: rgba(255, 255, 255, 0.12);
   border-left: 3px solid #5DCAA5;
 }
+
+
+/* Sidebar Refinement */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+.logo-icon-container {
+  width: 32px;
+  height: 32px;
+  background-color: #0d6efd;
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-icon-container .material-icons {
+  font-size: 20px;
+}
+.logo-text-bold {
+  font-weight: 700;
+  font-size: 18px;
+  color: #ffffff;
+}
+.logo-text-light {
+  font-weight: 300;
+  font-size: 18px;
+  color: #bae6fd;
+}
+
+.pill-style {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 6px 12px !important;
+}
+.nav-centered {
+  justify-content: flex-start;
+  gap: 15px;
+  padding-left: 0;
+}
+.menu-icon {
+  font-size: 24px;
+  padding: 6px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.menu-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+.menu-icon-active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+}
+
+
+/* Refinamiento Lista Atenciones */
+.estado-section summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 8px 10px;
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: capitalize;
+  user-select: none;
+}
+.estado-section summary::-webkit-details-marker {
+  display: none;
+}
+.estado-section summary::before {
+  content: 'play_arrow';
+  font-family: 'Material Icons';
+  font-size: 16px;
+  transition: transform 0.2s;
+  color: rgba(255, 255, 255, 0.6);
+}
+.estado-section[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.atencion-item {
+  border-left: none;
+  border-radius: 8px;
+  margin: 0 10px 5px 10px;
+  color: rgba(255, 255, 255, 0.9);
+}
+.atencion-item-selected {
+  background-color: #0d6efd !important;
+  color: #ffffff;
+  border-left: none;
+}
+.badges-derecha {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.badge-proc {
+  display: none;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.atencion-item-selected .badge-proc {
+  display: inline-block;
+}

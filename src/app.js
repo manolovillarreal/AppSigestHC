@@ -75,14 +75,8 @@ function configurarVistaPorRol() {
   document.getElementById("nombreUsuario").textContent = perfil.nombreUsuario;
   document.getElementById("nombreCompletoUsuario").textContent = perfil.nombre;
 
-  const iniciales = (perfil.nombre || perfil.nombreUsuario || "U").split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-  const avatarEl = document.getElementById("avatarUsuario");
-  if (avatarEl) {
-    avatarEl.textContent = iniciales;
-  }
-
-  // Si el usuario es Administrador, agregar botón de Admin
-  if (perfil.rol.nombre === "Admin") {
+  // Si el usuario es Administrador, agregar botón de Atenciones en el sidebar
+  if (perfil.rol.nombre === PERFILES.ADMINISTRADOR) {
     const header = document.querySelector(".sidebar-header");
 
     const btnAdmin = document.createElement("button");

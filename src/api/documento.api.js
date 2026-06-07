@@ -184,6 +184,10 @@ async function restaurarDocumento(id) {
     return apiPost(`/Documentos/${id}/restaurar`, {});
 }
 
+export async function importarDocumentoIdentidad(atencionId) {
+    return await apiPost(`/Documentos/importar-documento-identidad/${atencionId}`);
+}
+
 export const DocumentoService = {
     EnviarDocumentoFirmado,
     descargarMultiples,
@@ -191,5 +195,6 @@ export const DocumentoService = {
     descargarComoZip,
     descargarComoPdf,
     obtenerPapelera,
-    restaurarDocumento
-};  
+    restaurarDocumento,
+    importarDocumentoIdentidad
+};

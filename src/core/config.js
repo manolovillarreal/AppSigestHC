@@ -1,7 +1,7 @@
 // src/config.js
 
 // ✅ URL base de la API
-const RAW_API_URL = window.__APP_CONFIG__?.API_URL || 'http://localhost:5000';
+const RAW_API_URL = window.__APP_CONFIG__?.API_URL || 'http://10.10.1.1:8002';
 export const API_URL = RAW_API_URL.endsWith('/api') ? RAW_API_URL : `${RAW_API_URL}/api`;
 
 // ✅ Flag de debug

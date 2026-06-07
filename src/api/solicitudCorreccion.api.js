@@ -1,4 +1,4 @@
-import { apiDownloadBlob, apiGet, apiPost, apiUpload } from "../core/api.js";
+import { apiDownloadBlob, apiGet, apiPost,apiDelete ,apiUpload } from "../core/api.js";
 
 function obtenerCorreccionesPorRol() {
   return apiGet("/SolicitudCorreccion/por-rol");
@@ -17,10 +17,15 @@ function aprobarCorreccion(solicitudId, conservarDocumentoAnterior) {
 function rechazarCorreccion(solicitudId,observacion) {
   return apiPost(`/SolicitudCorreccion/${solicitudId}/rechazar`,observacion);
 }
+export async function eliminarSolicitudCorreccion(solicitudId) {
+     return await apiDelete(`/SolicitudCorreccion/${solicitudId}`);
+   }
+
 export const SolicitudCorreccionService = {
   obtenerCorreccionesPorRol,
   responderSolicitudCorreccion,
   visualizarCorreccion,
   aprobarCorreccion,
-  rechazarCorreccion
+  rechazarCorreccion,
+  eliminarSolicitudCorreccion
 };

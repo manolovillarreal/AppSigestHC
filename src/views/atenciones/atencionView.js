@@ -12,6 +12,7 @@ import {
   anularAtencion,
   preguntarSiAvanzarEstado,
 } from "./AtencionActions.js";
+import { importarDocumentoIdentidad } from "../../api/documento.api.js";
 
 export class AtencionView extends BaseComponent {
   constructor(atencion, onSuccess) {
@@ -58,24 +59,88 @@ export class AtencionView extends BaseComponent {
   }
 
   _renderPanelDocumentos() {
+    const headerDoc = document.createElement("div");
+    headerDoc.className = "header-documentos-seccion";
+
     const h3 = document.createElement("h3");
-    h3.textContent = "Documentos de la Atención";
-    this.element.appendChild(h3);
+    h3.className = "titulo-documentos";
+    h3.innerHTML = `<span class="material-icons">description</span> Documentos de la Atención`;
+    
+    const btnAgregarDocumento = document.createElement("button");
+    btnAgregarDocumento.id = "btn-agregar-documento";
+    btnAgregarDocumento.className = "btn-agregar-documento";
+    btnAgregarDocumento.innerHTML = `<span class="material-icons">add</span> Agregar Documento`;
+
+    headerDoc.appendChild(h3);
+    headerDoc.appendChild(btnAgregarDocumento);
+
+    this.element.appendChild(headerDoc);
 
     const contenedorDocumentos = document.createElement("ul");
     contenedorDocumentos.id = "documentos-list";
     contenedorDocumentos.className = "list-view";
 
+    const btnImportarID = document.createElement("button");
+    btnImportarID.id = "btn-importar-id";
+    btnImportarID.className = "btn-primary";
+    btnImportarID.textContent = "Importar documento de identidad";
+    btnImportarID.style.display = "none";
+
+    const actualizarBotonImportarID = (documentos) => {
+      const tieneID = documentos.some(
+        (d) => d.tipoDocumento?.codigo === "ID" && !d.fechaEliminacion
+      );
+      btnImportarID.style.display = tieneID ? "none" : "";
+    };
+
     const listaDocumentos = new ListaDocumentos(this.atencion, true, async () => {
       await listaDocumentos.reMount();
       if (this.papeleraDocumentos) await this.papeleraDocumentos.reMount();
+      actualizarBotonImportarID(listaDocumentos.documentos);
     });
-    listaDocumentos.mount(contenedorDocumentos);
+    listaDocumentos.mount(contenedorDocumentos).then(() => {
+      actualizarBotonImportarID(listaDocumentos.documentos);
+    });
 
-    const btnAgregarDocumento = document.createElement("button");
-    btnAgregarDocumento.id = "btn-agregar-documento";
-    btnAgregarDocumento.className = "btn-primary";
-    btnAgregarDocumento.textContent = " Agregar Documento";
+    btnImportarID.addEventListener("click", async () => {
+      Swal.fire({
+        title: "Importando...",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      const response = await importarDocumentoIdentidad(this.atencion.id);
+
+      if (!response.ok) {
+        await Swal.fire({
+          icon: "error",
+          title: "Error al importar",
+          text: response.errorMessages?.[0] || "Error desconocido",
+        });
+        return;
+      }
+
+      if (!response.result) {
+        await Swal.fire({
+          icon: "info",
+          title: "Sin documentos anteriores",
+          text: "No se encontró un documento de identidad en atenciones anteriores.",
+        });
+        return;
+      }
+
+      await Swal.fire({
+        icon: "success",
+        title: "Documento importado",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      btnImportarID.style.display = "none";
+      await listaDocumentos.reMount();
+    });
+
+    // btnAgregarDocumento ya fue creado en el headerDoc
 
     const papeleraContainer = document.createElement("div");
     papeleraContainer.id = "papelera-documentos-container";
@@ -101,7 +166,8 @@ export class AtencionView extends BaseComponent {
       });
     });
 
-    this.element.appendChild(btnAgregarDocumento);
+    // Ya se añadió btnAgregarDocumento arriba
+    this.element.appendChild(btnImportarID);
     this.element.appendChild(contenedorDocumentos);
     this.element.appendChild(papeleraContainer);
   }

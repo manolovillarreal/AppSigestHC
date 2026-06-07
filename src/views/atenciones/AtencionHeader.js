@@ -22,29 +22,35 @@ export class AtencionHeader extends BaseComponent {
     const inicialesPaciente = `${p.primerNombre.charAt(0)}${p.primerApellido.charAt(0)}`.toUpperCase();
     const estadoStr = this.atencion.estadoAtencion.nombre.toLowerCase().replace(/ /g, '-').replace('ó', 'o');
     this.element.innerHTML = `
-      <div class="header-col-left">
-        <div class="paciente-avatar-lg">${inicialesPaciente}</div>
-        <div class="paciente-datos">
-          <span class="paciente-nombre-view">${p.primerNombre} ${p.primerApellido}</span>
-          <span class="paciente-doc">${p.id}</span>
-        </div>
-      </div>
-      <div class="header-col-right grid-datos">
+      <div class="header-datos-grid">
         <div class="grid-dato">
-          <span class="grid-label">Administradora</span>
-          <span class="grid-valor" id="cabecera-adm">${this.atencion.administradora.nombre}</span>
+          <span class="grid-label">Atención ID:</span>
+          <span class="grid-valor">${this.atencion.id}</span>
         </div>
         <div class="grid-dato">
-          <span class="grid-label">Estado</span>
-          <span class="grid-valor badge-estado estado-${estadoStr}" id="estadoAtencion">${this.atencion.estadoAtencion.nombre}</span>
+          <span class="grid-label">Administradora:</span>
+          <span class="grid-valor">${this.atencion.administradora.nombre}</span>
         </div>
         <div class="grid-dato">
-          <span class="grid-label">Fecha</span>
-          <span class="grid-valor" id="cabecera-fecha">${formatearFechaHora(this.atencion.fecha)}</span>
+          <span class="grid-label">Paciente ID:</span>
+          <span class="grid-valor">${p.id}</span>
+        </div>
+        <div class="grid-dato">
+          <span class="grid-label">Estado:</span>
+          <span class="grid-valor badge-estado estado-${estadoStr}" style="margin-left:8px;">${this.atencion.estadoAtencion.nombre}</span>
+        </div>
+        <div class="grid-dato">
+          <span class="grid-label">Paciente:</span>
+          <span class="grid-valor paciente-link">${p.primerNombre} ${p.primerApellido}</span>
         </div>
         <div class="grid-dato" id="tipoAtencionContainer">
         </div>
+        <div class="grid-dato">
+          <span class="grid-label">Fecha:</span>
+          <span class="grid-valor">${formatearFechaHora(this.atencion.fecha)}</span>
+        </div>
       </div>
+      <div class="wave-bg"></div>
     `;
 
     const tipoAtencionElement = this._setTipoAtencionElement();

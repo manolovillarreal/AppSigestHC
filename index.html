@@ -47,16 +47,25 @@
     <div class="container">
       <aside class="sidebar">
         <div class="sidebar-header">
-          <div class="usuario-info-container">
+          <!-- Logo -->
+          <div class="sidebar-logo">
+            <div class="logo-icon-container">
+              <span class="material-icons">add</span>
+            </div>
+            <span class="logo-text-bold">SIGEST</span>
+            <span class="logo-text-light">HC</span>
+          </div>
+
+          <div class="usuario-info-container pill-style">
             <div class="usuario-info">
-              <div class="avatar-circular" id="avatarUsuario"></div>
+              <span class="material-icons">account_circle</span>
               <span id="nombreUsuario" class="usuario-nombre">Usuario</span>
             </div>
             <button id="btnLogout" class="btn-icon btn-logout" title="Cerrar sesión">
               <span class="material-icons">logout</span>
             </button>
           </div>
-          <div id="menuHeader" class="menu-navegacion">
+          <div id="menuHeader" class="menu-navegacion nav-centered">
           </div>
         </div>     
         <div id="sidebar-panel"></div>

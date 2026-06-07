@@ -31,7 +31,10 @@ export class ItemAtencion extends BaseComponent{
                     <strong>${paciente.primerNombre} ${paciente.primerApellido}</strong>
                     <span>${calcularEdad(paciente.fechaNacimiento)} años</span>
                 </div>
-                ${ubicacionPaciente ? `<span class="ubicacion">${ubicacionPaciente.codigo}</span>` : ''}
+                <div class="badges-derecha">
+                  <span class="badge-proc">PROC</span>
+                  ${ubicacionPaciente ? `<span class="ubicacion">${ubicacionPaciente.codigo}</span>` : ''}
+                </div>
                 </div>
                 <div class="atencion-detalles">
                 <span class="fecha">${new Date(

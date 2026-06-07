@@ -22,6 +22,8 @@ export class ListaDocumentos extends BaseComponent {
       doc.atencion = this.atencion;
       return doc;
     });
+    console.log(this.documentos);
+    
   }
 
 
