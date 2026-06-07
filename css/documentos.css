@@ -75,10 +75,12 @@
 }
 
 .doc-acciones {
-  margin-top: auto;
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px 8px;
+  margin-top: auto;
 }
 
 .icon-btn {
