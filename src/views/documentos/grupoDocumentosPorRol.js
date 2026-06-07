@@ -17,7 +17,21 @@ export class GrupoDocumentosPorRol extends BaseComponent {
 
     const header = document.createElement("div");
     header.classList.add("doc-panel-header");
-    header.textContent = `${this.rolNombre} (${this.documentos.length})`;
+
+    const leftPart = document.createElement("div");
+    leftPart.className = "grupo-doc-left";
+    leftPart.innerHTML = `
+      <span class="material-icons grupo-doc-icon">folder_shared</span>
+      <span class="grupo-doc-title">${this.rolNombre}</span>
+      <span class="grupo-doc-badge">${this.documentos.length}</span>
+    `;
+
+    const chevron = document.createElement("span");
+    chevron.className = "material-icons chevron-icon";
+    chevron.textContent = "expand_more";
+
+    header.appendChild(leftPart);
+    header.appendChild(chevron);
 
     const contenido = document.createElement("div");
     contenido.classList.add("doc-panel-content");
@@ -25,6 +39,7 @@ export class GrupoDocumentosPorRol extends BaseComponent {
     // Toggle colapsable
     header.addEventListener("click", () => {
       contenido.classList.toggle("hidden");
+      header.classList.toggle("collapsed");
     });
     
     // Renderizar los documentos de este grupo
