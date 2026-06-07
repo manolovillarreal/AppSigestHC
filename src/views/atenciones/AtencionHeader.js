@@ -10,37 +10,56 @@ export class AtencionHeader extends BaseComponent {
     super();
     this.atencion = atencion;
     this.onClose = onClose;
+import { formatearFechaHora } from "../../utils/date.js";
+import { PERFILES } from "../../core/config.js";
+import { apiPut } from "../../core/api.js";
+import { formatearErroresHTML } from "../../utils/error.js";
+
+export class AtencionHeader extends BaseComponent {
+  constructor(atencion, onClose, onSuccess) {
+    super();
+    this.atencion = atencion;
+    this.onClose = onClose;
     this.onSuccess = onSuccess;
   }
 
   render() {
     this.element = document.createElement("div");
     this.element.id = "panel-cabecera-atencion";
-    this.element.className = "atencion-header";
+    this.element.className = "atencion-header-card";
+
+    const p = this.atencion.paciente;
+    const inicialesPaciente = `${p.primerNombre.charAt(0)}${p.primerApellido.charAt(0)}`.toUpperCase();
+    const estadoStr = this.atencion.estadoAtencion.nombre.toLowerCase().replace(/ /g, '-').replace('ó', 'o');
+
     this.element.innerHTML = `
-      <div class="atencion-info">
-        <div>
-          <strong>Atención ID:</strong> <span id="cabecera-id">${this.atencion.id}</span>
-          <strong style="margin-left: 10px;">Paciente ID:</strong>
-          <span id="cabecera-paciente-id">${this.atencion.paciente.id}</span>
+      <div class="header-col-left">
+        <div class="paciente-avatar-lg">${inicialesPaciente}</div>
+        <div class="paciente-datos">
+          <span class="paciente-nombre-view">${p.primerNombre} ${p.primerApellido}</span>
+          <span class="paciente-doc">${p.id}</span>
         </div>
-        <strong>Paciente:</strong>
-        <span class="paciente-nombre-view">${this.atencion.paciente.primerNombre} ${this.atencion.paciente.primerApellido}</span><br />
-        <strong>Fecha:</strong>
-        <span id="cabecera-fecha">${formatearFechaHora(this.atencion.fecha)}</span><br />
-        <strong>Administradora:</strong>
-        <span id="cabecera-adm">${this.atencion.administradora.nombre}</span><br />
-        <div id="estadoyTipoContainer">
-          <div>
-            <strong>Estado:</strong>
-            <span id="estadoAtencion">${this.atencion.estadoAtencion.nombre}</span>
-          </div>
+      </div>
+      <div class="header-col-right grid-datos">
+        <div class="grid-dato">
+          <span class="grid-label">Administradora</span>
+          <span class="grid-valor" id="cabecera-adm">${this.atencion.administradora.nombre}</span>
+        </div>
+        <div class="grid-dato">
+          <span class="grid-label">Estado</span>
+          <span class="grid-valor badge-estado estado-${estadoStr}" id="estadoAtencion">${this.atencion.estadoAtencion.nombre}</span>
+        </div>
+        <div class="grid-dato">
+          <span class="grid-label">Fecha</span>
+          <span class="grid-valor" id="cabecera-fecha">${formatearFechaHora(this.atencion.fecha)}</span>
+        </div>
+        <div class="grid-dato" id="tipoAtencionContainer">
         </div>
       </div>
     `;
 
     const tipoAtencionElement = this._setTipoAtencionElement();
-    this.element.querySelector("#estadoyTipoContainer").appendChild(tipoAtencionElement);
+    this.element.querySelector("#tipoAtencionContainer").appendChild(tipoAtencionElement);
 
     const btnCerrar = document.createElement("button");
     btnCerrar.id = "btnCerrarPanelAtencion";
@@ -60,7 +79,7 @@ export class AtencionHeader extends BaseComponent {
 
   _setTipoAtencionElement() {
     const tipoAtencionElement = document.createElement("div");
-    tipoAtencionElement.className = "fila-horizontal";
+    tipoAtencionElement.className = "tipo-atencion-wrapper";
 
     const { perfil } = contexto;
 
@@ -82,18 +101,23 @@ export class AtencionHeader extends BaseComponent {
         select.appendChild(option);
       });
 
-      const title = document.createElement("strong");
-      title.textContent = "Tipo Atención:";
+      const title = document.createElement("span");
+      title.className = "grid-label";
+      title.textContent = "Tipo Atención";
+      
+      const valorWrapper = document.createElement("div");
+      valorWrapper.className = "grid-valor select-con-botones";
+      
       tipoAtencionElement.appendChild(title);
-      tipoAtencionElement.appendChild(select);
+      valorWrapper.appendChild(select);
+      tipoAtencionElement.appendChild(valorWrapper);
 
       const btnGuardar = document.createElement("button");
       btnGuardar.id = "btnGuardarTipoAtencion";
-      btnGuardar.className = "btn-guardar-tipo-atencion";
+      btnGuardar.className = "icon-btn";
       btnGuardar.title = "Guardar tipo de atención";
       btnGuardar.innerHTML = `<span class="material-icons">save</span>`;
-      btnGuardar.style.marginLeft = "8px";
-      tipoAtencionElement.appendChild(btnGuardar);
+      valorWrapper.appendChild(btnGuardar);
 
       select.addEventListener("change", () => {
         if (select.value == this.atencion.tipoAtencionId) {
@@ -153,8 +177,8 @@ export class AtencionHeader extends BaseComponent {
       });
     } else {
       tipoAtencionElement.innerHTML = `
-        <strong>Tipo Atención:</strong>
-        <span id="tipoAtencion">${this.atencion.tipoAtencionId == 1 ? "Urgencias" : "Hospitalización"}</span>
+        <span class="grid-label">Tipo Atención</span>
+        <span class="grid-valor" id="tipoAtencion">${this.atencion.tipoAtencionId == 1 ? "Urgencias" : "Hospitalización"}</span>
       `;
     }
 

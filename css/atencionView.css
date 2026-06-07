@@ -1,44 +1,93 @@
-.atencion-header {
+.atencion-header-card {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  background: var(--color-surface);
-  padding: 1rem;
-  border-bottom: 1px solid var(--color-borde-suave);
-}
-
-.atencion-info {
-  font-size: 0.9rem;
-  color: var(--color-texto);
-  line-height: 1.4;
-}
-
-.btn-secundario {
-  background: none;
-  border: 1px solid var(--color-borde-oscuro);
-  padding: 0.3rem 0.7rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  color: var(--color-text-dark);
-  border-radius: 4px;
-}
-
-.btn-secundario:hover {
-  background-color: var(--color-surface-tertiary);
-}
-
-#panel-cabecera-atencion button + button {
-  margin-left: 0.5rem;
-}
-
-/* Cabecera relativa para ubicar botón flotante */
-.atencion-header {
   position: relative;
-  padding: 1rem;
-  background-color: var(--color-surface);
-  border-bottom: 1px solid var(--color-borde-suave);
-  margin-bottom: 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0; /* 0.5px might not render well on all screens, using 1px */
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.5rem;
+  gap: 40px;
+  align-items: center;
 }
+
+.header-col-left {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  min-width: 250px;
+}
+
+.paciente-avatar-lg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #E6F1FB;
+  color: #185FA5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.paciente-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.paciente-nombre-view {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.paciente-doc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.grid-datos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 16px;
+  column-gap: 40px;
+  flex-grow: 1;
+}
+
+.grid-dato {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.grid-label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.grid-valor {
+  font-size: 13px;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.badge-estado {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  width: fit-content;
+}
+
+.estado-admision { background-color: #e0f2fe; color: #0284c7; }
+.estado-ingreso, .estado-consulta { background-color: #dcfce7; color: #16a34a; }
+.estado-cierre { background-color: #f1f5f9; color: #475569; }
+.estado-anulado { background-color: #fee2e2; color: #ef4444; }
 
 /* Botón cerrar en esquina superior derecha */
 .btn-cerrar-atencion {
