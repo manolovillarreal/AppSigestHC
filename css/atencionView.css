@@ -201,3 +201,20 @@
 .estado-consulta { background-color: #E6F1FB !important; color: #185FA5 !important; }
 .estado-cierre { background-color: #F1EFE8 !important; color: #5F5E5A !important; }
 .estado-anulado { background-color: #FCEBEB !important; color: #A32D2D !important; }
+
+
+#documentos-list {
+  margin-top: 12px;
+}
+
+.header-documentos-seccion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.acciones-docs-header {
+  display: flex;
+  gap: 8px;
+}
