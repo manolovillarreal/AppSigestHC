@@ -74,6 +74,13 @@ function configurarVistaPorRol() {
 
   document.getElementById("nombreUsuario").textContent = perfil.nombreUsuario;
   document.getElementById("nombreCompletoUsuario").textContent = perfil.nombre;
+
+  const iniciales = (perfil.nombre || perfil.nombreUsuario || "U").split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  const avatarEl = document.getElementById("avatarUsuario");
+  if (avatarEl) {
+    avatarEl.textContent = iniciales;
+  }
+
   // Si el usuario es Administrador, agregar botón de Admin
   if (perfil.rol.nombre === "Admin") {
     const header = document.querySelector(".sidebar-header");
@@ -121,7 +128,11 @@ function renderMenu() {
     span.title = opcion.label;
     span.classList.add("material-symbols-outlined","menu-icon");
     span.textContent = opcion.icon;
-    span.onclick = opcion.onclick;
+    span.onclick = () => {
+      document.querySelectorAll(".menu-icon").forEach(el => el.classList.remove("menu-icon-active"));
+      span.classList.add("menu-icon-active");
+      opcion.onclick();
+    };
     container.appendChild(span);
   });
 }

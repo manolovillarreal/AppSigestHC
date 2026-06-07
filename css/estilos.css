@@ -17,10 +17,11 @@ body {
   display: flex;
   flex-direction: column;
   width: 300px;
-  background-color: var(--color-superficie-secondary);
+  background: linear-gradient(to bottom, #0C447C, #042C53);
   padding: 10px;
   height: 100vh;
   z-index: 1;
+  color: #fff;
 }
 
 #sidebar-panel {
@@ -33,24 +34,27 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-bottom: 1px solid var(--color-borde-suave);
   margin-bottom: 15px;
 }
-.usuario-info-container{
+.sidebar-divider {
+  border: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 0 15px 0;
+}
+.usuario-info-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 120px;
+  align-items: center;
+  padding: 10px 0;
 }
-#menuHeader {
+.menu-navegacion {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 15px;
   padding-left: 8px;
-}
-#menuHeader span:hover{
-  color: var(--color-primario);
-  cursor: pointer;
+  margin-top: 15px;
 }
 .sidebar h2 {
     margin-top: 0;
@@ -63,9 +67,25 @@ body {
 .usuario-info {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: bold;
-  color: var(--color-texto);
+  gap: 0.8rem;
+}
+
+.avatar-circular {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 16px;
+  color: #fff;
+}
+
+.usuario-nombre {
+  font-weight: 500;
+  color: #fff;
 }
 
 .perfil-icon {
@@ -80,8 +100,13 @@ body {
   color: var(--color-text-muted);
 }
 
-.btn-icon:hover {
-  color: var(--color-negro);
+.btn-logout {
+  color: rgba(255,255,255,0.5);
+  transition: color 0.3s ease;
+}
+
+.btn-logout:hover {
+  color: #fff;
 }
 
 .main-content {
@@ -120,33 +145,63 @@ body {
   }  
 
   
+.atencion-item {
+  padding: 12px 16px;
+  background-color: transparent;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.atencion-item-selected {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #5DCAA5;
+}
+
+.atencion-item:hover:not(.atencion-item-selected) {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
 .paciente-info {
     display: flex;
-    justify-content: space-between; /* separa nombre y ubicación */
-    align-items: center;            /* centra verticalmente */
-    font-size: 1em;
-    color: var(--color-texto);
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 5px;
 }
 
-.ubicacion {
-    background-color: var(--color-primario);
-    color: var(--color-blanco);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.85em;
+.paciente-info strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
 }
 
-  .atencion-detalles {
+.paciente-info span {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.ubicacion {
+    background-color: rgba(93, 202, 165, 0.2) !important;
+    color: #5DCAA5 !important;
+    padding: 2px 8px !important;
+    border-radius: 12px !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+}
+
+.atencion-detalles {
     display: flex;
     justify-content: space-between;
-    font-size: 0.9em;
-    color: var(--color-text-muted);
-  }
+}
   
-  .fecha {
-    font-weight: bold;
-  }
+.fecha, .extra-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: normal;
+}
   
   .estado {
     font-style: italic;
@@ -265,9 +320,19 @@ body {
 
 .estado-section{
   margin: 8px 0;
-    font-size: 20px;
-    color: var(--color-azul-oscuro);
-    font-weight: bold;
+}
+
+.estado-section summary {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.4);
+  background: transparent;
+  padding: 10px 0 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 8px;
+  cursor: pointer;
+  list-style: none; /* Hide default triangle if desired, but ok to keep */
 }
 
 
@@ -278,6 +343,20 @@ body {
 
 
 .menu-icon {
-font-size: 32px!important;
-color: var(--color-azul-oscuro); 
+  font-size: 28px !important;
+  color: rgba(255, 255, 255, 0.7); 
+  padding: 8px;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+.menu-icon:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+}
+.menu-icon-active {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-left: 3px solid #5DCAA5;
 }
