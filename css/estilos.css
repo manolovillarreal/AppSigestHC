@@ -477,3 +477,142 @@ body {
 .atencion-item-selected .badge-proc {
   display: inline-block;
 }
+
+
+/* Sobrescribiendo con Diseño Objetivo Exacto */
+.sidebar {
+  padding: 0 !important;
+}
+.sidebar-header {
+  padding: 20px 20px 0 20px;
+}
+#sidebar-panel {
+  padding: 0;
+}
+.sidebar-logo {
+  margin-bottom: 15px;
+}
+.logo-icon-container {
+  background-color: #e0f2fe;
+  color: #0284c7;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+.logo-icon-container .material-icons {
+  font-size: 16px;
+}
+.logo-text-light {
+  color: #5DCAA5 !important;
+}
+.avatar-circular-pequeno {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.usuario-nombre {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}
+.menu-icon {
+  font-size: 20px !important;
+  color: rgba(255,255,255,0.7) !important;
+  background: transparent !important;
+  padding: 8px;
+  margin: 0;
+}
+.menu-icon:hover {
+  background: rgba(255,255,255,0.08) !important;
+}
+.menu-icon-active {
+  background: rgba(255,255,255,0.12) !important;
+  color: #ffffff !important;
+}
+.nav-centered {
+  gap: 8px !important;
+}
+.agrupador-atenciones label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  margin-right: 8px;
+}
+#agrupador-select {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #ffffff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  outline: none;
+}
+#agrupador-select option {
+  color: #000;
+}
+#btnNuevaAtencion {
+  background-color: #185FA5 !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  border: none !important;
+  width: auto !important;
+  margin-top: 10px;
+}
+.estado-section summary {
+  font-size: 12px !important;
+  color: rgba(255,255,255,0.6) !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+}
+.estado-group .estado-section summary {
+  padding-left: 26px !important;
+}
+.atencion-item {
+  padding: 10px 16px !important;
+  background-color: transparent !important;
+  border-left: 3px solid transparent !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+.atencion-item:hover {
+  background-color: rgba(255,255,255,0.06) !important;
+}
+.atencion-item.atencion-item-selected {
+  background-color: rgba(255,255,255,0.1) !important;
+  border-left: 3px solid #5DCAA5 !important;
+}
+.paciente-info strong {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  display: inline-block !important;
+  margin-right: 4px !important;
+  text-transform: none !important;
+}
+.paciente-info span {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: rgba(255,255,255,0.7) !important;
+}
+.atencion-detalles .fecha {
+  font-size: 11px !important;
+  color: rgba(255,255,255,0.55) !important;
+}
+.extra-info .extra-label {
+  font-size: 11px !important;
+  color: rgba(255,255,255,0.5) !important;
+  text-transform: uppercase !important;
+}
+.badge-proc {
+  background-color: rgba(55,138,221,0.3) !important;
+  color: #85B7EB !important;
+  font-size: 10px !important;
+  border-radius: 100px !important;
+  padding: 2px 8px !important;
+  float: right !important;
+  display: inline-block !important;
+}

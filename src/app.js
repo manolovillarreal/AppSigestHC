@@ -23,7 +23,7 @@ const opcionesMenuGenerales = [
   },
   { id: "btnAtenciones", 
     label: "Atenciones", 
-    icon: "folder_open",
+    icon: "folder",
     onclick: () => cargarBuscadorAtenciones(),
     permisos: [ 
             PERFILES.ADMISIONES,
@@ -34,12 +34,12 @@ const opcionesMenuGenerales = [
    },
   {   id:   "btnCorrecciones", 
       label: "Correciones", 
-      icon: "quick_reference",
+      icon: "note_add",
       permisos: Object.values(PERFILES),
       onclick: () => cargarCorrecciones()
    },
-    { id: "btnAtenciones", 
-    label: "Atenciones", 
+    { id: "btnAdmin", 
+    label: "Administración", 
     icon: "settings",
     onclick: () => window.location.href = "admin.html",
     permisos: [ 
