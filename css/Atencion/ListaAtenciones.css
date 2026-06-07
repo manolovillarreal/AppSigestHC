@@ -9,10 +9,11 @@
   justify-content: space-between;
   align-items: center;
 }
-#btnNuevaAtencion{
-      height: 35px;
-    padding: 0px 2px;
-    width: 150px;
+#btnNuevaAtencion {
+  height: auto;
+  padding: 6px 14px;
+  width: auto;
+  white-space: nowrap;
 }
 .agrupador-atenciones label {
   font-weight: 500;
