@@ -616,3 +616,53 @@ body {
   float: right !important;
   display: inline-block !important;
 }
+
+
+/* Correcciones Finales de Sidebar */
+ul.estado-group, ul.list-view {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+.estado-group .atencion-item {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.badge-proc {
+  display: none !important;
+}
+.atencion-item-selected .badge-proc {
+  display: inline-block !important;
+}
+.atencion-item.atencion-item-selected {
+  background-color: #0d6efd !important;
+  border-radius: 8px !important;
+  border-left: none !important;
+}
+.atencion-item.atencion-item-selected .paciente-info strong {
+  color: #ffffff !important;
+}
+.atencion-item.atencion-item-selected .paciente-info span {
+  color: rgba(255,255,255,0.8) !important;
+}
+.atencion-item.atencion-item-selected .fecha,
+.atencion-item.atencion-item-selected .extra-label {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+
+/* Correcciones Finales */
+.buscador-atenciones:has(#panel-vista-atencion > div) .buscador-atenciones-filtros {
+  display: none !important;
+}
+.btn-accion-doc {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+}
+.doc-panel-header .badge-contador {
+  display: none !important;
+}
+.doc-panel-header .grupo-doc-title {
+  display: inline-flex;
+  gap: 4px;
+}

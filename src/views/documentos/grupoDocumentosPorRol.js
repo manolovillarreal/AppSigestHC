@@ -22,8 +22,7 @@ export class GrupoDocumentosPorRol extends BaseComponent {
     leftPart.className = "grupo-doc-left";
     leftPart.innerHTML = `
       <span class="material-icons grupo-doc-icon" style="color: #64748b; font-size: 20px;">person</span>
-      <span class="grupo-doc-title">${this.rolNombre}</span>
-      <span class="badge-contador">${this.documentos.length}</span>
+      <span class="grupo-doc-title">${this.rolNombre} (${this.documentos.length})</span>
     `;
 
     const rightPart = document.createElement("div");
