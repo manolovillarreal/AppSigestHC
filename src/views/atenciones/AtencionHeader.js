@@ -1,19 +1,9 @@
-import { BaseComponent } from "../../components/BaseComponent.js";
-import contexto from "../../core/store.js";
-import { formatearFechaHora } from "../../utils/date.js";
-import { PERFILES } from "../../core/config.js";
-import { apiPut } from "../../core/api.js";
-import { formatearErroresHTML } from "../../utils/error.js";
-
-export class AtencionHeader extends BaseComponent {
-  constructor(atencion, onClose, onSuccess) {
-    super();
-    this.atencion = atencion;
-    this.onClose = onClose;
-import { formatearFechaHora } from "../../utils/date.js";
-import { PERFILES } from "../../core/config.js";
-import { apiPut } from "../../core/api.js";
-import { formatearErroresHTML } from "../../utils/error.js";
+import { BaseComponent } from '../../components/BaseComponent.js';
+import contexto from '../../core/store.js';
+import { formatearFechaHora } from '../../utils/date.js';
+import { PERFILES } from '../../core/config.js';
+import { apiPut } from '../../core/api.js';
+import { formatearErroresHTML } from '../../utils/error.js';
 
 export class AtencionHeader extends BaseComponent {
   constructor(atencion, onClose, onSuccess) {
@@ -31,7 +21,6 @@ export class AtencionHeader extends BaseComponent {
     const p = this.atencion.paciente;
     const inicialesPaciente = `${p.primerNombre.charAt(0)}${p.primerApellido.charAt(0)}`.toUpperCase();
     const estadoStr = this.atencion.estadoAtencion.nombre.toLowerCase().replace(/ /g, '-').replace('ó', 'o');
-
     this.element.innerHTML = `
       <div class="header-col-left">
         <div class="paciente-avatar-lg">${inicialesPaciente}</div>
