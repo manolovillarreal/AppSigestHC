@@ -80,7 +80,7 @@ export function renderAcciones({
 
   if (documento.puedeCargar) {
     const btnEliminar = document.createElement("button");
-    btnEliminar.classList.add("icon-btn");
+    btnEliminar.classList.add("btn-accion-doc", "btn-accion-eliminar");
     btnEliminar.title = "Eliminar";
     btnEliminar.innerHTML = `<span class="material-icons">delete</span>`;
     btnEliminar.addEventListener("click", onEliminar);
@@ -88,7 +88,7 @@ export function renderAcciones({
   }
 
   const btnDescargar = document.createElement("button");
-  btnDescargar.classList.add("icon-btn");
+  btnDescargar.classList.add("btn-accion-doc", "btn-accion-descargar");
   btnDescargar.title = "Descargar";
   btnDescargar.innerHTML = `<span class="material-icons">download</span>`;
   btnDescargar.addEventListener("click", onDescargar);
@@ -96,7 +96,7 @@ export function renderAcciones({
 
   if ((documento.tipoDocumento.requiereNumeroRelacion || documento.tipoDocumento.esAsistencial) && documento.puedeCargar) {
     const btnEditar = document.createElement("button");
-    btnEditar.classList.add("icon-btn");
+    btnEditar.classList.add("btn-accion-doc", "btn-accion-editar");
     btnEditar.title = "Editar";
     btnEditar.innerHTML = `<span class="material-icons">edit</span>`;
     btnEditar.addEventListener("click", onEditar);
@@ -105,7 +105,7 @@ export function renderAcciones({
 
   if (puedeSolicitarCorrecion(documento) && !tieneSolicitudesPendientes()) {
     const btnSolicitarCorreccion = document.createElement("button");
-    btnSolicitarCorreccion.classList.add("icon-btn");
+    btnSolicitarCorreccion.classList.add("btn-accion-doc", "btn-accion-editar");
     btnSolicitarCorreccion.title = "Solicitar Corrección";
     btnSolicitarCorreccion.innerHTML = `<span class="material-symbols-outlined">quick_reference</span>`;
     btnSolicitarCorreccion.addEventListener("click", onSolicitarCorreccion);
@@ -114,7 +114,7 @@ export function renderAcciones({
 
   if (documento.tipoDocumento?.permiteFirma) {
     const btnFirmar = document.createElement("button");
-    btnFirmar.classList.add("icon-btn");
+    btnFirmar.classList.add("btn-accion-doc", "btn-accion-firmar");
     btnFirmar.title = "Firmar";
     btnFirmar.innerHTML = `<span class="material-symbols-outlined">signature</span>`;
     btnFirmar.addEventListener("click", onFirmarDocumento);

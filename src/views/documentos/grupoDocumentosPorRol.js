@@ -21,17 +21,20 @@ export class GrupoDocumentosPorRol extends BaseComponent {
     const leftPart = document.createElement("div");
     leftPart.className = "grupo-doc-left";
     leftPart.innerHTML = `
-      <span class="material-icons grupo-doc-icon">folder_shared</span>
+      <span class="material-icons grupo-doc-icon" style="color: #64748b; font-size: 20px;">person</span>
       <span class="grupo-doc-title">${this.rolNombre}</span>
-      <span class="grupo-doc-badge">${this.documentos.length}</span>
+      <span class="badge-contador">${this.documentos.length}</span>
     `;
 
+    const rightPart = document.createElement("div");
+    rightPart.className = "grupo-doc-right";
     const chevron = document.createElement("span");
     chevron.className = "material-icons chevron-icon";
     chevron.textContent = "expand_more";
+    rightPart.appendChild(chevron);
 
     header.appendChild(leftPart);
-    header.appendChild(chevron);
+    header.appendChild(rightPart);
 
     const contenido = document.createElement("div");
     contenido.classList.add("doc-panel-content");

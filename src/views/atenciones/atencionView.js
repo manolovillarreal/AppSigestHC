@@ -34,13 +34,7 @@ export class AtencionView extends BaseComponent {
     this.element.appendChild(header.element);
     this._renderHeaderActions();
 
-    const estado = new AtencionEstado(
-      this.atencion,
-      this.PreguntarSiAvanzarEstado.bind(this),
-      this.cerrarAtencion.bind(this)
-    );
-    estado.render();
-    this.element.appendChild(estado.element);
+    // El estado ahora se renderiza dentro de _renderPanelDocumentos
 
     this._renderPanelDocumentos();
   }
@@ -57,22 +51,37 @@ export class AtencionView extends BaseComponent {
       this.element.appendChild(btnAnular);
     }
   }
-
   _renderPanelDocumentos() {
     const headerDoc = document.createElement("div");
     headerDoc.className = "header-documentos-seccion";
 
     const h3 = document.createElement("h3");
     h3.className = "titulo-documentos";
-    h3.innerHTML = `<span class="material-icons">description</span> Documentos de la Atención`;
+    h3.innerHTML = `<span class="material-icons" style="color: #64748b; font-size: 20px;">description</span> Documentos de la Atención`;
     
+    const accionesContainer = document.createElement("div");
+    accionesContainer.className = "acciones-docs-header";
+
+    const estado = new AtencionEstado(
+      this.atencion,
+      this.PreguntarSiAvanzarEstado.bind(this),
+      this.cerrarAtencion.bind(this)
+    );
+    estado.render();
+    if (estado.element) {
+        estado.element.className = "estado-buttons-container";
+        accionesContainer.appendChild(estado.element);
+    }
+
     const btnAgregarDocumento = document.createElement("button");
     btnAgregarDocumento.id = "btn-agregar-documento";
-    btnAgregarDocumento.className = "btn-agregar-documento";
+    btnAgregarDocumento.className = "btn-agregar-documento btn-primary";
     btnAgregarDocumento.innerHTML = `<span class="material-icons">add</span> Agregar Documento`;
 
+    accionesContainer.appendChild(btnAgregarDocumento);
+
     headerDoc.appendChild(h3);
-    headerDoc.appendChild(btnAgregarDocumento);
+    headerDoc.appendChild(accionesContainer);
 
     this.element.appendChild(headerDoc);
 
