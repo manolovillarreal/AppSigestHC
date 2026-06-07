@@ -99,11 +99,21 @@
   background: #f1f5f9;
 }
 
-.icon-btn[title="Eliminar"] { color: #ef4444; }
-.icon-btn[title="Descargar"] { color: #0284c7; }
-.icon-btn[title="Firmar"] { color: #16a34a; }
-.icon-btn[title="Editar"] { color: #f59e0b; }
-.icon-btn[title="Solicitar Corrección"] { color: #8b5cf6; }
+.btn-eliminar, .btn-accion-eliminar, .btn-accion-doc[title*="liminar"], .btn-accion-doc[title*="Eliminar"] {
+  color: #ef4444;
+}
+
+.btn-descargar, .btn-accion-descargar, .btn-accion-doc[title*="escargar"], .btn-accion-doc[title*="Descargar"] {
+  color: #185FA5;
+}
+
+.btn-editar, .btn-accion-editar, .btn-accion-doc[title*="ditar"], .btn-accion-doc[title*="Editar"] {
+  color: #f59e0b;
+}
+
+.btn-firmar, .btn-accion-firmar, .btn-accion-doc[title*="irmar"], .btn-accion-doc[title*="Firmar"] {
+  color: #10b981;
+}
 
 .dropzone {
   display: flex;
