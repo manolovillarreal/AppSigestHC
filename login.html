@@ -6,23 +6,547 @@
   <title>Login - SIGEST HC</title>
   <link rel="stylesheet" href="css/estilos.css" />
   <link rel="stylesheet" href="css/login.css" />
-  <script type="module" src="src/login.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* CSS overrides for the new premium login page */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    .login-container {
+      display: flex !important;
+      width: 100vw !important;
+      min-height: 100vh !important;
+      justify-content: stretch !important;
+      align-items: stretch !important;
+      background: none !important;
+    }
+
+    .left-panel {
+      flex: 1.1;
+      background-image: url('img/login_bg.png');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 80px;
+      color: white;
+      position: relative;
+    }
+
+    /* Subtle overlay to ensure contrast and premium feel */
+    .left-panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 54, 112, 0.4) 0%, rgba(0, 16, 40, 0.6) 100%);
+      z-index: 1;
+    }
+
+    .left-panel-content {
+      position: relative;
+      z-index: 2;
+      max-width: 480px;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon-img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    .logo-title {
+      font-size: 38px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .logo-title span {
+      color: #00d2ff; /* cyan */
+    }
+
+    .logo-subtitle {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0 0 16px 0;
+      line-height: 1.4;
+      font-weight: 400;
+      max-width: 380px;
+    }
+
+    .accent-line {
+      width: 40px;
+      height: 3px;
+      background-color: #00d2ff;
+      border-radius: 2px;
+    }
+
+    .right-panel {
+      flex: 0.9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background-color: #f8fafc;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dot-matrix {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-waves {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 440px;
+      padding: 40px;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .avatar-container {
+      width: 64px;
+      height: 64px;
+      background-color: #eff6ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+    }
+
+    .avatar-icon {
+      color: #1d4ed8;
+    }
+
+    .welcome-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .welcome-subtitle {
+      font-size: 14px;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-left {
+      position: absolute;
+      left: 14px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 14px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .input-icon-right:hover {
+      color: #475569;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 12px 14px 12px 42px;
+      font-size: 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background-color: #ffffff;
+      color: #0f172a;
+      transition: all 0.2s;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .login-input:focus {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.15);
+    }
+
+    .login-input::placeholder {
+      color: #94a3b8;
+    }
+
+    /* Padding for password input to prevent text overlapping the eye icon */
+    #contrasena {
+      padding-right: 42px;
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #475569;
+      user-select: none;
+    }
+
+    .checkbox-container input {
+      margin-right: 8px;
+      width: 16px;
+      height: 16px;
+      accent-color: #1d4ed8;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: #1d4ed8;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .forgot-link:hover {
+      color: #1e40af;
+      text-decoration: underline;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1d4ed8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(29, 78, 216, 0.1), 0 2px 4px -1px rgba(29, 78, 216, 0.06);
+    }
+
+    .submit-button:hover {
+      background-color: #1e40af;
+      box-shadow: 0 4px 12px -1px rgba(29, 78, 216, 0.2), 0 2px 6px -1px rgba(29, 78, 216, 0.15);
+    }
+
+    .submit-button:active {
+      transform: translateY(1px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #94a3b8;
+      margin: 24px 0;
+      font-size: 13px;
+    }
+
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .divider::before {
+      margin-right: 12px;
+    }
+
+    .divider::after {
+      margin-left: 12px;
+    }
+
+    .secure-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background-color: #f8fafc;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .secure-icon {
+      color: #10b981;
+    }
+
+    /* Error Alert Styling */
+    .error-container {
+      background-color: #fef2f2;
+      border: 1px solid #fee2e2;
+      color: #991b1b;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      line-height: 1.4;
+    }
+
+    .error-icon {
+      flex-shrink: 0;
+      color: #ef4444;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive styling */
+    @media (max-width: 900px) {
+      .left-panel {
+        display: none;
+      }
+      .right-panel {
+        flex: 1;
+        padding: 24px;
+      }
+      .login-card {
+        padding: 30px 24px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="login-container">
-    <div class="login-box">
-      <h1>Acceso SIGEST HC</h1>
-      <form id="loginForm">
-        <label for="usuario">Usuario</label>
-        <input type="text" id="usuario" required />
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <div class="left-panel-content">
+        <div class="logo-row">
+          <img src="img/logo_icon.png" alt="Logo SIGEST HC" class="logo-icon-img" />
+          <h1 class="logo-title">SIGEST <span>HC</span></h1>
+        </div>
+        <p class="logo-subtitle">Sistema integral de gestión de historia clínica</p>
+        <div class="accent-line"></div>
+      </div>
+    </div>
 
-        <label for="contrasena">Contraseña</label>
-        <input type="password" id="contrasena" required />
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <!-- Decorative Elements -->
+      <div class="dot-matrix">
+        <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+          <circle cx="10" cy="10" r="2" fill="#e2e8f0" />
+          <circle cx="26" cy="10" r="2" fill="#e2e8f0" />
+          <circle cx="42" cy="10" r="2" fill="#e2e8f0" />
+          <circle cx="58" cy="10" r="2" fill="#e2e8f0" />
+          <circle cx="10" cy="20" r="2" fill="#e2e8f0" />
+          <circle cx="26" cy="20" r="2" fill="#e2e8f0" />
+          <circle cx="42" cy="20" r="2" fill="#e2e8f0" />
+          <circle cx="58" cy="20" r="2" fill="#e2e8f0" />
+          <circle cx="10" cy="30" r="2" fill="#e2e8f0" />
+          <circle cx="26" cy="30" r="2" fill="#e2e8f0" />
+          <circle cx="42" cy="30" r="2" fill="#e2e8f0" />
+          <circle cx="58" cy="30" r="2" fill="#e2e8f0" />
+        </svg>
+      </div>
+      <div class="bg-waves">
+        <svg width="240" height="240" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 0 200 C 50 180, 100 210, 200 160 L 200 200 Z" fill="#f1f5f9" opacity="0.8" />
+          <path d="M 0 200 C 100 160, 150 180, 200 130 C 240 100, 250 50, 200 30" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="3 3" />
+        </svg>
+      </div>
 
-        <button type="submit" class="btn-primary">Iniciar Sesión</button>
-      </form>
-      <div id="loginError" class="error hidden">Credenciales inválidas. Intenta de nuevo.</div>
+      <!-- Login Card -->
+      <div class="login-card">
+        <div class="avatar-container">
+          <svg class="avatar-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        
+        <h2 class="welcome-title">Bienvenido</h2>
+        <p class="welcome-subtitle">Inicie sesión para continuar</p>
+
+        <form id="loginForm">
+          <!-- Username field -->
+          <div class="form-group">
+            <label for="usuario" class="form-label">Usuario</label>
+            <div class="input-wrapper">
+              <span class="input-icon-left">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <input type="text" id="usuario" class="login-input" placeholder="Ingrese su usuario" required autocomplete="username" />
+            </div>
+          </div>
+
+          <!-- Password field -->
+          <div class="form-group">
+            <label for="contrasena" class="form-label">Contraseña</label>
+            <div class="input-wrapper">
+              <span class="input-icon-left">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <input type="password" id="contrasena" class="login-input" placeholder="Ingrese su contraseña" required autocomplete="current-password" />
+              <button type="button" class="input-icon-right" id="togglePasswordBtn" onclick="togglePasswordVisibility()">
+                <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Options row -->
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox" id="recordarSesion" />
+              <span>Recordar sesión</span>
+            </label>
+            <a href="#" class="forgot-link" onclick="alert('Funcionalidad en desarrollo. Contacte al administrador.')">¿Olvidó su contraseña?</a>
+          </div>
+
+          <!-- Submit button -->
+          <button type="submit" class="submit-button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            <span>Iniciar sesión</span>
+          </button>
+        </form>
+
+        <!-- Error Message Alert -->
+        <div id="loginError" class="error-container hidden">
+          <svg class="error-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>Credenciales inválidas. Intenta de nuevo.</span>
+        </div>
+
+        <div class="divider">o</div>
+
+        <!-- Safe access message -->
+        <div class="secure-info">
+          <svg class="secure-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 11 11 13 15 9"></polyline>
+          </svg>
+          <span>Acceso seguro y confidencial</span>
+        </div>
+      </div>
     </div>
   </div>
+
+  <script>
+    // Password visibility toggle helper
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('contrasena');
+      const eyeIconContainer = document.getElementById('togglePasswordBtn');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIconContainer.innerHTML = `
+          <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        `;
+      } else {
+        passwordInput.type = 'password';
+        eyeIconContainer.innerHTML = `
+          <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        `;
+      }
+    }
+  </script>
+  <script type="module" src="src/login.js"></script>
 </body>
 </html>
