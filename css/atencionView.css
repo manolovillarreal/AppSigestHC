@@ -114,36 +114,43 @@
 }
 
 .btn-avanzar {
-  background-color: var(--color-primario);
-  color: var(--color-blanco);
+  background: #185FA5;
+  color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  border-radius: 4px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
+  gap: 6px;
+  transition: background 0.15s;
+  white-space: nowrap;
 }
 
 .btn-avanzar:hover {
-  background-color: var(--color-primario-dark);
+  background: #0C447C;
 }
+
 .btn-salida {
-  background-color: var(--color-warning-alt);
-  color: var(--color-blanco);
-  border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  border-radius: 4px;
+  background: transparent;
+  color: #ef4444;
+  border: 1.5px solid #ef4444;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
+  gap: 6px;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
 }
 
 .btn-salida:hover {
-  background-color: var(--color-warning-dark);
+  background: rgba(239,68,68,0.06);
 }
 
 #obs-cambio-estado{
@@ -228,3 +235,4 @@
 #btn-agregar-documento:hover, .btn-agregar-documento:hover {
   background: rgba(24, 95, 165, 0.06);
 }
+
