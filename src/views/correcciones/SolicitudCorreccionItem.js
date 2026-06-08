@@ -19,6 +19,13 @@ export class SolicitudCorreccionItem extends BaseComponent {
     this.element = document.createElement("div");
     this.element.classList.add("correcciones-container");
 
+    const nombreUsuario = (usuario) => {
+      if (!usuario) return 'Usuario desconocido';
+      const nombre = usuario.nombre || usuario.nombreUsuario || '';
+      const apellidos = usuario.apellidos || '';
+      return `${nombre} ${apellidos}`.trim() || 'Usuario desconocido';
+    };
+
     const solicitudPendiente = this.solicitudCorreccion;
     const item = document.createElement("div");
     item.classList.add("correccion-item");
@@ -30,8 +37,8 @@ export class SolicitudCorreccionItem extends BaseComponent {
       <span class="fecha-solicitud">${formatearFecha(solicitudPendiente.fechaSolicitud)}</span>      
     <span class="estado-correccion-${estadoNombre}">${estadoNombre}</span>
     <div class="usuarios-correccion">
-      <div class="usuario-solicita">Solicitado por: <strong>${solicitudPendiente.usuarioSolicita?.nombre + " " + solicitudPendiente.usuarioSolicita?.apellidos}</strong></div>
-      ${solicitudPendiente.usuarioCorrige ? `<div class="usuario-corrige">Corregido por: <strong>${solicitudPendiente.usuarioCorrige.nombre + " " + solicitudPendiente.usuarioCorrige.apellidos}</strong></div>` : ''}
+      <div class="usuario-solicita">Solicitado por: <strong>${nombreUsuario(solicitudPendiente.usuarioSolicita)}</strong></div>
+      ${solicitudPendiente.usuarioCorrige ? `<div class="usuario-corrige">Corregido por: <strong>${nombreUsuario(solicitudPendiente.usuarioCorrige)}</strong></div>` : ''}
     </div>
     </div>
 
