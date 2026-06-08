@@ -21,3 +21,11 @@ export function puedeAvanzarEstado(estadoId, rolNombre) {
   const permitidos = reglasCambioEstado[rolNombre] || [];
   return permitidos.includes(estadoId);
 }
+
+export function obtenerSiguienteEstado(estadoActualId) {
+  const { estadosAtencion } = contexto;
+  if (!estadosAtencion) return null;
+  const actual = estadosAtencion.find(e => e.id === estadoActualId);
+  if (!actual) return null;
+  return estadosAtencion.find(e => e.orden === actual.orden + 1) || null;
+}

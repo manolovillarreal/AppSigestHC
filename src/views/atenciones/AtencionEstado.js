@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
 import contexto from "../../core/store.js";
-import { puedeAvanzarEstado } from "../../utils/estados.js";
+import { puedeAvanzarEstado, obtenerSiguienteEstado } from "../../utils/estados.js";
 import { PERFILES } from "../../core/config.js";
 
 export class AtencionEstado extends BaseComponent {
@@ -35,22 +35,25 @@ export class AtencionEstado extends BaseComponent {
       this.element.appendChild(btnCerrar);
     }
 
-    const btnAvanzar = document.createElement("button");
-    btnAvanzar.id = "btnAvanzarEstado";
-    btnAvanzar.className = "btn-avanzar";
+    const siguienteEstado = obtenerSiguienteEstado(this.atencion.estadoAtencionId);
+    if (siguienteEstado) {
+      const btnAvanzar = document.createElement("button");
+      btnAvanzar.id = "btnAvanzarEstado";
+      btnAvanzar.className = "btn-avanzar";
 
-    const iconAvanzar = document.createElement("span");
-    iconAvanzar.className = "material-icons";
-    iconAvanzar.textContent = "arrow_forward";
+      const iconAvanzar = document.createElement("span");
+      iconAvanzar.className = "material-icons";
+      iconAvanzar.textContent = "arrow_forward";
 
-    btnAvanzar.appendChild(iconAvanzar);
-    btnAvanzar.appendChild(document.createTextNode(" Avanzar Estado"));
-    btnAvanzar.addEventListener("click", () => {
-      if (typeof this.onAvanzar === "function") {
-        this.onAvanzar();
-      }
-    });
+      btnAvanzar.appendChild(iconAvanzar);
+      btnAvanzar.appendChild(document.createTextNode(` Pasar a ${siguienteEstado.nombre}`));
+      btnAvanzar.addEventListener("click", () => {
+        if (typeof this.onAvanzar === "function") {
+          this.onAvanzar();
+        }
+      });
 
-    this.element.appendChild(btnAvanzar);
+      this.element.appendChild(btnAvanzar);
+    }
   }
 }
