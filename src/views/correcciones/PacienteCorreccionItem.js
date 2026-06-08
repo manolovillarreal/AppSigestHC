@@ -25,8 +25,15 @@ export class PacienteCorreccionItem extends BaseComponent {
     const info = document.createElement("div");
     info.classList.add("correccion-paciente-info");
     
+    const nombre = [
+      this.paciente?.primerNombre,
+      this.paciente?.segundoNombre,
+      this.paciente?.primerApellido,
+      this.paciente?.segundoApellido
+    ].filter(Boolean).join(' ') || 'Paciente sin nombre';
+
     info.innerHTML = `
-      <div class="correccion-paciente-nombre">${this.paciente.primerNombre} ${this.paciente.primerApellido}</div>
+      <div class="correccion-paciente-nombre">${nombre}</div>
       <div class="correccion-paciente-metadata">
         <span class="correccion-paciente-fecha">${formatearFecha(this.atencion.fecha) || "Sin fecha"}</span>
         <span class="correccion-paciente-eps">${this.administradora?.nombre || "Sin EPS"}</span>

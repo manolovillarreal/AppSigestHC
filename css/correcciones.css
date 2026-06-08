@@ -402,3 +402,29 @@
 .btn-accion-success:hover {
   background: #059669;
 }
+
+/* ==========================================================================
+   TIMELINE COLAPSABLE
+   ========================================================================== */
+.correccion-timeline-body {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.btn-toggle-timeline {
+  background: none;
+  border: none;
+  color: #185FA5;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-toggle-timeline:hover {
+  text-decoration: underline;
+}
