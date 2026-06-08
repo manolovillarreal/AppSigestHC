@@ -740,3 +740,36 @@ ul.list-view {
   display: inline-flex;
   gap: 4px;
 }
+
+.controles-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
+.controles-fila {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+#buscador-atenciones {
+  width: 100%;
+  padding: 7px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 12px;
+  outline: none;
+}
+
+#buscador-atenciones::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
+#buscador-atenciones:focus {
+  border-color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.12);
+}

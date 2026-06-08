@@ -33,69 +33,98 @@ export class ListaAtenciones extends BaseComponent {
 
   render() {
     this.element = document.createElement("div");
-     const wrapper = document.createElement('div');
-    wrapper.classList.add('btn-right-wrapper');
-    
-    if(puedeVerAgrupadorSelect()) 
-      this._renderAgrupadorSelect(wrapper);
 
-    if(puedeCrearNuevaAtencion()) 
-      this._renderBtnNuevaAtencion(wrapper);
-    this.element.appendChild(wrapper);
+    const controlesSidebar = document.createElement("div");
+    controlesSidebar.classList.add("controles-sidebar");
 
-   this.listElement = Object.assign(document.createElement("ul"), {
-        id: "atenciones-list",
-        className: "list-view"
-        });      
+    // FILA 1: Buscador
+    const buscador = document.createElement("input");
+    buscador.type = "text";
+    buscador.id = "buscador-atenciones";
+    buscador.placeholder = "Buscar paciente...";
+
+    buscador.addEventListener("input", (e) => {
+      const termino = e.target.value.toLowerCase().trim();
+      const items = document.querySelectorAll(".atencion-item");
+      items.forEach(item => {
+        const texto = item.textContent.toLowerCase();
+        item.style.display = termino === "" || texto.includes(termino) 
+          ? "" : "none";
+      });
+      // Ocultar grupos vacíos
+      document.querySelectorAll(".grupo-estado").forEach(grupo => {
+        const visibles = grupo.querySelectorAll(".atencion-item:not([style*='none'])");
+        grupo.style.display = visibles.length === 0 ? "none" : "";
+      });
+    });
+
+    controlesSidebar.appendChild(buscador);
+
+    // FILA 2: Select + Botón
+    const controlesFila = document.createElement("div");
+    controlesFila.classList.add("controles-fila");
+
+    if (puedeVerAgrupadorSelect()) {
+      this._renderAgrupadorSelect(controlesFila);
+    }
+
+    if (puedeCrearNuevaAtencion()) {
+      this._renderBtnNuevaAtencion(controlesFila);
+    }
+
+    controlesSidebar.appendChild(controlesFila);
+    this.element.appendChild(controlesSidebar);
+
+    this.listElement = Object.assign(document.createElement("ul"), {
+      id: "atenciones-list",
+      className: "list-view"
+    });      
     this.element.appendChild(this.listElement);
 
     this._renderGrupos();
-
-    
   }
-  _renderGrupos(){
 
+  _renderGrupos() {
     // Determinar agrupamiento
     this.listElement.innerHTML = ""; // Limpiar lista antes de renderizar
-      let groups;
-      (this.agruparPor === "estado")
-        ? groups = ordenarPorEstado(this.atenciones)
-        : groups = ordenarPorAdministradora(this.atenciones);
+    let groups;
+    (this.agruparPor === "estado")
+      ? groups = ordenarPorEstado(this.atenciones)
+      : groups = ordenarPorAdministradora(this.atenciones);
 
-      // Renderizar secciones por estado o tercero
-      groups.forEach((grupo) => {
-        let { label, lista,} = grupo;
-        const details = document.createElement("details");
-        details.classList.add("estado-section");
-        details.open = true;
+    // Renderizar secciones por estado o tercero
+    groups.forEach((grupo) => {
+      let { label, lista } = grupo;
+      const details = document.createElement("details");
+      details.classList.add("estado-section", "grupo-estado");
+      details.open = true;
 
-        const summary = document.createElement("summary");
-        summary.textContent = `${label} (${lista.length})`;
-        details.appendChild(summary);
+      const summary = document.createElement("summary");
+      summary.textContent = `${label} (${lista.length})`;
+      details.appendChild(summary);
 
-        const ul = document.createElement("ul");
-        ul.classList.add("estado-group");
+      const ul = document.createElement("ul");
+      ul.classList.add("estado-group");
 
-      if(this.agruparPor === "estado" && grupo.grupoId === 3) {
-          const urgenciasCount = grupo.lista.filter(a => a.tipoAtencionId === 1).length;
-          const hospitalizacionCount = grupo.lista.filter(a => a.tipoAtencionId === 2).length;
-          ul.appendChild(this._buildTipoAtencionGroup('urgencias', urgenciasCount));
-          ul.appendChild(this._buildTipoAtencionGroup('hospitalizacion', hospitalizacionCount));
+      if (this.agruparPor === "estado" && grupo.grupoId === 3) {
+        const urgenciasCount = grupo.lista.filter(a => a.tipoAtencionId === 1).length;
+        const hospitalizacionCount = grupo.lista.filter(a => a.tipoAtencionId === 2).length;
+        ul.appendChild(this._buildTipoAtencionGroup('urgencias', urgenciasCount));
+        ul.appendChild(this._buildTipoAtencionGroup('hospitalizacion', hospitalizacionCount));
       }      
       lista.forEach((atencion) => {
         let groupContainer = ul;
 
-        atencion.extraLabel = (this.agruparPor === "estado")?                                
-                                 atencion.administradora.nombre
-                                 : obtenerNombreEstado(atencion.estadoAtencion.id )
+        atencion.extraLabel = (this.agruparPor === "estado")
+          ? atencion.administradora.nombre
+          : obtenerNombreEstado(atencion.estadoAtencion.id);
 
-        if(grupo.grupoId === 3) {
+        if (grupo.grupoId === 3) {
           groupContainer = atencion.tipoAtencionId == 1 
-                            ? ul.querySelector('#grupo-urgencias') 
-                            : ul.querySelector('#grupo-hospitalizacion');
-            
+            ? ul.querySelector('#grupo-urgencias') 
+            : ul.querySelector('#grupo-hospitalizacion');
         }
-        const atencionItem = new ItemAtencion(atencion,()=>this.seleccionarAtencion(atencion));
+        const atencionItem = new ItemAtencion(atencion, () => this.seleccionarAtencion(atencion));
         
         atencionItem.appendTo(groupContainer);        
       });
@@ -103,66 +132,57 @@ export class ListaAtenciones extends BaseComponent {
       details.appendChild(ul);
       this.listElement.appendChild(details);
     });
-
   }
+
   _renderAgrupadorSelect(wrapper) {
-      const agrupadorWrapper = document.createElement("div");
-      agrupadorWrapper.className = "agrupador-atenciones";
-      agrupadorWrapper.innerHTML = `
-        <label for="agrupador-select">Agrupar por:</label>      
-      `;
-      const agrupadorSelect = document.createElement("select");
-      agrupadorSelect.id = "agrupador-select";
-      agrupadorSelect.innerHTML = `
-        <option value="estado">Estado</option>
-        <option value="administradora">Administradora</option>
-      `;
+    const agrupadorSelect = document.createElement("select");
+    agrupadorSelect.id = "agrupador-select";
+    agrupadorSelect.innerHTML = `
+      <option value="estado">Estado</option>
+      <option value="administradora">Administradora</option>
+    `;
 
-      agrupadorSelect.onchange = (e) => {
-        this.agruparPor = e.target.value;
-        this._renderGrupos();
-      };
+    agrupadorSelect.onchange = (e) => {
+      this.agruparPor = e.target.value;
+      this._renderGrupos();
+    };
 
+    wrapper.appendChild(agrupadorSelect);
+  }
 
-      agrupadorWrapper.appendChild(agrupadorSelect);
-      wrapper.appendChild(agrupadorWrapper);
-    }
   _renderBtnNuevaAtencion(wrapper) {
-
     const btnNuevaAtencion = document.createElement("button");
     btnNuevaAtencion.id = "btnNuevaAtencion";
     btnNuevaAtencion.classList.add("btn-primary");
     btnNuevaAtencion.textContent = "Nueva Atención";
     btnNuevaAtencion.addEventListener("click", () => {
-        const modal = new ModalNuevaAtencion((atencion) => {
-          this.atenciones.push(atencion);
-          this._renderGrupos();
-        });
+      const modal = new ModalNuevaAtencion((atencion) => {
+        this.atenciones.push(atencion);
+        this._renderGrupos();
       });
-  
-      wrapper.appendChild(btnNuevaAtencion);
-      document.getElementById("sidebar-panel").appendChild(wrapper);
+    });
+
+    wrapper.appendChild(btnNuevaAtencion);
   }
-  _buildTipoAtencionGroup(tipoAtencionId,length){
-      let details = document.createElement("details");
-      details.classList.add("estado-section");
-      details.style.marginLeft = "20px";
-      details.open = true;
 
-      let summary = document.createElement("summary");
-      summary.textContent = `${tipoAtencionId} (${length})`;
-      details.appendChild(summary);
+  _buildTipoAtencionGroup(tipoAtencionId, length) {
+    let details = document.createElement("details");
+    details.classList.add("estado-section", "grupo-estado");
+    details.style.marginLeft = "20px";
+    details.open = true;
 
-      let ul = document.createElement("ul");
-      ul.id = "grupo-"+tipoAtencionId;
-      ul.classList.add("estado-group");
-      details.appendChild(ul);
+    let summary = document.createElement("summary");
+    summary.textContent = `${tipoAtencionId} (${length})`;
+    details.appendChild(summary);
 
-      return details;
+    let ul = document.createElement("ul");
+    ul.id = "grupo-" + tipoAtencionId;
+    ul.classList.add("estado-group");
+    details.appendChild(ul);
 
+    return details;
   }
 }
-
 
 function ordenarPorEstado(atenciones) {
   const grupos = {};
@@ -185,7 +205,7 @@ function ordenarPorEstado(atenciones) {
 function ordenarPorAdministradora(atenciones) {
   const grupos = {};
 
-    atenciones.forEach((a) => {
+  atenciones.forEach((a) => {
     const nit = a.administradora.nit
     if (!grupos[nit]) grupos[nit] = [];
     grupos[nit].push(a);
@@ -216,18 +236,17 @@ function ordenarPorAdministradora(atenciones) {
 }
 
 function puedeVerAgrupadorSelect() {
-
   const perfilesHabilitados = [
     PERFILES.ADMISIONES,
     PERFILES.AUDITORIA,
     PERFILES.FACTURACION,
     PERFILES.ADMINISTRADOR
   ]
-  const {perfil} = contexto;
+  const { perfil } = contexto;
   return perfilesHabilitados.includes(perfil.rol.nombre);
 }
 
-function puedeCrearNuevaAtencion(){
-  const {perfil} = contexto;
+function puedeCrearNuevaAtencion() {
+  const { perfil } = contexto;
   return perfil.rol.nombre === PERFILES.ADMISIONES;
 }
