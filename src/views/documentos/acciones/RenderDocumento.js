@@ -82,7 +82,9 @@ export function renderAcciones({
     const btnEliminar = document.createElement("button");
     btnEliminar.classList.add("btn-accion-doc", "btn-accion-eliminar");
     btnEliminar.title = "Eliminar";
-    btnEliminar.innerHTML = `<span class="material-icons">delete</span>`;
+    btnEliminar.innerHTML = `
+    <span class="material-icons">delete</span>
+    <span class="btn-accion-label">Eliminar</span>`;
     btnEliminar.addEventListener("click", onEliminar);
     acciones.appendChild(btnEliminar);
   }
@@ -90,7 +92,9 @@ export function renderAcciones({
   const btnDescargar = document.createElement("button");
   btnDescargar.classList.add("btn-accion-doc", "btn-accion-descargar");
   btnDescargar.title = "Descargar";
-  btnDescargar.innerHTML = `<span class="material-icons">download</span>`;
+  btnDescargar.innerHTML = `
+    <span class="material-icons">download</span>
+    <span class="btn-accion-label">Descargar</span>`;
   btnDescargar.addEventListener("click", onDescargar);
   acciones.appendChild(btnDescargar);
 
@@ -98,7 +102,9 @@ export function renderAcciones({
     const btnEditar = document.createElement("button");
     btnEditar.classList.add("btn-accion-doc", "btn-accion-editar");
     btnEditar.title = "Editar";
-    btnEditar.innerHTML = `<span class="material-icons">edit</span>`;
+    btnEditar.innerHTML = `
+    <span class="material-icons">edit</span>
+    <span class="btn-accion-label">Editar</span>`;
     btnEditar.addEventListener("click", onEditar);
     acciones.prepend(btnEditar);
   }
@@ -107,7 +113,9 @@ export function renderAcciones({
     const btnSolicitarCorreccion = document.createElement("button");
     btnSolicitarCorreccion.classList.add("btn-accion-doc", "btn-accion-editar");
     btnSolicitarCorreccion.title = "Solicitar Corrección";
-    btnSolicitarCorreccion.innerHTML = `<span class="material-symbols-outlined">quick_reference</span>`;
+    btnSolicitarCorreccion.innerHTML = `
+    <span class="material-symbols-outlined">quick_reference</span>
+    <span class="btn-accion-label">Corrección</span>`;
     btnSolicitarCorreccion.addEventListener("click", onSolicitarCorreccion);
     acciones.appendChild(btnSolicitarCorreccion);
   }
@@ -116,7 +124,9 @@ export function renderAcciones({
     const btnFirmar = document.createElement("button");
     btnFirmar.classList.add("btn-accion-doc", "btn-accion-firmar");
     btnFirmar.title = "Firmar";
-    btnFirmar.innerHTML = `<span class="material-symbols-outlined">signature</span>`;
+    btnFirmar.innerHTML = `
+    <span class="material-symbols-outlined">signature</span>
+    <span class="btn-accion-label">Firmar</span>`;
     btnFirmar.addEventListener("click", onFirmarDocumento);
     acciones.appendChild(btnFirmar);
   }

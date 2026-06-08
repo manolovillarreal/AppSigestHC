@@ -299,3 +299,31 @@
 .btn-agregar-documento:hover {
   background-color: #0C447C;
 }
+
+.btn-accion-doc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-accion-doc:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.btn-accion-label {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.btn-accion-eliminar .btn-accion-label { color: #ef4444; }
+.btn-accion-descargar .btn-accion-label { color: #185FA5; }
+.btn-accion-editar .btn-accion-label { color: #f59e0b; }
+.btn-accion-firmar .btn-accion-label { color: #10b981; }
