@@ -25,9 +25,9 @@
   gap: 4px;
 }
 
-.correccion-paciente-nombre {
+.correccion-paciente-bloque .correccion-paciente-nombre {
+  color: #ffffff;
   font-size: 13px;
-  color: white;
   font-weight: 600;
 }
 
@@ -37,14 +37,10 @@
   gap: 2px;
 }
 
-.correccion-paciente-fecha {
+.correccion-paciente-bloque .correccion-paciente-fecha,
+.correccion-paciente-bloque .correccion-paciente-eps {
+  color: rgba(255, 255, 255, 0.6);
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.correccion-paciente-eps {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
 }
 
 /* Badges de Estado */
