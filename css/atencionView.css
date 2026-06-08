@@ -218,3 +218,13 @@
   display: flex;
   gap: 8px;
 }
+
+#btn-agregar-documento, .btn-agregar-documento {
+  background: transparent;
+  border: 1.5px solid #185FA5;
+  color: #185FA5;
+}
+
+#btn-agregar-documento:hover, .btn-agregar-documento:hover {
+  background: rgba(24, 95, 165, 0.06);
+}
