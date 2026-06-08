@@ -45,7 +45,7 @@ describe('api/solicitudCorreccion.api', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const [url, options] = fetch.mock.calls[0];
-    expect(url).toBe('http://localhost:5000/api/SolicitudCorreccion/7/aprobar');
+    expect(url).toBe('http://10.10.1.1:8002/api/SolicitudCorreccion/7/aprobar');
     expect(options.method).toBe('POST');
     expect(result).toEqual({ ok: true, result: { estado: 'aprobada' } });
   });
@@ -57,7 +57,7 @@ describe('api/solicitudCorreccion.api', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const [url] = fetch.mock.calls[0];
-    expect(url).toBe('http://localhost:5000/api/SolicitudCorreccion/9/rechazar');
+    expect(url).toBe('http://10.10.1.1:8002/api/SolicitudCorreccion/9/rechazar');
     expect(result.ok).toBe(false);
   });
 });

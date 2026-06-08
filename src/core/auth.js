@@ -1,3 +1,23 @@
+
+
+function validarPassword(password) {
+  const longitudMinima = password.length >= 12;
+  const mayuscula = /[A-Z]/.test(password);
+  const minuscula = /[a-z]/.test(password);
+  const numero = /\d/.test(password);
+  const caracterEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  return longitudMinima && mayuscula && minuscula && numero && caracterEspecial;
+}
+
+const password = "SaludCloud2025!";
+if (validarPassword(password)) {
+  console.log("Contraseña válida");
+} else {
+  console.log("La contraseña no cumple la política de seguridad");
+}
+
+
+
 import { apiGet } from "./api.js";
 import debug from "../utils/debug.js";
 
@@ -6,43 +26,41 @@ export let Perfil = null;
 
 let autenticado = false;
 
- async function iniciar() {
+async function iniciar() {
   // Aquí puedes agregar la lógica de inicialización de autenticación
-  debug.log('Autenticación iniciada');
+  debug.log("Autenticación iniciada");
 
-  const token = localStorage.getItem('token');
-  if (!token) {    
+  const token = localStorage.getItem("token");
+  if (!token) {
     return;
   }
-  const res = await apiGet('/usuarios/perfil');  
+  const res = await apiGet("/usuarios/perfil");
 
-   if (!res.ok) {
-    localStorage.removeItem('token');    
+  if (!res.ok) {
+    localStorage.removeItem("token");
     return;
   }
 
   Perfil = res.result;
-  autenticado= true;
-  
+  autenticado = true;
+
   return Perfil;
 }
 
- async function getPerfilUsuario() {
+async function getPerfilUsuario() {
   if (Perfil) return Perfil;
 }
 
-
-
- function logout() {
-  localStorage.removeItem('token');
+function logout() {
+  localStorage.removeItem("token");
   Perfil = null;
-  window.location.href = 'login.html';
+  window.location.href = "login.html";
 }
 
 const auth = {
   iniciar,
   getPerfilUsuario,
   logout,
-  autenticado
+  autenticado,
 };
 export default auth;

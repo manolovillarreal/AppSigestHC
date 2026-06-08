@@ -5,19 +5,18 @@ import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../utils/correccio
 import { formatearFecha } from "../../utils/date.js";
 import { formatearErroresHTML } from "../../utils/error.js";
 import { SolicitudCorreccionService } from "../../api/solicitudCorreccion.api.js";
+import { descargarMiniaturas } from "../documentos/acciones/RenderDocumento.js";
 
 export class SolicitudCorreccionItem extends BaseComponent {  
   constructor(solicitudCorreccion, onAction) {
     super();
-    console.log(solicitudCorreccion);
-
     this.solicitudCorreccion = solicitudCorreccion;
     this.onAction = onAction;
   }
 
   render() {
     this.element = document.createElement("div");
-    this.element.classList.add("correcciones-container");
+    this.element.classList.add("solicitud-card");
 
     const nombreUsuario = (usuario) => {
       if (!usuario) return 'Usuario desconocido';
@@ -27,118 +26,176 @@ export class SolicitudCorreccionItem extends BaseComponent {
     };
 
     const solicitudPendiente = this.solicitudCorreccion;
-    const item = document.createElement("div");
-    item.classList.add("correccion-item");
-
+    const documento = solicitudPendiente.documento;
     const estadoNombre = solicitudPendiente.estadoCorreccion.nombre;
-    item.innerHTML = `<div class="correccion-header">
-    <div>
-    <strong>Solicitud de Corrección -</strong>
-      <span class="fecha-solicitud">${formatearFecha(solicitudPendiente.fechaSolicitud)}</span>      
-    <span class="estado-correccion-${estadoNombre}">${estadoNombre}</span>
-    <div class="usuarios-correccion">
-      <div class="usuario-solicita">Solicitado por: <strong>${nombreUsuario(solicitudPendiente.usuarioSolicita)}</strong></div>
-      ${solicitudPendiente.usuarioCorrige ? `<div class="usuario-corrige">Corregido por: <strong>${nombreUsuario(solicitudPendiente.usuarioCorrige)}</strong></div>` : ''}
-    </div>
-    </div>
+    const estadoClase = estadoNombre.toLowerCase();
 
-    </div>
-    <div class="correccion-observacion">${this._renderObservacion()}</div>
+    // CARD SUPERIOR — info del documento
+    const docHeader = document.createElement("div");
+    docHeader.classList.add("solicitud-doc-header");
+
+    const thumbnailContainer = document.createElement("div");
+    thumbnailContainer.classList.add("solicitud-doc-thumbnail");
+    descargarMiniaturas(documento, thumbnailContainer, () => this._verCorreccion());
+
+    const docInfo = document.createElement("div");
+    docInfo.classList.add("solicitud-doc-info");
+    docInfo.innerHTML = `
+      <h3 class="solicitud-doc-titulo">${documento.tipoDocumento.nombre}</h3>
+      <span class="solicitud-doc-fecha">Fecha del documento: ${formatearFecha(documento.fechaDocumento) || formatearFecha(documento.fechaCreacion)}</span>
+      <span class="solicitud-doc-cargado">Cargado el ${formatearFecha(documento.fechaCreacion)} por ${nombreUsuario({nombre: documento.usuario?.nombre, apellidos: documento.usuario?.apellidos})}</span>
+      <span class="badge-estado ${estadoClase}">${estadoNombre}</span>
+      <span class="solicitud-doc-solicitud-fecha">Solicitado el: ${formatearFecha(solicitudPendiente.fechaSolicitud)}</span>
     `;
-    this.element.appendChild(item);
-    if (puedeSolicitarCorrecion(solicitudPendiente.documento)) {
-      this._renderAccionesParaSolicitante();
-    } else {
-      this._renderAccionesParaNoSolicitante();
+
+    docHeader.appendChild(thumbnailContainer);
+    docHeader.appendChild(docInfo);
+    this.element.appendChild(docHeader);
+
+    // SECCIÓN MOTIVO
+    const motivoSeccion = document.createElement("div");
+    motivoSeccion.classList.add("solicitud-motivo-seccion");
+    motivoSeccion.innerHTML = `
+      <h4 class="solicitud-seccion-titulo">Motivo de corrección</h4>
+      <div class="solicitud-motivo-box">${this._renderObservacionHTML()}</div>
+    `;
+    this.element.appendChild(motivoSeccion);
+
+    // TIMELINE (NUEVO)
+    const timelineSeccion = document.createElement("div");
+    timelineSeccion.classList.add("solicitud-timeline-seccion");
+    
+    // Determinar texto estado
+    let textoEstado = "Esperando respuesta del médico.";
+    if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA) {
+        textoEstado = "Respuesta recibida. Pendiente de revisión.";
+    } else if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
+        textoEstado = "Corrección aprobada.";
+    } else if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
+        textoEstado = "Corrección rechazada.";
     }
+
+    const htmlTimeline = `
+      <h4 class="solicitud-timeline-titulo">Historial de la Solicitud</h4>
+      <div class="timeline-container">
+        <!-- Nodo 1 -->
+        <div class="timeline-nodo">
+          <div class="timeline-icono bg-amber">
+            <span class="material-icons">person</span>
+          </div>
+          <div class="timeline-contenido">
+            <div class="timeline-cabecera">
+              <h5 class="timeline-titulo">Solicitud de corrección</h5>
+              <span class="badge-rol">${solicitudPendiente.usuarioSolicita?.rol?.nombre || 'Administración'}</span>
+            </div>
+            <span class="timeline-fecha">${formatearFecha(solicitudPendiente.fechaSolicitud)}</span>
+            <div class="timeline-box-motivo">${this._renderObservacionHTML()}</div>
+          </div>
+        </div>
+
+        <!-- Nodo 2 -->
+        <div class="timeline-nodo" id="nodo-respuesta-${solicitudPendiente.id}">
+          <div class="timeline-icono bg-blue">
+            <span class="material-icons">medical_services</span>
+          </div>
+          <div class="timeline-contenido" id="contenido-respuesta-${solicitudPendiente.id}">
+            <div class="timeline-cabecera">
+              <h5 class="timeline-titulo">Respuesta del Corrector</h5>
+              <span class="badge-rol">${solicitudPendiente.usuarioCorrige?.rol?.nombre || 'Médico'}</span>
+            </div>
+            <div class="timeline-acciones" id="acciones-respuesta-${solicitudPendiente.id}">
+            </div>
+          </div>
+        </div>
+
+        <!-- Nodo 3 -->
+        <div class="timeline-nodo">
+          <div class="timeline-icono ${solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE ? 'bg-gray' : (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA ? 'bg-green' : (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA ? 'bg-red' : 'bg-blue'))}">
+            <span class="material-icons">flag</span>
+          </div>
+          <div class="timeline-contenido">
+            <div class="timeline-cabecera">
+              <h5 class="timeline-titulo">Estado actual</h5>
+              <span class="badge-estado ${estadoClase}">${estadoNombre}</span>
+            </div>
+            <span class="timeline-texto">${textoEstado}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    timelineSeccion.innerHTML = htmlTimeline;
+    this.element.appendChild(timelineSeccion);
+
+    // ACCIONES (pie de la card)
+    const accionesFooter = document.createElement("div");
+    accionesFooter.classList.add("solicitud-acciones-footer");
+    this.element.appendChild(accionesFooter);
+
+    // Rellenar dinámicamente según estado y permisos
+    setTimeout(() => {
+        const accionesRespuesta = this.element.querySelector(`#acciones-respuesta-${solicitudPendiente.id}`);
+        
+        if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
+             const btnVerCorreccionTimeline = document.createElement("button");
+             btnVerCorreccionTimeline.className = "btn-accion-outline";
+             btnVerCorreccionTimeline.innerHTML = `<span class="material-icons">visibility</span> Ver corrección`;
+             btnVerCorreccionTimeline.onclick = () => this._verCorreccion();
+             accionesRespuesta.appendChild(btnVerCorreccionTimeline);
+        } else {
+             const textoNoRespuesta = document.createElement("span");
+             textoNoRespuesta.className = "timeline-texto";
+             textoNoRespuesta.innerText = "Aún no hay respuesta registrada.";
+             accionesRespuesta.appendChild(textoNoRespuesta);
+             
+             if (!puedeSolicitarCorrecion(solicitudPendiente.documento) && solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE) {
+                 const btnResponderTimeline = document.createElement("button");
+                 btnResponderTimeline.className = "btn-accion-outline";
+                 btnResponderTimeline.innerHTML = `<span class="material-icons">reply</span> Responder`;
+                 btnResponderTimeline.onclick = () => this._responderCorreccion();
+                 accionesRespuesta.appendChild(btnResponderTimeline);
+             }
+        }
+
+        if (puedeSolicitarCorrecion(solicitudPendiente.documento)) {
+             if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
+                 const btnEliminar = document.createElement("button");
+                 btnEliminar.className = "btn-accion-peligro";
+                 btnEliminar.innerHTML = `<span class="material-icons">delete</span> Eliminar solicitud`;
+                 btnEliminar.onclick = () => this._eliminarSolicitudCorreccion();
+                 accionesFooter.appendChild(btnEliminar);
+             } else if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA) {
+                 const btnRechazar = document.createElement("button");
+                 btnRechazar.className = "btn-accion-peligro";
+                 btnRechazar.innerHTML = `<span class="material-icons">cancel</span> Rechazar`;
+                 btnRechazar.onclick = () => this._rechazarCorreccion();
+                 accionesFooter.appendChild(btnRechazar);
+                 
+                 const btnAprobar = document.createElement("button");
+                 btnAprobar.className = "btn-accion-success";
+                 btnAprobar.innerHTML = `<span class="material-icons">check</span> Aprobar`;
+                 btnAprobar.onclick = () => this._aprobarCorreccion();
+                 accionesFooter.appendChild(btnAprobar);
+             }
+        } else {
+             if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
+                 const btnResponder = document.createElement("button");
+                 btnResponder.className = "btn-accion-solido";
+                 btnResponder.innerHTML = `<span class="material-icons">send</span> Responder solicitud`;
+                 btnResponder.onclick = () => this._responderCorreccion();
+                 accionesFooter.appendChild(btnResponder);
+             }
+        }
+    }, 0);
   }
-  _renderObservacion() {
+
+  _renderObservacionHTML() {
     const observaciones = this.solicitudCorreccion.observacion.split('|');
-    const contenedor = document.createElement('ul');
+    let html = '<ul>';
     observaciones.forEach(obs => {
-      const item = document.createElement('li');
-      item.classList.add('observacion-item');
-      item.textContent = obs;
-      contenedor.appendChild(item);
+      html += `<li>${obs}</li>`;
     });
-    return contenedor.outerHTML;
-  }
-  _renderAccionesParaSolicitante() {
-    const item = this.element.querySelector(".correccion-header");
-    switch (this.solicitudCorreccion.estadoCorreccionId) {
-      case EstadoCorreccion.PENDIENTE:
-        this.renderDeleteCorrectionButton(item);
-        break;
-      case EstadoCorreccion.RESPONDIDA:
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("correccion-acciones");
-        item.appendChild(wrapper);
-
-        const btnVerCorreccion = document.createElement("button");
-        btnVerCorreccion.classList.add("icon-btn");
-        btnVerCorreccion.title = "Ver corrección";
-        btnVerCorreccion.innerHTML = `<span class="material-icons btn-ver-correccion">visibility</span>`;
-        btnVerCorreccion.addEventListener("click", () => this._verCorreccion());
-        wrapper.appendChild(btnVerCorreccion);
-
-        const btnAprobarCorreccion = document.createElement("button");
-        btnAprobarCorreccion.classList.add("icon-btn");
-        btnAprobarCorreccion.title = "Aprobar corrección";
-        btnAprobarCorreccion.innerHTML = `<span class="material-icons btn-aprobar-correccion">check</span>`;
-        btnAprobarCorreccion.addEventListener("click", () =>
-          this._aprobarCorreccion()
-        );
-        wrapper.appendChild(btnAprobarCorreccion);
-
-        const btnRechazarCorreccion = document.createElement("button");
-        btnRechazarCorreccion.classList.add("icon-btn");
-        btnRechazarCorreccion.title = "Rechazar corrección";
-        btnRechazarCorreccion.innerHTML = `<span class="material-icons btn-rechazar-correccion">cancel</span>`;
-        btnRechazarCorreccion.addEventListener("click", () =>
-          this._rechazarCorreccion()
-        );
-        wrapper.appendChild(btnRechazarCorreccion);
-        break;
-      case EstadoCorreccion.RECHAZADA: 
-      this.renderDeleteCorrectionButton(item);
-      break;
-      }
-  }
-  renderDeleteCorrectionButton(item) {
-    const btnEliminarCorreccion = document.createElement("button");
-    btnEliminarCorreccion.classList.add("icon-btn");
-    btnEliminarCorreccion.title = "Eliminar corrección";
-    btnEliminarCorreccion.innerHTML = `<span class="material-icons btn-eliminar-solicitud">delete</span>`;
-    btnEliminarCorreccion.addEventListener("click", () => this._eliminarSolicitudCorreccion()
-    );
-    item.appendChild(btnEliminarCorreccion);
-  }
-
-  _renderAccionesParaNoSolicitante() {
-    const item = this.element.querySelector(".correccion-header");
-    switch (this.solicitudCorreccion.estadoCorreccionId) {
-      case EstadoCorreccion.PENDIENTE:
-        this.renderResponseButton(item);
-        break;
-      case EstadoCorreccion.RESPONDIDA:
-        const estadoEsperando = document.createElement("span");
-        estadoEsperando.classList.add("estado-esperando");
-        estadoEsperando.innerText = "Esperando respuesta...";
-        item.appendChild(estadoEsperando);
-        break;
-        case EstadoCorreccion.RECHAZADA:
-          this.renderResponseButton(item);
-        break;
-    }
-  }
-  renderResponseButton(item) {
-    const btnResponderCorreccion = document.createElement("button");
-    btnResponderCorreccion.classList.add("icon-btn");
-    btnResponderCorreccion.title = "Responder corrección";
-    btnResponderCorreccion.innerHTML = `<span class="material-icons btn-responder">reply</span>`;
-    btnResponderCorreccion.addEventListener("click", () => this._responderCorreccion(this.solicitudCorreccion)
-    );
-    item.appendChild(btnResponderCorreccion);
+    html += '</ul>';
+    return html;
   }
 
   async _verCorreccion() {
@@ -165,6 +222,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
     content.appendChild(pdfViewer);
     modal.show(content);
   }
+
   async _eliminarSolicitudCorreccion() {
     const confirmacion = await Swal.fire({
       icon: "warning",
@@ -199,6 +257,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
       });
     }
   }
+
   async _responderCorreccion() {
     const modal = new Modal("Responder Solicitud de Corrección");
     const container = document.createElement("div");
@@ -269,6 +328,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
     container.appendChild(form);
     modal.show(container);
   }
+
   async _aprobarCorreccion() {
     const confirmacion = await Swal.fire({
       icon: "question",
@@ -284,13 +344,10 @@ export class SolicitudCorreccionItem extends BaseComponent {
       cancelButtonColor: "#d33",
     });
 
-    // Si el usuario cancela, no hacer nada
     if (confirmacion.dismiss === Swal.DismissReason.cancel) return;
 
-    // Determinar si conservar el documento anterior
     let conservarDocumentoAnterior = confirmacion.isDenied;
 
-    // Si el usuario no confirmó ni negó, salir
     if (!confirmacion.isConfirmed && !confirmacion.isDenied) return;
 
     const res = await SolicitudCorreccionService.aprobarCorreccion(
@@ -317,6 +374,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
       });
     }
   }
+
   async _rechazarCorreccion() {
     const { value: observacion } = await Swal.fire({
       title: 'Rechazar solicitud de corrección',
@@ -367,5 +425,4 @@ export class SolicitudCorreccionItem extends BaseComponent {
       });
     }
   }
-
 }

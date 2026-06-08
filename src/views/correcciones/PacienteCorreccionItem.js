@@ -15,30 +15,32 @@ export class PacienteCorreccionItem extends BaseComponent {
     const item = document.createElement("div");
     item.classList.add("correccion-paciente-bloque");
 
-    // Cabecera paciente
-    const cabecera = document.createElement("div");
-    cabecera.classList.add("correccion-paciente-cabecera");
-    cabecera.innerHTML = `
-      <strong>${this.paciente.primerNombre} ${this.paciente.primerApellido}</strong>
-      <span class="correccion-contador">${this.solicitudes.length}</span>
-    `;
-    item.appendChild(cabecera);
+    // Identificar el estado de la corrección más reciente
+    // Asumimos que la primera o última tiene el estado relevante, ordenaremos o tomaremos el primero:
+    const solicitudReciente = this.solicitudes[0]; 
+    const estadoNombre = solicitudReciente?.estadoCorreccion?.nombre || 'PENDIENTE';
+    const estadoClase = estadoNombre.toLowerCase();
 
-    // Datos de atención
-    const datos = document.createElement("div");
-    datos.classList.add("correccion-paciente-datos");
+    // Contenedor Info
+    const info = document.createElement("div");
+    info.classList.add("correccion-paciente-info");
     
-    const {perfil} = contexto;
-    
-    datos.innerHTML = `
-      <span>${formatearFecha(this.atencion.fecha) || ""}</span>
-      <div class="correccion-linea-baja">
-      <div>${this.administradora?.nombre || ""}</div>
-      ${this.solicitudes.some(({documento})=> documento.usuarioId == perfil.id)?
-            "<span class='material-symbols-outlined'>person_alert</span>":""}
+    info.innerHTML = `
+      <div class="correccion-paciente-nombre">${this.paciente.primerNombre} ${this.paciente.primerApellido}</div>
+      <div class="correccion-paciente-metadata">
+        <span class="correccion-paciente-fecha">${formatearFecha(this.atencion.fecha) || "Sin fecha"}</span>
+        <span class="correccion-paciente-eps">${this.administradora?.nombre || "Sin EPS"}</span>
       </div>
+      <span class="badge-estado ${estadoClase}">${estadoNombre}</span>
     `;
-    item.appendChild(datos);
+
+    // Contador Circular
+    const contador = document.createElement("div");
+    contador.classList.add("correccion-contador-circular");
+    contador.textContent = this.solicitudes.length;
+
+    item.appendChild(info);
+    item.appendChild(contador);
 
     this.element = item;
     return item;

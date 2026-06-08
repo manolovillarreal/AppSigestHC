@@ -59,7 +59,7 @@ describe('api/atencion.api', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const [url, options] = fetch.mock.calls[0];
-    expect(url).toBe('http://localhost:5000/api/Atenciones');
+    expect(url).toBe('http://10.10.1.1:8002/api/Atenciones');
     expect(options.method).toBe('POST');
     expect(result.ok).toBe(false);
   });

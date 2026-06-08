@@ -39,8 +39,21 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
             });
             const pacienteElement = pacienteItem.render();
             pacienteElement.addEventListener('click', () => {    
-                const listaDocumentos = new ListaDocumentos(grupo.atencion,false);
-                listaDocumentos.mount('main-content-panel');
+                const mainPanel = document.getElementById('main-content-panel');
+                mainPanel.innerHTML = '';
+                
+                const container = document.createElement("div");
+                container.classList.add("correcciones-detalle-container");
+                
+                grupo.solicitudes.forEach(solicitud => {
+                    const solicitudItem = new SolicitudCorreccionItem(solicitud, (action) => {
+                         // Manejar recarga u otras acciones
+                         // TODO: podria requerir repintar o recargar.
+                    });
+                    solicitudItem.render();
+                    container.appendChild(solicitudItem.element);
+                });
+                mainPanel.appendChild(container);
             });
             this.element.appendChild(pacienteElement);
         });
