@@ -1,16 +1,15 @@
-
 @import './variables.css';
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    display: flex;
-    height: 100vh;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  height: 100vh;
 }
 
 .container {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
 }
 
 .sidebar {
@@ -30,18 +29,42 @@ body {
   overflow-y: auto;
   max-height: calc(100vh - 160px);
 }
+
+.sidebar-panel::-webkit-scrollbar,
+#sidebar-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-panel::-webkit-scrollbar-track,
+#sidebar-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-panel::-webkit-scrollbar-thumb,
+#sidebar-panel::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+
+.sidebar-panel::-webkit-scrollbar-thumb:hover,
+#sidebar-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.35);
+}
+
 .sidebar-header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin-bottom: 15px;
 }
+
 .sidebar-divider {
   border: 0;
   height: 1px;
   background: rgba(255, 255, 255, 0.08);
   margin: 0 0 15px 0;
 }
+
 .usuario-info-container {
   display: flex;
   flex-direction: row;
@@ -49,6 +72,7 @@ body {
   align-items: center;
   padding: 10px 0;
 }
+
 .menu-navegacion {
   display: flex;
   flex-direction: row;
@@ -56,12 +80,13 @@ body {
   padding-left: 8px;
   margin-top: 15px;
 }
+
 .sidebar h2 {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .panel {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .usuario-info {
@@ -74,7 +99,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,6 +117,7 @@ body {
   font-size: 1.8rem;
   color: var(--color-text-secondary);
 }
+
 .btn-icon {
   background: none;
   border: none;
@@ -101,7 +127,7 @@ body {
 }
 
 .btn-logout {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   transition: color 0.3s ease;
 }
 
@@ -110,41 +136,42 @@ body {
 }
 
 .main-content {
-    flex: 1;
-    padding: 20px;
+  flex: 1;
+  padding: 20px;
 }
 
 .btn {
-    background-color: var(--color-primario);
-    color: var(--color-blanco);
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    margin-top: 10px;
-    display: block;
-    text-align: center;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  display: block;
+  text-align: center;
 }
 
 .btn:hover {
-    background-color: var(--color-primario-hover);
+  background-color: var(--color-primario-hover);
 }
 
 #atenciones-container {
-    margin: 10px;;
-  }
+  margin: 10px;
+  ;
+}
 
-  .estado-group{
-    padding-inline-start: 5px;
-    font-size: 14px;
-    font-weight: normal;
-  }
-  
-  .list-view {
-    list-style: none;
-    padding: 0;
-  }  
+.estado-group {
+  padding-inline-start: 5px;
+  font-size: 14px;
+  font-weight: normal;
+}
 
-  
+.list-view {
+  list-style: none;
+  padding: 0;
+}
+
+
 .atencion-item {
   padding: 12px 16px;
   background-color: transparent;
@@ -165,54 +192,57 @@ body {
 }
 
 .paciente-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
 }
 
 .paciente-info strong {
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  display: block;
 }
 
 .paciente-info span {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.55);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .ubicacion {
-    background-color: rgba(93, 202, 165, 0.2) !important;
-    color: #5DCAA5 !important;
-    padding: 2px 8px !important;
-    border-radius: 12px !important;
-    font-size: 10px !important;
-    font-weight: 600 !important;
+  background-color: rgba(93, 202, 165, 0.2) !important;
+  color: #5DCAA5 !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
 }
 
 .atencion-detalles {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
-  
-.fecha, .extra-label {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.55);
-    font-weight: normal;
+
+.fecha,
+.extra-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: normal;
 }
-  
-  .estado {
-    font-style: italic;
-    color: var(--color-primario);
-  }
-  /* Layout */
+
+.estado {
+  font-style: italic;
+  color: var(--color-primario);
+}
+
+/* Layout */
 .flex-container {
   display: flex;
   gap: 20px;
   padding: 20px;
 }
+
 #atencion-panel {
   flex: 1;
   display: flex;
@@ -239,6 +269,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
 .btn-primary:hover {
   background-color: var(--color-primario-hover);
 }
@@ -255,6 +286,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 /* Asegurarse de que el panel de documentos est茅 oculto al principio */
 #documentos-panel.hidden {
   display: none;
@@ -267,15 +299,19 @@ body {
   top: 10px;
   right: 20px;
   cursor: pointer;
-  font-size: 2em; /* Aumentar tama帽o del icono de cerrar */
-  color: var(--color-primario); /* Cambiar color del icono */
-  transition: color 0.3s ease; /* Agregar transici贸n */
+  font-size: 2em;
+  /* Aumentar tama帽o del icono de cerrar */
+  color: var(--color-primario);
+  /* Cambiar color del icono */
+  transition: color 0.3s ease;
+  /* Agregar transici贸n */
 }
 
 .close:hover {
-  color: var(--color-primario-hover); /* Color al pasar el rat贸n */
+  color: var(--color-primario-hover);
+  /* Color al pasar el rat贸n */
 }
-  
+
 .swal-errores {
   margin-top: 0.5rem;
   font-size: 0.9rem;
@@ -318,7 +354,7 @@ body {
   display: none !important;
 }
 
-.estado-section{
+.estado-section {
   margin: 8px 0;
 }
 
@@ -332,11 +368,12 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   margin-bottom: 8px;
   cursor: pointer;
-  list-style: none; /* Hide default triangle if desired, but ok to keep */
+  list-style: none;
+  /* Hide default triangle if desired, but ok to keep */
 }
 
 
-#vistaContenido{
+#vistaContenido {
   max-width: 600px;
   margin-left: 25px;
 }
@@ -344,17 +381,19 @@ body {
 
 .menu-icon {
   font-size: 28px !important;
-  color: rgba(255, 255, 255, 0.7); 
+  color: rgba(255, 255, 255, 0.7);
   padding: 8px;
   border-left: 3px solid transparent;
   transition: all 0.3s ease;
   border-radius: 4px;
 }
+
 .menu-icon:hover {
   color: #fff;
   background-color: rgba(255, 255, 255, 0.07);
   cursor: pointer;
 }
+
 .menu-icon-active {
   color: #fff;
   background-color: rgba(255, 255, 255, 0.12);
@@ -367,9 +406,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 0;
-  margin-bottom: 20px;
 }
+
 .logo-icon-container {
   width: 32px;
   height: 32px;
@@ -380,14 +418,17 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .logo-icon-container .material-icons {
   font-size: 20px;
 }
+
 .logo-text-bold {
   font-weight: 700;
   font-size: 18px;
   color: #ffffff;
 }
+
 .logo-text-light {
   font-weight: 300;
   font-size: 18px;
@@ -399,11 +440,13 @@ body {
   border-radius: 20px;
   padding: 6px 12px !important;
 }
+
 .nav-centered {
   justify-content: flex-start;
   gap: 15px;
   padding-left: 0;
 }
+
 .menu-icon {
   font-size: 24px;
   padding: 6px;
@@ -412,10 +455,12 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .menu-icon:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
 }
+
 .menu-icon-active {
   background-color: rgba(255, 255, 255, 0.15);
   color: #ffffff !important;
@@ -435,9 +480,11 @@ body {
   text-transform: capitalize;
   user-select: none;
 }
+
 .estado-section summary::-webkit-details-marker {
   display: none;
 }
+
 .estado-section summary::before {
   content: 'play_arrow';
   font-family: 'Material Icons';
@@ -445,7 +492,8 @@ body {
   transition: transform 0.2s;
   color: rgba(255, 255, 255, 0.6);
 }
-.estado-section[open] > summary::before {
+
+.estado-section[open]>summary::before {
   transform: rotate(90deg);
 }
 
@@ -455,16 +503,19 @@ body {
   margin: 0 10px 5px 10px;
   color: rgba(255, 255, 255, 0.9);
 }
+
 .atencion-item-selected {
   background-color: #0d6efd !important;
   color: #ffffff;
   border-left: none;
 }
+
 .badges-derecha {
   display: flex;
   gap: 4px;
   align-items: center;
 }
+
 .badge-proc {
   display: none;
   background-color: rgba(255, 255, 255, 0.3);
@@ -474,24 +525,26 @@ body {
   font-size: 10px;
   font-weight: 700;
 }
+
 .atencion-item-selected .badge-proc {
   display: inline-block;
 }
 
 
-/* Sobrescribiendo con Dise駉 Objetivo Exacto */
+/* Sobrescribiendo con Dise锟給 Objetivo Exacto */
 .sidebar {
   padding: 0 !important;
 }
+
 .sidebar-header {
   padding: 20px 20px 0 20px;
 }
+
 #sidebar-panel {
   padding: 0;
 }
-.sidebar-logo {
-  margin-bottom: 15px;
-}
+
+
 .logo-icon-container {
   background-color: #e0f2fe;
   color: #0284c7;
@@ -499,50 +552,60 @@ body {
   height: 24px;
   border-radius: 4px;
 }
+
 .logo-icon-container .material-icons {
   font-size: 16px;
 }
+
 .logo-text-light {
   color: #5DCAA5 !important;
 }
+
 .avatar-circular-pequeno {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: rgba(255,255,255,0.12);
+  background-color: rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .usuario-nombre {
   font-size: 13px !important;
   font-weight: 400 !important;
 }
+
 .menu-icon {
   font-size: 20px !important;
-  color: rgba(255,255,255,0.7) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
   background: transparent !important;
   padding: 8px;
   margin: 0;
 }
+
 .menu-icon:hover {
-  background: rgba(255,255,255,0.08) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
+
 .menu-icon-active {
-  background: rgba(255,255,255,0.12) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
 }
+
 .nav-centered {
   gap: 8px !important;
 }
+
 .agrupador-atenciones label {
   font-size: 11px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   margin-right: 8px;
 }
+
 #agrupador-select {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
   font-size: 12px;
   padding: 4px 8px;
@@ -551,10 +614,12 @@ body {
   cursor: pointer;
   width: 100%;
 }
+
 #agrupador-select option {
   background: #0C447C;
   color: white;
 }
+
 #btnNuevaAtencion {
   background-color: #185FA5 !important;
   color: #ffffff !important;
@@ -565,15 +630,18 @@ body {
   width: auto !important;
   margin-top: 10px;
 }
+
 .estado-section summary {
   font-size: 12px !important;
-  color: rgba(255,255,255,0.6) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
   font-weight: 400 !important;
   text-transform: none !important;
 }
+
 .estado-group .estado-section summary {
   padding-left: 26px !important;
 }
+
 .atencion-item {
   padding: 10px 16px !important;
   background-color: transparent !important;
@@ -581,13 +649,16 @@ body {
   margin: 0 !important;
   border-radius: 0 !important;
 }
+
 .atencion-item:hover {
-  background-color: rgba(255,255,255,0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
 }
+
 .atencion-item.atencion-item-selected {
-  background-color: rgba(255,255,255,0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
   border-left: 3px solid #5DCAA5 !important;
 }
+
 .paciente-info strong {
   font-size: 13px !important;
   font-weight: 600 !important;
@@ -596,22 +667,26 @@ body {
   margin-right: 4px !important;
   text-transform: none !important;
 }
+
 .paciente-info span {
   font-size: 13px !important;
   font-weight: 400 !important;
-  color: rgba(255,255,255,0.7) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
+
 .atencion-detalles .fecha {
   font-size: 11px !important;
-  color: rgba(255,255,255,0.55) !important;
+  color: rgba(255, 255, 255, 0.55) !important;
 }
+
 .extra-info .extra-label {
   font-size: 11px !important;
-  color: rgba(255,255,255,0.5) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
   text-transform: uppercase !important;
 }
+
 .badge-proc {
-  background-color: rgba(55,138,221,0.3) !important;
+  background-color: rgba(55, 138, 221, 0.3) !important;
   color: #85B7EB !important;
   font-size: 10px !important;
   border-radius: 100px !important;
@@ -622,34 +697,42 @@ body {
 
 
 /* Correcciones Finales de Sidebar */
-ul.estado-group, ul.list-view {
+ul.estado-group,
+ul.list-view {
   list-style: none !important;
   padding-left: 0 !important;
 }
+
 .estado-group .atencion-item {
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
+
 .badge-proc {
   display: none !important;
 }
+
 .atencion-item-selected .badge-proc {
   display: inline-block !important;
 }
+
 .atencion-item.atencion-item-selected {
   background-color: #0d6efd !important;
   border-radius: 8px !important;
   border-left: none !important;
 }
+
 .atencion-item.atencion-item-selected .paciente-info strong {
   color: #ffffff !important;
 }
+
 .atencion-item.atencion-item-selected .paciente-info span {
-  color: rgba(255,255,255,0.8) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
+
 .atencion-item.atencion-item-selected .fecha,
 .atencion-item.atencion-item-selected .extra-label {
-  color: rgba(255,255,255,0.7) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 
@@ -657,14 +740,17 @@ ul.estado-group, ul.list-view {
 .buscador-atenciones:has(#panel-vista-atencion > div) .buscador-atenciones-filtros {
   display: none !important;
 }
+
 .btn-accion-doc {
   background: transparent !important;
   border: none !important;
   outline: none !important;
 }
+
 .doc-panel-header .badge-contador {
   display: none !important;
 }
+
 .doc-panel-header .grupo-doc-title {
   display: inline-flex;
   gap: 4px;
