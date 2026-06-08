@@ -620,6 +620,9 @@ body {
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-right: 28px;
+  flex: 1;
+  height: 36px;
+  box-sizing: border-box;
 }
 
 #agrupador-select option {
@@ -632,10 +635,17 @@ body {
   color: #ffffff !important;
   font-size: 12px !important;
   border-radius: 6px !important;
-  padding: 6px 12px !important;
   border: none !important;
   width: auto !important;
-  margin-top: 10px;
+  margin-top: 0;
+  height: 36px;
+  padding: 0 14px;
+  white-space: nowrap;
+  font-weight: 500;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .estado-section summary {
@@ -746,17 +756,20 @@ ul.list-view {
   flex-direction: column;
   gap: 6px;
   padding: 8px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .controles-fila {
   display: flex;
   gap: 6px;
-  align-items: center;
+  align-items: stretch;
 }
 
 #buscador-atenciones {
   width: 100%;
-  padding: 7px 12px;
+  box-sizing: border-box;
+  padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid rgba(255,255,255,0.2);
   background: rgba(255,255,255,0.08);
