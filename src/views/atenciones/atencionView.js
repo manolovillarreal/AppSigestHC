@@ -99,7 +99,8 @@ export class AtencionView extends BaseComponent {
       const tieneID = documentos.some(
         (d) => d.tipoDocumento?.codigo === "ID" && !d.fechaEliminacion
       );
-      btnImportarID.style.display = tieneID ? "none" : "";
+      const esAdmisiones = contexto.perfil?.rol?.nombre === PERFILES.ADMISIONES;
+      btnImportarID.style.display = (esAdmisiones && !tieneID) ? "" : "none";
     };
 
     const listaDocumentos = new ListaDocumentos(this.atencion, true, async () => {
