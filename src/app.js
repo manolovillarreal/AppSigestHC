@@ -206,17 +206,10 @@ async function cargarCorrecciones() {
     SolicitudCorreccionService.obtenerEnviadasPorRol()
   ]);
 
-  const todasLasSolicitudes = [
-    ...(recibidas.result || []),
-    ...(enviadas.result || [])
-  ];
-
-  // Deduplicar por id por si aparece en ambas
-  const unicas = Array.from(
-    new Map(todasLasSolicitudes.map(s => [s.id, s])).values()
-  );
-
-  const documentos = new ListaSolicitudesCorreccion(unicas);
+  const documentos = new ListaSolicitudesCorreccion({
+    recibidas: recibidas.result || [],
+    enviadas: enviadas.result || []
+  });
   documentos.mount("sidebar-panel");
 }
 

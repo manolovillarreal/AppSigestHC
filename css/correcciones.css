@@ -424,3 +424,13 @@
 .btn-toggle-timeline:hover {
   text-decoration: underline;
 }
+
+.correcciones-seccion-titulo {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 1px;
+  padding: 12px 8px 6px;
+  text-transform: uppercase;
+}
+
