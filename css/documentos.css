@@ -81,10 +81,9 @@
 
 .doc-acciones {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 0 0;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px 12px;
   margin-top: auto;
 }
 
@@ -443,41 +442,57 @@
   background-color: #0C447C;
 }
 
-.btn-accion-doc {
-  display: flex;
-  flex-direction: column;
+.btn-doc-accion {
+  display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 6px 10px;
-  border: none;
-  background: none;
+  gap: 6px;
+  padding: 7px 14px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.btn-accion-doc:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.btn-accion-label {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  border: 1.5px solid;
+  background: transparent;
 }
 
-.btn-accion-eliminar .btn-accion-label {
-  color: #ef4444;
+.btn-doc-accion .material-icons,
+.btn-doc-accion .material-symbols-outlined {
+  font-size: 16px;
 }
 
-.btn-accion-descargar .btn-accion-label {
+.btn-doc-ver {
   color: #185FA5;
+  border-color: #185FA5;
 }
+.btn-doc-ver:hover { background: rgba(24,95,165,0.06); }
 
-.btn-accion-editar .btn-accion-label {
-  color: #f59e0b;
+.btn-doc-descargar {
+  color: #185FA5;
+  border-color: #185FA5;
 }
+.btn-doc-descargar:hover { background: rgba(24,95,165,0.06); }
 
-.btn-accion-firmar .btn-accion-label {
-  color: #10b981;
+.btn-doc-editar {
+  color: #d97706;
+  border-color: #d97706;
 }
+.btn-doc-editar:hover { background: rgba(217,119,6,0.06); }
+
+.btn-doc-firmar {
+  color: #059669;
+  border-color: #059669;
+}
+.btn-doc-firmar:hover { background: rgba(5,150,105,0.06); }
+
+.btn-doc-eliminar {
+  color: #dc2626;
+  border-color: #dc2626;
+}
+.btn-doc-eliminar:hover { background: rgba(220,38,38,0.06); }
+
+.btn-doc-correccion {
+  color: #7c3aed;
+  border-color: #7c3aed;
+}
+.btn-doc-correccion:hover { background: rgba(124,58,237,0.06); }

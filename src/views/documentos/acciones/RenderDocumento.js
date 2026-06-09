@@ -80,56 +80,56 @@ export function renderAcciones({
 
   if (documento.puedeCargar) {
     const btnEliminar = document.createElement("button");
-    btnEliminar.classList.add("btn-accion-doc", "btn-accion-eliminar");
-    btnEliminar.title = "Eliminar";
     btnEliminar.innerHTML = `
-    <span class="material-icons">delete</span>
-    <span class="btn-accion-label">Eliminar</span>`;
+      <span class="material-icons">delete</span> Eliminar`;
+    btnEliminar.className = 'btn-doc-accion btn-doc-eliminar';
     btnEliminar.addEventListener("click", onEliminar);
     acciones.appendChild(btnEliminar);
   }
 
   const btnDescargar = document.createElement("button");
-  btnDescargar.classList.add("btn-accion-doc", "btn-accion-descargar");
-  btnDescargar.title = "Descargar";
   btnDescargar.innerHTML = `
-    <span class="material-icons">download</span>
-    <span class="btn-accion-label">Descargar</span>`;
+    <span class="material-icons">download</span> Descargar`;
+  btnDescargar.className = 'btn-doc-accion btn-doc-descargar';
   btnDescargar.addEventListener("click", onDescargar);
   acciones.appendChild(btnDescargar);
 
   if ((documento.tipoDocumento.requiereNumeroRelacion || documento.tipoDocumento.esAsistencial) && documento.puedeCargar) {
     const btnEditar = document.createElement("button");
-    btnEditar.classList.add("btn-accion-doc", "btn-accion-editar");
-    btnEditar.title = "Editar";
     btnEditar.innerHTML = `
-    <span class="material-icons">edit</span>
-    <span class="btn-accion-label">Editar</span>`;
+      <span class="material-icons">edit</span> Editar`;
+    btnEditar.className = 'btn-doc-accion btn-doc-editar';
     btnEditar.addEventListener("click", onEditar);
     acciones.prepend(btnEditar);
   }
 
   if (puedeSolicitarCorrecion(documento) && !tieneSolicitudesPendientes()) {
     const btnSolicitarCorreccion = document.createElement("button");
-    btnSolicitarCorreccion.classList.add("btn-accion-doc", "btn-accion-editar");
-    btnSolicitarCorreccion.title = "Solicitar Corrección";
     btnSolicitarCorreccion.innerHTML = `
-    <span class="material-symbols-outlined">quick_reference</span>
-    <span class="btn-accion-label">Corrección</span>`;
+      <span class="material-symbols-outlined">quick_reference</span> Corrección`;
+    btnSolicitarCorreccion.className = 'btn-doc-accion btn-doc-correccion';
     btnSolicitarCorreccion.addEventListener("click", onSolicitarCorreccion);
     acciones.appendChild(btnSolicitarCorreccion);
   }
 
   if (documento.tipoDocumento?.permiteFirma) {
     const btnFirmar = document.createElement("button");
-    btnFirmar.classList.add("btn-accion-doc", "btn-accion-firmar");
-    btnFirmar.title = "Firmar";
     btnFirmar.innerHTML = `
-    <span class="material-symbols-outlined">signature</span>
-    <span class="btn-accion-label">Firmar</span>`;
+      <span class="material-symbols-outlined">signature</span> Firmar`;
+    btnFirmar.className = 'btn-doc-accion btn-doc-firmar';
     btnFirmar.addEventListener("click", onFirmarDocumento);
     acciones.appendChild(btnFirmar);
   }
+
+  // Agregar botón "Vista previa"
+  const btnVer = document.createElement('button');
+  btnVer.className = 'btn-doc-accion btn-doc-ver';
+  btnVer.innerHTML = `<span class="material-icons">visibility</span> Vista previa`;
+  btnVer.addEventListener('click', () => {
+    const target = element.querySelector('.doc-thumbnail, .doc-titulo') || element.querySelector('.thumbnail, .thumbnail-container, .doc-nombre');
+    target?.click();
+  });
+  acciones.prepend(btnVer);
 
   container.appendChild(acciones);
 }
