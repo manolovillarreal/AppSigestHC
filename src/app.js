@@ -206,6 +206,9 @@ async function cargarCorrecciones() {
     SolicitudCorreccionService.obtenerEnviadasPorRol()
   ]);
 
+  const home = new HomeView();
+  await home.mount("main-content-panel");
+
   const documentos = new ListaSolicitudesCorreccion({
     recibidas: recibidas.result || [],
     enviadas: enviadas.result || []

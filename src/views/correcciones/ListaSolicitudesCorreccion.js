@@ -4,6 +4,7 @@ import { PacienteCorreccionItem } from "./PacienteCorreccionItem.js";
 import { ListaDocumentos } from "../documentos/listaDocumentos.js";
 import { AtencionHeader } from "../atenciones/AtencionHeader.js";
 import contexto from "../../core/store.js";
+import { FiltrosCorrecciones } from "./FiltrosCorrecciones.js";
 
 export class ListaSolicitudesCorreccion extends BaseComponent {
     constructor({ recibidas, enviadas }) {
@@ -12,7 +13,15 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
         this.enviadas = enviadas || [];
     }
 
-    render() {
+    async render() {
+        const filtros = new FiltrosCorrecciones(async (params) => {
+          // Cuando el usuario busca, llamar al backend con filtros
+          // Por ahora filtrar localmente hasta que el backend esté listo
+          console.log('filtros:', params);
+        });
+        await filtros.render();
+        filtros.mount('main-content-panel');
+
         this.element = document.createElement("div");
         this.element.className = "sidebar-correcciones-wrapper";
 
