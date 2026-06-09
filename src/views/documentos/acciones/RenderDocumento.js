@@ -153,10 +153,28 @@ export function renderCorrecciones(element, documento, onReMount) {
     .map(o => o.trim())
     .filter(Boolean);
 
+  const textoCompleto = observaciones.join(' | ');
+  const truncado = textoCompleto.length > 50 
+    ? textoCompleto.slice(0, 50) + '...' 
+    : textoCompleto;
+  const necesitaTruncado = textoCompleto.length > 50;
+  const motivoId = `motivo-${solicitudPendiente.id}`;
+
   const motivoHtml = observaciones.length > 0
     ? `<div class="correccion-panel-motivo">
          <span class="correccion-motivo-label">Motivo:</span>
-         <ul>${observaciones.map(o => `<li>${o}</li>`).join('')}</ul>
+         <span id="${motivoId}-corto">${truncado}</span>
+         ${necesitaTruncado ? `
+           <span id="${motivoId}-largo" style="display:none">${textoCompleto}</span>
+           <button class="btn-ver-mas-motivo" 
+             onclick="
+               document.getElementById('${motivoId}-corto').style.display = 
+                 document.getElementById('${motivoId}-corto').style.display === 'none' ? '' : 'none';
+               document.getElementById('${motivoId}-largo').style.display = 
+                 document.getElementById('${motivoId}-largo').style.display === 'none' ? '' : 'none';
+               this.textContent = this.textContent === 'ver más' ? 'ver menos' : 'ver más';
+             ">ver más</button>
+         ` : ''}
        </div>`
     : '';
 
@@ -197,8 +215,12 @@ export function renderCorrecciones(element, documento, onReMount) {
     // Creador
     if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
       const btnEliminar = document.createElement("button");
-      btnEliminar.className = "btn-accion-peligro";
-      btnEliminar.innerHTML = `<span class="material-icons">delete</span> Eliminar solicitud`;
+      btnEliminar.className = "btn-accion-doc btn-accion-eliminar";
+      btnEliminar.title = "Eliminar Solicitud";
+      btnEliminar.innerHTML = `
+        <span class="material-icons">delete</span>
+        <span class="btn-accion-label">Eliminar</span>
+      `;
       btnEliminar.onclick = () => solicitudItem._eliminarSolicitudCorreccion();
       accionesContainer.appendChild(btnEliminar);
     } else if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA) {
