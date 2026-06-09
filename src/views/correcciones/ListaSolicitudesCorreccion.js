@@ -2,6 +2,7 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import { SolicitudCorreccionItem } from "./SolicitudCorreccionItem.js";
 import { PacienteCorreccionItem } from "./PacienteCorreccionItem.js";
 import { ListaDocumentos } from "../documentos/listaDocumentos.js";
+import { AtencionHeader } from "../atenciones/AtencionHeader.js";
 
 export class ListaSolicitudesCorreccion extends BaseComponent {
     constructor(correcciones) {
@@ -44,6 +45,20 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
                 
                 const container = document.createElement("div");
                 container.classList.add("correcciones-detalle-container");
+
+                // Montar el header de la atención
+                const header = new AtencionHeader(grupo.atencion);
+                header.render();
+                container.appendChild(header.element);
+
+                // Agregar el título
+                const titulo = document.createElement("h3");
+                titulo.style.fontSize = "16px";
+                titulo.style.fontWeight = "600";
+                titulo.style.margin = "16px 0 12px";
+                titulo.style.color = "#1e293b";
+                titulo.textContent = "Correcciones de Documentos";
+                container.appendChild(titulo);
                 
                 grupo.solicitudes.forEach(solicitud => {
                     const solicitudItem = new SolicitudCorreccionItem(solicitud, (action) => {
