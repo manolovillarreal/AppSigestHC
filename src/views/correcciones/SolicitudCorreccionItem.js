@@ -76,24 +76,11 @@ export class SolicitudCorreccionItem extends BaseComponent {
     `;
     cardHeader.appendChild(motivoSeccion);
 
-    // BOTÓN TOGGLE TIMELINE
-    const btnToggle = document.createElement("button");
-    btnToggle.classList.add("btn-toggle-timeline");
-    btnToggle.innerHTML = `▼ Ver historial`;
-    cardHeader.appendChild(btnToggle);
-
     this.element.appendChild(cardHeader);
 
-    // TIMELINE BODY (Colapsable)
+    // TIMELINE BODY
     const timelineBody = document.createElement("div");
     timelineBody.classList.add("correccion-timeline-body");
-    timelineBody.style.display = "none";
-
-    btnToggle.addEventListener("click", () => {
-        const isHidden = timelineBody.style.display === "none";
-        timelineBody.style.display = isHidden ? "block" : "none";
-        btnToggle.innerHTML = isHidden ? `▲ Ocultar historial` : `▼ Ver historial`;
-    });
 
     // TIMELINE
     const timelineSeccion = document.createElement("div");
@@ -107,6 +94,26 @@ export class SolicitudCorreccionItem extends BaseComponent {
         textoEstado = "Corrección aprobada.";
     } else if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
         textoEstado = "Corrección rechazada.";
+    }
+
+    const observaciones = (solicitudPendiente.observacion || '')
+      .split('|')
+      .map(o => o.trim())
+      .filter(Boolean);
+   
+    const motivoOriginal = observaciones[0] || '';
+    const observacionesAdicionales = observaciones.slice(1);
+
+    let htmlAdicionales = '';
+    if (observacionesAdicionales.length > 0) {
+      htmlAdicionales = `
+        <div class="observaciones-adicionales-container" style="margin-top: 12px; padding: 10px; background: #f8fafc; border-left: 3px solid #cbd5e1; border-radius: 4px;">
+          <strong style="font-size: 12px; color: #475569; display: block; margin-bottom: 6px;">Observaciones adicionales:</strong>
+          <ul style="margin: 0; padding-left: 16px; font-size: 12px; color: #64748b;">
+            ${observacionesAdicionales.map(obs => `<li>${obs}</li>`).join('')}
+          </ul>
+        </div>
+      `;
     }
 
     const htmlTimeline = `
@@ -123,7 +130,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
               <span class="badge-rol">${solicitudPendiente.usuarioSolicita?.rol?.nombre || 'Administración'}</span>
             </div>
             <span class="timeline-fecha">${fechaSegura(solicitudPendiente.fechaSolicitud)}</span>
-            <div class="timeline-box-motivo">${this._renderObservacionHTML()}</div>
+            <div class="timeline-box-motivo">${motivoOriginal}</div>
           </div>
         </div>
 
@@ -139,6 +146,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
             </div>
             <div class="timeline-acciones" id="acciones-respuesta-${solicitudPendiente.id}">
             </div>
+            ${htmlAdicionales}
           </div>
         </div>
 
