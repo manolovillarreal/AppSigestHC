@@ -20,7 +20,9 @@ export class AtencionHeader extends BaseComponent {
 
     const p = this.atencion.paciente;
     const inicialesPaciente = `${p.primerNombre.charAt(0)}${p.primerApellido.charAt(0)}`.toUpperCase();
-    const estadoStr = this.atencion.estadoAtencion.nombre.toLowerCase().replace(/ /g, '-').replace('ó', 'o');
+    const estadoNombre = this.atencion.estadoAtencion?.nombre || 'Desconocido';
+    const estadoStr = estadoNombre.toLowerCase().replace(/ /g, '-').replace('ó', 'o');
+    const administradoraNombre = this.atencion.administradora?.nombre || 'Desconocido';
     this.element.innerHTML = `
       <div class="header-datos-grid">
         <div class="grid-dato">
@@ -29,7 +31,7 @@ export class AtencionHeader extends BaseComponent {
         </div>
         <div class="grid-dato">
           <span class="grid-label">Administradora:</span>
-          <span class="grid-valor">${this.atencion.administradora.nombre}</span>
+          <span class="grid-valor">${administradoraNombre}</span>
         </div>
         <div class="grid-dato">
           <span class="grid-label">Paciente ID:</span>
@@ -37,7 +39,7 @@ export class AtencionHeader extends BaseComponent {
         </div>
         <div class="grid-dato">
           <span class="grid-label">Estado:</span>
-          <span class="grid-valor badge-estado estado-${estadoStr}" style="margin-left:8px;">${this.atencion.estadoAtencion.nombre}</span>
+          <span class="grid-valor badge-estado estado-${estadoStr}" style="margin-left:8px;">${estadoNombre}</span>
         </div>
         <div class="grid-dato">
           <span class="grid-label">Paciente:</span>
