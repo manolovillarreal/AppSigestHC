@@ -58,6 +58,43 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
 
         const usuarioId = contexto.usuario?.id || contexto.perfil?.id;
 
+        // LÓGICA DE FILTROS LOCALES
+        const applyFilters = () => {
+            const buscadorVal = controles.querySelector('#buscador-correcciones').value.toLowerCase().trim();
+            const soloMias = controles.querySelector('#toggle-solo-mias').checked;
+
+            // Recibidas: filtro por término de búsqueda
+            let recibidasVisibles = 0;
+            seccionRecibidas.querySelectorAll('.correccion-paciente-bloque').forEach(card => {
+                const nombre = card.querySelector('.correccion-paciente-nombre')?.textContent.toLowerCase() || '';
+                const matchesSearch = !buscadorVal || nombre.includes(buscadorVal);
+                if (matchesSearch) {
+                    card.style.display = '';
+                    recibidasVisibles++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Enviadas: filtro por término de búsqueda + solo mías
+            let enviadasVisibles = 0;
+            seccionEnviadas.querySelectorAll('.correccion-paciente-bloque').forEach(card => {
+                const nombre = card.querySelector('.correccion-paciente-nombre')?.textContent.toLowerCase() || '';
+                const matchesSearch = !buscadorVal || nombre.includes(buscadorVal);
+                const matchesSoloMias = !soloMias || card._esMio;
+                if (matchesSearch && matchesSoloMias) {
+                    card.style.display = '';
+                    enviadasVisibles++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Mostrar u ocultar secciones
+            seccionRecibidas.style.display = (this.recibidas.length === 0 || recibidasVisibles === 0) ? 'none' : '';
+            seccionEnviadas.style.display = (this.enviadas.length === 0 || enviadasVisibles === 0) ? 'none' : '';
+        };
+
         // Renderiza grupos de pacientes en cada sección
         const renderListInSection = (correcciones, container) => {
             const grupos = {};
@@ -98,7 +135,16 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
                     const containerDetalle = document.createElement("div");
                     containerDetalle.classList.add("correcciones-detalle-container");
 
-                    const header = new AtencionHeader(grupo.atencion);
+                    const header = new AtencionHeader(
+                        grupo.atencion,
+                        async () => {
+                            const mainPanelClose = document.getElementById('main-content-panel');
+                            mainPanelClose.innerHTML = '';
+                            const f = new FiltrosCorrecciones(onBuscar);
+                            await f.render();
+                            f.mount('main-content-panel');
+                        }
+                    );
                     header.render();
                     containerDetalle.appendChild(header.element);
 
@@ -123,44 +169,7 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
             });
         };
 
-        // LÓGICA DE FILTROS
-        const applyFilters = () => {
-            const buscadorVal = controles.querySelector('#buscador-correcciones').value.toLowerCase().trim();
-            const soloMias = controles.querySelector('#toggle-solo-mias').checked;
-
-            // Recibidas: filtro por término de búsqueda
-            let recibidasVisibles = 0;
-            seccionRecibidas.querySelectorAll('.correccion-paciente-bloque').forEach(card => {
-                const nombre = card.querySelector('.correccion-paciente-nombre')?.textContent.toLowerCase() || '';
-                const matchesSearch = !buscadorVal || nombre.includes(buscadorVal);
-                if (matchesSearch) {
-                    card.style.display = '';
-                    recibidasVisibles++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            // Enviadas: filtro por término de búsqueda + solo mías
-            let enviadasVisibles = 0;
-            seccionEnviadas.querySelectorAll('.correccion-paciente-bloque').forEach(card => {
-                const nombre = card.querySelector('.correccion-paciente-nombre')?.textContent.toLowerCase() || '';
-                const matchesSearch = !buscadorVal || nombre.includes(buscadorVal);
-                const matchesSoloMias = !soloMias || card._esMio;
-                if (matchesSearch && matchesSoloMias) {
-                    card.style.display = '';
-                    enviadasVisibles++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            // Mostrar u ocultar secciones
-            seccionRecibidas.style.display = (this.recibidas.length === 0 || recibidasVisibles === 0) ? 'none' : '';
-            seccionEnviadas.style.display = (this.enviadas.length === 0 || enviadasVisibles === 0) ? 'none' : '';
-        };
-
-        const filtros = new FiltrosCorrecciones(async (params) => {
+        const onBuscar = async (params) => {
             const res = await SolicitudCorreccionService.obtenerCorreccionesPorRol(params);
             if (res.ok && res.result) {
                 this.recibidas = res.result;
@@ -175,7 +184,9 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
                   seccionRecibidas.style.display = '';
                 applyFilters();
             }
-        });
+        };
+
+        const filtros = new FiltrosCorrecciones(onBuscar);
         await filtros.render();
         filtros.mount('main-content-panel');
 
