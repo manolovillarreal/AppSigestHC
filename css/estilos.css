@@ -21,6 +21,8 @@ body {
   height: 100vh;
   z-index: 1;
   color: #fff;
+  position: sticky;
+  top: 0;
 }
 
 #sidebar-panel {
@@ -138,6 +140,8 @@ body {
 .main-content {
   flex: 1;
   padding: 20px;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .btn {
