@@ -1,5 +1,4 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
-import TipoDocumentoService from "../../api/tipoDocumento.api.js";
 import { contexto } from "../../core/store.js";
 
 export class FiltrosCorrecciones extends BaseComponent {
@@ -51,12 +50,6 @@ export class FiltrosCorrecciones extends BaseComponent {
               <input type="date" name="fechaFinal" />
             </div>
             <div class="filtro-campo">
-              <label>Tipo de documento</label>
-              <select name="tipoDocumentoId">
-                <option value="">Todos los tipos</option>
-              </select>
-            </div>
-            <div class="filtro-campo">
               <label>N° Relación</label>
               <input type="text" name="numeroRelacion" 
                 placeholder="Ingrese el número de relación" />
@@ -86,20 +79,6 @@ export class FiltrosCorrecciones extends BaseComponent {
         chevron.textContent = visible ? 'expand_more' : 'expand_less';
       });
 
-    // Poblar tipos de documento
-    try {
-      const res = await TipoDocumentoService.obtenerTodos();
-      if (res.ok && res.result) {
-        const select = this.element.querySelector('select[name="tipoDocumentoId"]');
-        res.result.forEach(td => {
-          const opt = document.createElement('option');
-          opt.value = td.id;
-          opt.textContent = td.nombre;
-          select.appendChild(opt);
-        });
-      }
-    } catch(e) {}
-
     // Limpiar
     this.element.querySelector('#btn-limpiar-correcciones')
       .addEventListener('click', () => {
@@ -115,7 +94,6 @@ export class FiltrosCorrecciones extends BaseComponent {
           estadoCorreccionId: this.element.querySelector('[name="estadoCorreccionId"]').value,
           fechaInicial: this.element.querySelector('[name="fechaInicial"]').value,
           fechaFinal: this.element.querySelector('[name="fechaFinal"]').value,
-          tipoDocumentoId: this.element.querySelector('[name="tipoDocumentoId"]').value,
           numeroRelacion: this.element.querySelector('[name="numeroRelacion"]').value,
         };
         // Colapsar filtros
