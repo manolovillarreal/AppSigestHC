@@ -45,7 +45,7 @@ export class ItemAtencion extends BaseComponent{
                 <div class="extra-info">
                     <span class="extra-label">${this.atencion.extraLabel}</span>
                     ${this.atencion.tieneCorreccionesPendientes ? 
-                    `<span id="correcciones-pendientes" class="material-symbols-outlined">quick_reference</span>` : ''}                
+                    `<span class="correcciones-pendientes material-symbols-outlined">quick_reference</span>` : ''}                
                 </div>
             `;
         this.element = item;

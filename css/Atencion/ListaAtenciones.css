@@ -65,8 +65,11 @@
     justify-content: space-between;
     gap: 5px;
 }
-#correcciones-pendientes{
-  color: #ec8e00dc;
+#correcciones-pendientes,
+.correcciones-pendientes {
+  font-size: 16px;
+  color: #FBB024;
+  vertical-align: middle;
 }
 #btn-importar-id{
   margin-left: 10px;
