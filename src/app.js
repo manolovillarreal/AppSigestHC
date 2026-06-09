@@ -173,7 +173,8 @@ async function cargarEstadosAtencion() {
 async function cargarInicio() {
   clearPanels();
   await renderListaAtenciones();
-
+  const home = new HomeView();
+  home.mount("main-content-panel");
 }
 async function renderListaAtenciones() {
     const resAtenciones = await AtencionService.obtenerAtencionesVisibles();
