@@ -9,7 +9,7 @@ import contexto from "../../core/store.js";
 import { PERFILES } from "../../core/config.js";
 
 export class ListaAtenciones extends BaseComponent {
-  constructor({atenciones,contenedorId}) {
+  constructor({atenciones,contenedorId, onClose}) {
     super();
     this.atenciones = atenciones || [];
     this.id = "atenciones-list";
@@ -18,16 +18,21 @@ export class ListaAtenciones extends BaseComponent {
     this.agruparPor = "estado";
     this.listElement = {};
     this.contenedorId = contenedorId;
+    this.onClose = onClose;
   }
 
 
   seleccionarAtencion(atencionSeleccionada) {    
 
-    const vistaAtencion = new AtencionView(atencionSeleccionada,(accion)=>{
-      if(accion === "anulada")
-        this.atenciones = this.atenciones.filter(a => a.id !== atencionSeleccionada.id);
-       this._renderGrupos();
-    });
+    const vistaAtencion = new AtencionView(
+      atencionSeleccionada,
+      (accion)=>{
+        if(accion === "anulada")
+          this.atenciones = this.atenciones.filter(a => a.id !== atencionSeleccionada.id);
+         this._renderGrupos();
+      },
+      this.onClose
+    );
     vistaAtencion.mount(this.contenedorId || "main-content-panel");
   }
 

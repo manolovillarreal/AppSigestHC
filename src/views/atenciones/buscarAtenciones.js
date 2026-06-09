@@ -135,7 +135,11 @@ export class BuscarAtenciones extends BaseComponent{
     _renderResultados() {
       const listaAtenciones = new ListaAtenciones({
         atenciones: this.listaAtenciones,
-        contenedorId: "main-content-panel"
+        contenedorId: "main-content-panel",
+        onClose: () => {
+          const filtros = new BuscarAtenciones();
+          filtros.mount('main-content-panel');
+        }
       });
       listaAtenciones.mount("sidebar-panel");
 

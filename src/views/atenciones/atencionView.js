@@ -17,10 +17,11 @@ import { importarDocumentoIdentidad } from "../../api/documento.api.js";
 import { HomeView } from "../HomeView.js";
 
 export class AtencionView extends BaseComponent {
-  constructor(atencion, onSuccess) {
+  constructor(atencion, onSuccess, onClose = null) {
     super();
     this.atencion = atencion;
     this.onSuccess = onSuccess;
+    this.onClose = onClose;
   }
 
   render() {
@@ -30,8 +31,12 @@ export class AtencionView extends BaseComponent {
     const header = new AtencionHeader(
       this.atencion,
       () => {
-        const home = new HomeView();
-        home.mount("main-content-panel");
+        if (typeof this.onClose === 'function') {
+          this.onClose();
+        } else {
+          const home = new HomeView();
+          home.mount("main-content-panel");
+        }
       },
       this._onSuccess.bind(this)
     );
