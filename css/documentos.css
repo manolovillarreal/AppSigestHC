@@ -510,3 +510,14 @@
   font-size: 14px;
   color: #94a3b8;
 }
+
+.cp-rechazos {
+  font-size: 11px;
+  color: #dc2626;
+  margin-top: 4px;
+}
+
+.cp-rechazos ul {
+  margin: 2px 0 0 14px;
+  padding: 0;
+}

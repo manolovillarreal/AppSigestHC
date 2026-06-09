@@ -161,12 +161,8 @@ export function renderCorrecciones(element, documento, onReMount) {
     .map(o => o.trim())
     .filter(Boolean);
 
-  const textoCompleto = observaciones.join(' | ');
-  const truncado = textoCompleto.length > 50 
-    ? textoCompleto.slice(0, 50) + '...' 
-    : textoCompleto;
-  const necesitaTruncado = textoCompleto.length > 50;
-  const motivoId = `motivo-${solicitudPendiente.id}`;
+  const motivoOriginal = observaciones[0] || '';
+  const rechazos = observaciones.slice(1);
 
   const panel = document.createElement('div');
   panel.className = 'correccion-panel-simple';
@@ -205,19 +201,15 @@ export function renderCorrecciones(element, documento, onReMount) {
     <div class="cp-meta">
       <span>${fechaLabel}: <strong>${fecha}</strong></span>
       <span>${porLabel}: ${porUsuario}</span>
-      ${observaciones.length > 0 ? `
+      ${motivoOriginal ? `
         <div class="cp-motivo">
           <strong>Motivo:</strong>
-          <span id="${motivoId}-corto">${truncado}</span>
-          ${necesitaTruncado ? `
-            <span id="${motivoId}-largo" style="display:none">${textoCompleto}</span>
-            <button class="btn-ver-mas-motivo"
-              onclick="
-                var c=document.getElementById('${motivoId}-corto');
-                var l=document.getElementById('${motivoId}-largo');
-                if(l.style.display==='none'){c.style.display='none';l.style.display='';this.textContent='ver menos';}
-                else{c.style.display='';l.style.display='none';this.textContent='ver más';}
-              ">ver más</button>
+          <span>${motivoOriginal}</span>
+          ${rechazos.length > 0 ? `
+            <div class="cp-rechazos">
+              <strong>Rechazos previos:</strong>
+              <ul>${rechazos.map(r => `<li>${r}</li>`).join('')}</ul>
+            </div>
           ` : ''}
         </div>
       ` : ''}
