@@ -14,6 +14,8 @@ import {
 } from "./AtencionActions.js";
 import { importarDocumentoIdentidad } from "../../api/documento.api.js";
 
+import { HomeView } from "../HomeView.js";
+
 export class AtencionView extends BaseComponent {
   constructor(atencion, onSuccess) {
     super();
@@ -27,7 +29,10 @@ export class AtencionView extends BaseComponent {
 
     const header = new AtencionHeader(
       this.atencion,
-      () => this.element.remove(),
+      () => {
+        const home = new HomeView();
+        home.mount("main-content-panel");
+      },
       this._onSuccess.bind(this)
     );
     header.render();

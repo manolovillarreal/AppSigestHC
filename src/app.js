@@ -10,6 +10,7 @@ import EstadoAtencionService from './api/estadoAtencion.api.js';
 import { PERFILES } from "./core/config.js";
 import { SolicitudCorreccionService } from "./api/solicitudCorreccion.api.js";
 import { ListaSolicitudesCorreccion } from "./views/correcciones/ListaSolicitudesCorreccion.js";
+import { HomeView } from "./views/HomeView.js";
 
 cargarCSS("main");
 
@@ -73,7 +74,10 @@ function configurarVistaPorRol() {
   const { perfil } = contexto;
 
   document.getElementById("nombreUsuario").textContent = perfil.nombreUsuario;
-  document.getElementById("nombreCompletoUsuario").textContent = perfil.nombre;
+  const welcomeH1 = document.getElementById("nombreCompletoUsuario")?.parentElement;
+  if (welcomeH1) welcomeH1.style.display = "none";
+  const home = new HomeView();
+  home.mount("main-content-panel");
 
   // Si el usuario es Administrador, agregar botón de Atenciones en el sidebar
   if (perfil.rol.nombre === PERFILES.ADMINISTRADOR) {
