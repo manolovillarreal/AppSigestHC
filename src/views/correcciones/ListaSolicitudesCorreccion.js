@@ -3,6 +3,7 @@ import { SolicitudCorreccionItem } from "./SolicitudCorreccionItem.js";
 import { PacienteCorreccionItem } from "./PacienteCorreccionItem.js";
 import { ListaDocumentos } from "../documentos/listaDocumentos.js";
 import { AtencionHeader } from "../atenciones/AtencionHeader.js";
+import contexto from "../../core/store.js";
 
 export class ListaSolicitudesCorreccion extends BaseComponent {
     constructor({ recibidas, enviadas }) {
@@ -13,7 +14,31 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
 
     render() {
         this.element = document.createElement("div");
-        this.element.classList.add("lista-correcciones");
+        this.element.className = "sidebar-correcciones-wrapper";
+
+        // Contenedor de controles
+        const controles = document.createElement('div');
+        controles.className = 'controles-sidebar';
+        controles.innerHTML = `
+          <input type="text" id="buscador-correcciones" 
+            placeholder="Buscar paciente..." />
+          <div class="controles-fila">
+            <select id="agrupador-correcciones">
+              <option value="estado">Estado</option>
+              <option value="eps">EPS</option>
+            </select>
+            <label class="toggle-mias">
+              <input type="checkbox" id="toggle-solo-mias" />
+              <span>Solo mías</span>
+            </label>
+          </div>
+        `;
+        this.element.appendChild(controles);
+
+        // Elemento principal de la lista
+        const listEl = document.createElement("div");
+        listEl.classList.add("lista-correcciones");
+        this.element.appendChild(listEl);
 
         // Sección 1
         const seccionRecibidas = document.createElement('div');
@@ -28,6 +53,8 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
           <div class="correcciones-seccion-titulo">
             MIS SOLICITUDES ENVIADAS
           </div>`;
+
+        const usuarioId = contexto.usuario?.id || contexto.perfil?.id;
 
         // Renderiza grupos de pacientes en cada sección
         const renderListInSection = (correcciones, container) => {
@@ -54,6 +81,14 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
                     solicitudes: grupo.solicitudes
                 });
                 const pacienteElement = pacienteItem.render();
+                
+                // Determinar si alguna solicitud pertenece al usuario actual
+                const esMio = grupo.solicitudes.some(s => 
+                    s.usuarioSolicitaId === usuarioId || 
+                    (s.usuarioSolicita && s.usuarioSolicita.id === usuarioId)
+                );
+                pacienteElement._esMio = esMio;
+
                 pacienteElement.addEventListener('click', () => {    
                     const mainPanel = document.getElementById('main-content-panel');
                     mainPanel.innerHTML = '';
@@ -95,8 +130,62 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
         if (this.enviadas.length === 0)
           seccionEnviadas.style.display = 'none';
 
-        this.element.appendChild(seccionRecibidas);
-        this.element.appendChild(seccionEnviadas);
+        listEl.appendChild(seccionRecibidas);
+        listEl.appendChild(seccionEnviadas);
+
+        // LÓGICA DE FILTROS
+        const applyFilters = () => {
+            const buscadorVal = controles.querySelector('#buscador-correcciones').value.toLowerCase().trim();
+            const soloMias = controles.querySelector('#toggle-solo-mias').checked;
+
+            // Recibidas: filtro por término de búsqueda
+            let recibidasVisibles = 0;
+            seccionRecibidas.querySelectorAll('.correccion-paciente-bloque').forEach(card => {
+                const nombre = card.querySelector('.correccion-paciente-nombre')?.textContent.toLowerCase() || '';
+                const matchesSearch = !buscadorVal || nombre.includes(buscadorVal);
+                if (matchesSearch) {
+                    card.style.display = '';
+                    recibidasVisibles++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Enviadas: filtro por término de búsqueda + solo mías
+            let enviadasVisibles = 0;
+            seccionEnviadas.querySelectorAll('.correccion-paciente-bloque').forEach(card => {
+                const nombre = card.querySelector('.correccion-paciente-nombre')?.textContent.toLowerCase() || '';
+                const matchesSearch = !buscadorVal || nombre.includes(buscadorVal);
+                const matchesSoloMias = !soloMias || card._esMio;
+                if (matchesSearch && matchesSoloMias) {
+                    card.style.display = '';
+                    enviadasVisibles++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Mostrar u ocultar secciones
+            seccionRecibidas.style.display = (this.recibidas.length === 0 || recibidasVisibles === 0) ? 'none' : '';
+            seccionEnviadas.style.display = (this.enviadas.length === 0 || enviadasVisibles === 0) ? 'none' : '';
+        };
+
+        controles.querySelector('#buscador-correcciones').addEventListener('input', applyFilters);
+        controles.querySelector('#toggle-solo-mias').addEventListener('change', applyFilters);
+
+        // Lógica del agrupador
+        controles.querySelector('#agrupador-correcciones').addEventListener('change', (e) => {
+            const val = e.target.value;
+            const titleRecibidas = seccionRecibidas.querySelector('.correcciones-seccion-titulo');
+            const titleEnviadas = seccionEnviadas.querySelector('.correcciones-seccion-titulo');
+            if (val === 'estado') {
+                if (titleRecibidas) titleRecibidas.textContent = 'PENDIENTES POR RESOLVER';
+                if (titleEnviadas) titleEnviadas.textContent = 'MIS SOLICITUDES ENVIADAS';
+            } else if (val === 'eps') {
+                if (titleRecibidas) titleRecibidas.textContent = 'EPS';
+                if (titleEnviadas) titleEnviadas.textContent = 'EPS';
+            }
+        });
 
         return this.element;
     }
