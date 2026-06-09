@@ -270,16 +270,14 @@
 }
 
 .correccion-panel-simple {
-  flex: 0 0 45%;
-  min-width: 0;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 16px;
-  justify-content: center;
-  position: relative;
-  padding-bottom: 56px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 8px;
+  border-left: 1px solid rgba(0,0,0,0.08);
+  padding: 12px;
+  min-width: 0;
+  flex: 0 0 42%;
 }
 
 .correccion-panel-meta {
@@ -291,14 +289,11 @@
 }
 
 .correccion-panel-acciones {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   justify-content: flex-end;
-  max-width: 100%;
+  margin-top: auto;
 }
 
 .badge-estado-correccion {
