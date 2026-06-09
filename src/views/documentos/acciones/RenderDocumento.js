@@ -148,6 +148,18 @@ export function renderCorrecciones(element, documento, onReMount) {
     ? `${solicitudPendiente.usuarioSolicita.nombre || ''} ${solicitudPendiente.usuarioSolicita.apellidos || ''}`.trim()
     : 'Usuario desconocido';
 
+  const observaciones = (solicitudPendiente.observacion || '')
+    .split('|')
+    .map(o => o.trim())
+    .filter(Boolean);
+
+  const motivoHtml = observaciones.length > 0
+    ? `<div class="correccion-panel-motivo">
+         <span class="correccion-motivo-label">Motivo:</span>
+         <ul>${observaciones.map(o => `<li>${o}</li>`).join('')}</ul>
+       </div>`
+    : '';
+
   const panel = document.createElement('div');
   panel.className = 'correccion-panel-simple';
   panel.innerHTML = `
@@ -158,6 +170,7 @@ export function renderCorrecciones(element, documento, onReMount) {
       <span>Solicitado: ${fechaSolicitud}</span>
       <span>Por: <strong>${solicitadoPor}</strong></span>
     </div>
+    ${motivoHtml}
     <div class="correccion-panel-acciones"></div>
   `;
 
