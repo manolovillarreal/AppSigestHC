@@ -131,15 +131,6 @@ export function renderAcciones({
     acciones.appendChild(btnFirmar);
   }
 
-  // Agregar botón "Vista previa"
-  const btnVer = document.createElement('button');
-  btnVer.className = 'btn-doc-accion btn-doc-ver';
-  btnVer.innerHTML = `<span class="material-icons">visibility</span> Vista previa`;
-  btnVer.addEventListener('click', () => {
-    const target = element.querySelector('.doc-thumbnail, .doc-titulo') || element.querySelector('.thumbnail, .thumbnail-container, .doc-nombre');
-    target?.click();
-  });
-  acciones.prepend(btnVer);
 
   container.appendChild(acciones);
 }
