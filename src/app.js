@@ -201,13 +201,22 @@ function cargarBuscadorAtenciones() {
 // CARGAR CORRECCIONES  
 async function cargarCorrecciones() {
   clearPanels();
-  const resSolicitudesCorreccion = await SolicitudCorreccionService.obtenerCorreccionesPorRol();
-  if (!resSolicitudesCorreccion.ok) {
-    debug.logError("Error al cargar solicitudes de corrección:", resSolicitudesCorreccion.errorMessages);
-    return;
-  }
-  console.log("Solicitudes de corrección cargadas:", resSolicitudesCorreccion.result);
-  const documentos = new ListaSolicitudesCorreccion(resSolicitudesCorreccion.result || []);
+  const [recibidas, enviadas] = await Promise.all([
+    SolicitudCorreccionService.obtenerCorreccionesPorRol(),
+    SolicitudCorreccionService.obtenerEnviadasPorRol()
+  ]);
+
+  const todasLasSolicitudes = [
+    ...(recibidas.result || []),
+    ...(enviadas.result || [])
+  ];
+
+  // Deduplicar por id por si aparece en ambas
+  const unicas = Array.from(
+    new Map(todasLasSolicitudes.map(s => [s.id, s])).values()
+  );
+
+  const documentos = new ListaSolicitudesCorreccion(unicas);
   documentos.mount("sidebar-panel");
 }
 

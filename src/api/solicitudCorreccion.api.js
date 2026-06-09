@@ -4,6 +4,10 @@ function obtenerCorreccionesPorRol() {
   return apiGet("/SolicitudCorreccion/por-rol");
 }
 
+function obtenerEnviadasPorRol() {
+  return apiGet("/SolicitudCorreccion/enviadas-por-rol");
+}
+
 function responderSolicitudCorreccion(solicitudId, data) {
   return apiUpload(`/SolicitudCorreccion/${solicitudId}/responder`, data);
 }
@@ -23,6 +27,7 @@ export async function eliminarSolicitudCorreccion(solicitudId) {
 
 export const SolicitudCorreccionService = {
   obtenerCorreccionesPorRol,
+  obtenerEnviadasPorRol,
   responderSolicitudCorreccion,
   visualizarCorreccion,
   aprobarCorreccion,
