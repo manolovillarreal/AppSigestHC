@@ -5,6 +5,7 @@ import { ListaDocumentos } from "../documentos/listaDocumentos.js";
 import { AtencionHeader } from "../atenciones/AtencionHeader.js";
 import contexto from "../../core/store.js";
 import { FiltrosCorrecciones } from "./FiltrosCorrecciones.js";
+import { SolicitudCorreccionService } from "../../api/solicitudCorreccion.api.js";
 
 export class ListaSolicitudesCorreccion extends BaseComponent {
     constructor({ recibidas, enviadas }) {
@@ -14,14 +15,6 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
     }
 
     async render() {
-        const filtros = new FiltrosCorrecciones(async (params) => {
-          // Cuando el usuario busca, llamar al backend con filtros
-          // Por ahora filtrar localmente hasta que el backend esté listo
-          console.log('filtros:', params);
-        });
-        await filtros.render();
-        filtros.mount('main-content-panel');
-
         this.element = document.createElement("div");
         this.element.className = "sidebar-correcciones-wrapper";
 
@@ -130,18 +123,6 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
             });
         };
 
-        renderListInSection(this.recibidas, seccionRecibidas);
-        renderListInSection(this.enviadas, seccionEnviadas);
-
-        // Ocultar sección si está vacía
-        if (this.recibidas.length === 0) 
-          seccionRecibidas.style.display = 'none';
-        if (this.enviadas.length === 0)
-          seccionEnviadas.style.display = 'none';
-
-        listEl.appendChild(seccionRecibidas);
-        listEl.appendChild(seccionEnviadas);
-
         // LÓGICA DE FILTROS
         const applyFilters = () => {
             const buscadorVal = controles.querySelector('#buscador-correcciones').value.toLowerCase().trim();
@@ -178,6 +159,37 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
             seccionRecibidas.style.display = (this.recibidas.length === 0 || recibidasVisibles === 0) ? 'none' : '';
             seccionEnviadas.style.display = (this.enviadas.length === 0 || enviadasVisibles === 0) ? 'none' : '';
         };
+
+        const filtros = new FiltrosCorrecciones(async (params) => {
+            const res = await SolicitudCorreccionService.obtenerCorreccionesPorRol(params);
+            if (res.ok && res.result) {
+                this.recibidas = res.result;
+                seccionRecibidas.innerHTML = `
+                  <div class="correcciones-seccion-titulo">
+                    PENDIENTES POR RESOLVER
+                  </div>`;
+                renderListInSection(this.recibidas, seccionRecibidas);
+                if (this.recibidas.length === 0) 
+                  seccionRecibidas.style.display = 'none';
+                else
+                  seccionRecibidas.style.display = '';
+                applyFilters();
+            }
+        });
+        await filtros.render();
+        filtros.mount('main-content-panel');
+
+        renderListInSection(this.recibidas, seccionRecibidas);
+        renderListInSection(this.enviadas, seccionEnviadas);
+
+        // Ocultar sección si está vacía
+        if (this.recibidas.length === 0) 
+          seccionRecibidas.style.display = 'none';
+        if (this.enviadas.length === 0)
+          seccionEnviadas.style.display = 'none';
+
+        listEl.appendChild(seccionRecibidas);
+        listEl.appendChild(seccionEnviadas);
 
         controles.querySelector('#buscador-correcciones').addEventListener('input', applyFilters);
         controles.querySelector('#toggle-solo-mias').addEventListener('change', applyFilters);

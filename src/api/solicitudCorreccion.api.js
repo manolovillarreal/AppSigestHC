@@ -1,7 +1,16 @@
 import { apiDownloadBlob, apiGet, apiPost,apiDelete ,apiUpload } from "../core/api.js";
 
-function obtenerCorreccionesPorRol() {
-  return apiGet("/SolicitudCorreccion/por-rol");
+async function obtenerCorreccionesPorRol(filtros = {}) {
+  const params = new URLSearchParams();
+  if (filtros.pacienteId) params.append('pacienteId', filtros.pacienteId);
+  if (filtros.estadoCorreccionId) params.append('estadoCorreccionId', filtros.estadoCorreccionId);
+  if (filtros.fechaInicial) params.append('fechaInicial', filtros.fechaInicial);
+  if (filtros.fechaFinal) params.append('fechaFinal', filtros.fechaFinal);
+  if (filtros.tipoDocumentoId) params.append('tipoDocumentoId', filtros.tipoDocumentoId);
+  if (filtros.numeroRelacion) params.append('numeroRelacion', filtros.numeroRelacion);
+  
+  const query = params.toString();
+  return await apiGet(`/SolicitudCorreccion/por-rol${query ? '?' + query : ''}`);
 }
 
 function obtenerEnviadasPorRol() {
