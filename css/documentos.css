@@ -234,6 +234,19 @@
 
 .documento-item-correcciones {
   background: antiquewhite;
+  align-items: stretch;
+}
+
+.documento-item-correcciones .documento-item-wrapper {
+  flex: 0 0 35%;
+  min-width: 0;
+}
+
+.documento-item-correcciones > div:last-child {
+  flex: 1;
+  border-left: 1px solid rgba(0,0,0,0.08);
+  padding: 12px;
+  min-width: 0;
 }
 
 /* Estilos para descarga múltiple */
