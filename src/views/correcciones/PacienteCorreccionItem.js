@@ -38,7 +38,10 @@ export class PacienteCorreccionItem extends BaseComponent {
         <span class="correccion-paciente-fecha">${formatearFecha(this.atencion.fecha) || "Sin fecha"}</span>
         <span class="correccion-paciente-eps">${this.administradora?.nombre || "Sin EPS"}</span>
       </div>
-      <span class="badge-estado ${estadoClase}">${estadoNombre}</span>
+      <div class="correccion-paciente-footer">
+        <span class="badge-estado ${estadoClase}">${estadoNombre}</span>
+        <span class="material-symbols-outlined correccion-alerta-icon">quick_reference</span>
+      </div>
     `;
 
     // Contador Circular
