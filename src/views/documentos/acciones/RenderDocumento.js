@@ -140,13 +140,20 @@ export function renderCorrecciones(element, documento, onReMount) {
   );
   if (!solicitudPendiente) return;
 
+  const fechaSegura = (valor) => {
+    if (!valor) return 'Fecha no disponible';
+    const d = new Date(valor);
+    return isNaN(d.getTime()) ? 'Fecha no disponible' : formatearFecha(valor);
+  };
+
+  const nombreUsuario = (usuario) => {
+    if (!usuario) return 'Usuario desconocido';
+    const nombre = usuario.nombre || usuario.nombreUsuario || '';
+    const apellidos = usuario.apellidos || '';
+    return `${nombre} ${apellidos}`.trim() || 'Usuario desconocido';
+  };
+
   const estadoNombre = solicitudPendiente.estadoCorreccion?.nombre || 'Pendiente';
-  const fechaSolicitud = solicitudPendiente.fechaSolicitud 
-    ? formatearFecha(solicitudPendiente.fechaSolicitud) 
-    : 'Sin fecha';
-  const solicitadoPor = solicitudPendiente.usuarioSolicita
-    ? `${solicitudPendiente.usuarioSolicita.nombre || ''} ${solicitudPendiente.usuarioSolicita.apellidos || ''}`.trim()
-    : 'Usuario desconocido';
 
   const observaciones = (solicitudPendiente.observacion || '')
     .split('|')
@@ -160,35 +167,60 @@ export function renderCorrecciones(element, documento, onReMount) {
   const necesitaTruncado = textoCompleto.length > 50;
   const motivoId = `motivo-${solicitudPendiente.id}`;
 
-  const motivoHtml = observaciones.length > 0
-    ? `<div class="correccion-panel-motivo">
-         <span class="correccion-motivo-label">Motivo:</span>
-         <span id="${motivoId}-corto">${truncado}</span>
-         ${necesitaTruncado ? `
-           <span id="${motivoId}-largo" style="display:none">${textoCompleto}</span>
-           <button class="btn-ver-mas-motivo" 
-             onclick="
-               document.getElementById('${motivoId}-corto').style.display = 
-                 document.getElementById('${motivoId}-corto').style.display === 'none' ? '' : 'none';
-               document.getElementById('${motivoId}-largo').style.display = 
-                 document.getElementById('${motivoId}-largo').style.display === 'none' ? '' : 'none';
-               this.textContent = this.textContent === 'ver más' ? 'ver menos' : 'ver más';
-             ">ver más</button>
-         ` : ''}
-       </div>`
-    : '';
-
   const panel = document.createElement('div');
   panel.className = 'correccion-panel-simple';
+
+  const estadoConfig = {
+    'Pendiente':   { color: '#d97706', bg: 'rgba(251,191,36,0.12)',  texto: 'PENDIENTE' },
+    'Respondida':  { color: '#059669', bg: 'rgba(16,185,129,0.12)', texto: 'RESPONDIDA' },
+    'Rechazada':   { color: '#dc2626', bg: 'rgba(239,68,68,0.12)',  texto: 'RECHAZADA' },
+    'Aprobada':    { color: '#2563eb', bg: 'rgba(59,130,246,0.12)', texto: 'APROBADA' },
+  };
+  const cfg = estadoConfig[estadoNombre] || estadoConfig['Pendiente'];
+
+  // Fecha y usuario según estado
+  const estaRespondida = estadoNombre === 'Respondida' || estadoNombre === 'Aprobada';
+  const fechaLabel = estaRespondida ? 'Respondido' : 'Solicitado';
+  const fecha = estaRespondida 
+    ? fechaSegura(solicitudPendiente.fechaRespuesta || solicitudPendiente.fechaSolicitud)
+    : fechaSegura(solicitudPendiente.fechaSolicitud);
+  const porLabel = estaRespondida ? 'Por' : 'Por';
+  const porUsuario = estaRespondida
+    ? nombreUsuario(solicitudPendiente.usuarioCorrige)
+    : nombreUsuario(solicitudPendiente.usuarioSolicita);
+
   panel.innerHTML = `
-    <div class="correccion-panel-estado">
-      <span class="badge-estado-correccion badge-${estadoNombre.toLowerCase()}">${estadoNombre.toUpperCase()}</span>
+    <div class="cp-badge" style="
+      color: ${cfg.color}; 
+      background: ${cfg.bg};
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    ">${cfg.texto}</div>
+    <div class="cp-meta">
+      <span>${fechaLabel}: <strong>${fecha}</strong></span>
+      <span>${porLabel}: ${porUsuario}</span>
+      ${observaciones.length > 0 ? `
+        <div class="cp-motivo">
+          <strong>Motivo:</strong>
+          <span id="${motivoId}-corto">${truncado}</span>
+          ${necesitaTruncado ? `
+            <span id="${motivoId}-largo" style="display:none">${textoCompleto}</span>
+            <button class="btn-ver-mas-motivo"
+              onclick="
+                var c=document.getElementById('${motivoId}-corto');
+                var l=document.getElementById('${motivoId}-largo');
+                if(l.style.display==='none'){c.style.display='none';l.style.display='';this.textContent='ver menos';}
+                else{c.style.display='';l.style.display='none';this.textContent='ver más';}
+              ">ver más</button>
+          ` : ''}
+        </div>
+      ` : ''}
     </div>
-    <div class="correccion-panel-meta">
-      <span>Solicitado: ${fechaSolicitud}</span>
-      <span>Por: <strong>${solicitadoPor}</strong></span>
-    </div>
-    ${motivoHtml}
     <div class="correccion-panel-acciones"></div>
   `;
 
@@ -204,7 +236,7 @@ export function renderCorrecciones(element, documento, onReMount) {
   // Botón "Ver corrección" (Visible si está Respondida o Aceptada)
   if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
     const btnVer = document.createElement("button");
-    btnVer.className = "btn-accion-outline btn-ver-correccion";
+    btnVer.className = "btn-accion-outline";
     btnVer.innerHTML = `<span class="material-icons">visibility</span> Ver corrección`;
     btnVer.onclick = () => solicitudItem._verCorreccion();
     accionesContainer.appendChild(btnVer);
