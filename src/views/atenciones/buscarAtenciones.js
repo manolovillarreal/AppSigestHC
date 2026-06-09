@@ -67,9 +67,6 @@ export class BuscarAtenciones extends BaseComponent{
               </div>
             </div>
           </div>
-
-          <!-- Resultados -->
-          <div id="buscador-resultados"></div>
         `;
 
         // Toggle colapsable
@@ -135,13 +132,11 @@ export class BuscarAtenciones extends BaseComponent{
         }
     }
 
-    _renderResultados() {       
-        console.log(this.listaAtenciones);
-        const listaAtenciones = new ListaAtenciones(
-            {   
-                atenciones:     this.listaAtenciones , 
-                contenedorId:   "main-content-panel" 
-            });
-        listaAtenciones.mount("buscador-resultados");
+    _renderResultados() {
+      const listaAtenciones = new ListaAtenciones({
+        atenciones: this.listaAtenciones,
+        contenedorId: "main-content-panel"
+      });
+      listaAtenciones.mount("sidebar-panel");
     }
 }
