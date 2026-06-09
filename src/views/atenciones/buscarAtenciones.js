@@ -13,35 +13,83 @@ export class BuscarAtenciones extends BaseComponent{
     render() {
         this.element = document.createElement("div");
         this.element.className = "buscador-atenciones";
+
+        // Título
         this.element.innerHTML = `
-            <div class="buscador-atenciones-filtros">
-                <label>
-                    Paciente ID:
-                    <input type="text" name="pacienteId" />
-                </label>
-                <label>
-                    Fecha Inicial:
-                    <input type="date" name="fechaInicial" />
-                </label>
-                <label>
-                    Fecha Final:
-                    <input type="date" name="fechaFinal" />
-                </label>
-                <label>
-                    Estado Atención:
-                    <select name="estadoAtencionId">
-                    <option value="">Seleccione un estado</option>
-                    </select>
-                </label>
-                <label>
-                    Tercero ID:
-                    <input type="text" name="terceroId" />
-                </label>
-                <button class="btn-primary" type="button">Buscar</button>
+          <div class="buscador-titulo">
+            <h2>Consulta de Atenciones</h2>
+            <p class="buscador-subtitulo">Consulta y seguimiento de registros clínicos.</p>
+          </div>
+
+          <!-- Panel colapsable -->
+          <div class="filtros-panel">
+            <div class="filtros-panel-header" id="filtros-toggle">
+              <div class="filtros-panel-titulo">
+                <span class="material-icons">search</span>
+                <strong>Filtros de búsqueda</strong>
+              </div>
+              <span class="material-icons filtros-chevron">expand_less</span>
             </div>
-            <div id="panel-vista-atencion">
+            <div class="filtros-panel-body" id="filtros-body">
+              <div class="filtros-grid">
+                <div class="filtro-campo">
+                  <label>Paciente ID</label>
+                  <input type="text" name="pacienteId" 
+                    placeholder="Ingrese el ID del paciente" />
+                </div>
+                <div class="filtro-campo">
+                  <label>Estado de atención</label>
+                  <select name="estadoAtencionId">
+                    <option value="">Todos los estados</option>
+                  </select>
+                </div>
+                <div class="filtro-campo">
+                  <label>Fecha inicial</label>
+                  <input type="date" name="fechaInicial" />
+                </div>
+                <div class="filtro-campo">
+                  <label>Fecha final</label>
+                  <input type="date" name="fechaFinal" />
+                </div>
+                <div class="filtro-campo">
+                  <label>Tercero ID</label>
+                  <input type="text" name="terceroId" 
+                    placeholder="Ingrese el ID del tercero" />
+                </div>
+              </div>
+              <div class="filtros-acciones">
+                <button class="btn-limpiar" id="btn-limpiar-filtros">
+                  <span class="material-icons">refresh</span> Limpiar
+                </button>
+                <button class="btn-primary btn-buscar" id="btn-buscar-atenciones">
+                  <span class="material-icons">search</span> Buscar Atenciones
+                </button>
+              </div>
             </div>
+          </div>
+
+          <!-- Resultados -->
+          <div id="buscador-resultados"></div>
         `;
+
+        // Toggle colapsable
+        this.element.querySelector('#filtros-toggle')
+          .addEventListener('click', () => {
+            const body = this.element.querySelector('#filtros-body');
+            const chevron = this.element.querySelector('.filtros-chevron');
+            const visible = body.style.display !== 'none';
+            body.style.display = visible ? 'none' : '';
+            chevron.textContent = visible ? 'expand_more' : 'expand_less';
+          });
+
+        // Botón limpiar
+        this.element.querySelector('#btn-limpiar-filtros')
+          .addEventListener('click', () => {
+            this.element.querySelectorAll('input').forEach(i => i.value = '');
+            const sel = this.element.querySelector('select[name="estadoAtencionId"]');
+            if (sel) sel.value = '';
+          });
+
         const {estadosAtencionPermitidos} = contexto;
         const estadoSelect = this.element.querySelector("select[name='estadoAtencionId']");
         estadosAtencionPermitidos.forEach(estado => {
@@ -51,7 +99,7 @@ export class BuscarAtenciones extends BaseComponent{
             estadoSelect.appendChild(option);
         });
 
-        this.element.querySelector("button").addEventListener("click", () => this._buscarAtenciones());
+        this.element.querySelector("#btn-buscar-atenciones").addEventListener("click", () => this._buscarAtenciones());
 
         return this.element;
     }
@@ -92,8 +140,8 @@ export class BuscarAtenciones extends BaseComponent{
         const listaAtenciones = new ListaAtenciones(
             {   
                 atenciones:     this.listaAtenciones , 
-                contenedorId:   "panel-vista-atencion" 
+                contenedorId:   "main-content-panel" 
             });
-        listaAtenciones.mount("sidebar-panel");
+        listaAtenciones.mount("buscador-resultados");
     }
 }
