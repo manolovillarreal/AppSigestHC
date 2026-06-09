@@ -40,7 +40,10 @@ export class PacienteCorreccionItem extends BaseComponent {
       </div>
       <div class="correccion-paciente-footer">
         <span class="badge-estado ${estadoClase}">${estadoNombre}</span>
-        <span class="material-symbols-outlined correccion-alerta-icon">quick_reference</span>
+        <div class="correccion-alerta-wrapper">
+          <span class="material-icons">person</span>
+          <span class="correccion-alerta-exclamacion">!</span>
+        </div>
       </div>
     `;
 
