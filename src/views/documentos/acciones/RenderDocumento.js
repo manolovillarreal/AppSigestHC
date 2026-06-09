@@ -138,18 +138,81 @@ export function renderCorrecciones(element, documento, onReMount) {
   const solicitudPendiente = documento.solicitudesCorreccion.find(
     (sc) => sc?.estadoCorreccionId !== EstadoCorreccion.ACEPTADA
   );
-
   if (!solicitudPendiente) return;
 
+  const estadoNombre = solicitudPendiente.estadoCorreccion?.nombre || 'Pendiente';
+  const fechaSolicitud = solicitudPendiente.fechaSolicitud 
+    ? formatearFecha(solicitudPendiente.fechaSolicitud) 
+    : 'Sin fecha';
+  const solicitadoPor = solicitudPendiente.usuarioSolicita
+    ? `${solicitudPendiente.usuarioSolicita.nombre || ''} ${solicitudPendiente.usuarioSolicita.apellidos || ''}`.trim()
+    : 'Usuario desconocido';
+
+  const panel = document.createElement('div');
+  panel.className = 'correccion-panel-simple';
+  panel.innerHTML = `
+    <div class="correccion-panel-estado">
+      <span class="badge-estado-correccion badge-${estadoNombre.toLowerCase()}">${estadoNombre.toUpperCase()}</span>
+    </div>
+    <div class="correccion-panel-meta">
+      <span>Solicitado: ${fechaSolicitud}</span>
+      <span>Por: <strong>${solicitadoPor}</strong></span>
+    </div>
+    <div class="correccion-panel-acciones"></div>
+  `;
+
+  // Instanciar SolicitudCorreccionItem para reutilizar sus métodos
   solicitudPendiente.documento = solicitudPendiente.documento || documento;
   const solicitudItem = new SolicitudCorreccionItem(solicitudPendiente, () => {
     element.classList.remove("documento-item-correcciones");
     onReMount();
   });
 
-  const container = document.createElement("div");
-  solicitudItem.mount(container);
-  element.appendChild(container);
+  const accionesContainer = panel.querySelector('.correccion-panel-acciones');
+
+  // Botón "Ver corrección" (Visible si está Respondida o Aceptada)
+  if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
+    const btnVer = document.createElement("button");
+    btnVer.className = "btn-accion-outline";
+    btnVer.innerHTML = `<span class="material-icons">visibility</span> Ver corrección`;
+    btnVer.onclick = () => solicitudItem._verCorreccion();
+    accionesContainer.appendChild(btnVer);
+  }
+
+  // Botones según rol (Creador vs Corrector)
+  if (puedeSolicitarCorrecion(solicitudPendiente.documento)) {
+    // Creador
+    if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
+      const btnEliminar = document.createElement("button");
+      btnEliminar.className = "btn-accion-peligro";
+      btnEliminar.innerHTML = `<span class="material-icons">delete</span> Eliminar solicitud`;
+      btnEliminar.onclick = () => solicitudItem._eliminarSolicitudCorreccion();
+      accionesContainer.appendChild(btnEliminar);
+    } else if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA) {
+      const btnRechazar = document.createElement("button");
+      btnRechazar.className = "btn-accion-peligro";
+      btnRechazar.innerHTML = `<span class="material-icons">cancel</span> Rechazar`;
+      btnRechazar.onclick = () => solicitudItem._rechazarCorreccion();
+      accionesContainer.appendChild(btnRechazar);
+
+      const btnAprobar = document.createElement("button");
+      btnAprobar.className = "btn-accion-success";
+      btnAprobar.innerHTML = `<span class="material-icons">check</span> Aprobar`;
+      btnAprobar.onclick = () => solicitudItem._aprobarCorreccion();
+      accionesContainer.appendChild(btnAprobar);
+    }
+  } else {
+    // Corrector
+    if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
+      const btnResponder = document.createElement("button");
+      btnResponder.className = "btn-accion-solido";
+      btnResponder.innerHTML = `<span class="material-icons">send</span> Responder solicitud`;
+      btnResponder.onclick = () => solicitudItem._responderCorreccion();
+      accionesContainer.appendChild(btnResponder);
+    }
+  }
+
+  element.appendChild(panel);
 }
 
 export async function descargarMiniaturas(doc, thumbnailContainer, onVerDocumento) {
