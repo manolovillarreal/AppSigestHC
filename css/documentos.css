@@ -253,8 +253,13 @@
 }
 
 .documento-item-correcciones {
-  background: antiquewhite;
+  background: #ffffff;
   align-items: stretch;
+  border: 1px solid #e2e8f0;
+}
+
+.documento-item-correcciones .documento-item-wrapper {
+  border-right: 1px solid #e2e8f0;
 }
 
 .documento-item-correcciones .documento-item-wrapper {
