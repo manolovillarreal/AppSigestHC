@@ -138,5 +138,13 @@ export class BuscarAtenciones extends BaseComponent{
         contenedorId: "main-content-panel"
       });
       listaAtenciones.mount("sidebar-panel");
+
+      // Colapsar filtros al mostrar resultados
+      const body = this.element.querySelector('#filtros-body');
+      const chevron = this.element.querySelector('.filtros-chevron');
+      if (body && chevron) {
+        body.style.display = 'none';
+        chevron.textContent = 'expand_more';
+      }
     }
 }
