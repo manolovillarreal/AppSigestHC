@@ -204,7 +204,7 @@ export function renderCorrecciones(element, documento, onReMount) {
   // Botón "Ver corrección" (Visible si está Respondida o Aceptada)
   if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
     const btnVer = document.createElement("button");
-    btnVer.className = "btn-accion-outline";
+    btnVer.className = "btn-accion-outline btn-ver-correccion";
     btnVer.innerHTML = `<span class="material-icons">visibility</span> Ver corrección`;
     btnVer.onclick = () => solicitudItem._verCorreccion();
     accionesContainer.appendChild(btnVer);
