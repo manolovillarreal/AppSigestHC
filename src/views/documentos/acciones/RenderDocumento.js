@@ -41,14 +41,18 @@ export function renderContent(element, documento, onVerDocumento) {
   if (documento.tipoDocumento?.esAsistencial) {
     const fechaDoc = document.createElement("div");
     fechaDoc.classList.add("doc-fecha");
-    fechaDoc.textContent = `Fecha del documento: ${formatearFecha(documento.fecha)}`;
+    fechaDoc.innerHTML = `
+      <span class="material-icons doc-meta-icon">calendar_today</span>
+      Fecha del documento: ${formatearFecha(documento.fecha)}`;
     detalles.appendChild(fechaDoc);
   }
 
   if (documento.numeroRelacion) {
     const relacion = document.createElement("div");
     relacion.classList.add("doc-relacion");
-    relacion.textContent = `N° Relación: ${documento.numeroRelacion}`;
+    relacion.innerHTML = `
+      <span class="material-icons doc-meta-icon">tag</span>
+      N° Relación: ${documento.numeroRelacion}`;
     detalles.appendChild(relacion);
   }
 
@@ -56,8 +60,14 @@ export function renderContent(element, documento, onVerDocumento) {
   metadata.classList.add("doc-meta");
   const usuario = documento.usuario || {};
   metadata.innerHTML = `
-    <div>Cargado el ${formatearFechaHora(documento.fechaCarga)}</div>
-    <div>por ${usuario.nombre || "—"} ${usuario.apellidos || ""}</div>`;
+    <div>
+      <span class="material-icons doc-meta-icon">schedule</span>
+      Cargado el ${formatearFechaHora(documento.fechaCarga)}
+    </div>
+    <div>
+      <span class="material-icons doc-meta-icon">person</span>
+      por ${usuario.nombre || "—"} ${usuario.apellidos || ""}
+    </div>`;
   detalles.appendChild(metadata);
 
   wrapper.appendChild(thumbnailContainer);
@@ -247,7 +257,7 @@ export function renderCorrecciones(element, documento, onReMount) {
     // Creador
     if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.PENDIENTE || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RECHAZADA) {
       const btnEliminar = document.createElement("button");
-      btnEliminar.className = "btn-accion-doc btn-accion-eliminar";
+      btnEliminar.className = "btn-doc-accion btn-doc-eliminar";
       btnEliminar.title = "Eliminar Solicitud";
       btnEliminar.innerHTML = `
         <span class="material-icons">delete</span>

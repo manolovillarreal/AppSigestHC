@@ -496,3 +496,17 @@
   border-color: #7c3aed;
 }
 .btn-doc-correccion:hover { background: rgba(124,58,237,0.06); }
+
+.doc-fecha, .doc-relacion, .doc-meta div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.doc-meta-icon {
+  font-size: 14px;
+  color: #94a3b8;
+}
