@@ -2,37 +2,37 @@ const estilos = [
     "/css/estilos.css",
     'css/modal.css',
     "css/FiltroLista.css",
-    "css/components/SelectConBuscador.css",
-    "css/components/paginacion.css"
+    "src/components/SelectConBuscador.css",
+    "src/components/paginacion.css"
 ]
 
 const atencionesCss = [
-  'css/atencion/BuscadorAtenciones.css',
-  'css/atencion/ListaAtenciones.css'
+  'src/views/atenciones/BuscadorAtenciones.css',
+  'src/views/atenciones/ListaAtenciones.css'
 ];
 
 const tipoDocumentoCss = [
-  'css/tipoDocumento/AgregarPermisosTipoDocumento.css',
-  'css/tipoDocumento/EstadoRequeridoForm.css',
-  'css/tipoDocumento/TipoDocumentoPermisoItem.css',
-  'css/tipoDocumento/TipoDocumentoForm.css'
+  'src/views/admin/tipoDocumento/AgregarPermisosTipoDocumento.css',
+  'src/views/admin/tipoDocumento/EstadoRequeridoForm.css',
+  'src/views/admin/tipoDocumento/TipoDocumentoPermisoItem.css',
+  'src/views/admin/tipoDocumento/TipoDocumentoForm.css'
 ]
 
 const UsuarioCss = [
-  'css/usuario/ListaUsuario.css',
-  'css/usuario/UsuarioForm.css',
+  'src/views/admin/usuario/ListaUsuario.css',
+  'src/views/admin/usuario/UsuarioForm.css',
 ]
 
 const RolesCss = [
-  'css/roles/roles.css',
+  'src/views/admin/roles/roles.css',
 ];
 
 const EstadoAtencionCss = [
-  'css/estadoAtencion/EstadoAtencion.css',
+  'src/views/admin/estadoAtencion/EstadoAtencion.css',
 ];
 
 const ConfiguracionCss = [
-  'css/admin/configuracion.css',
+  'src/views/admin/configuracion/configuracion.css',
 ];
 
 const modulos = {
@@ -45,7 +45,7 @@ const modulos = {
   ],
   main: [
     ...atencionesCss,
-    'css/solicitudCorreccion/SolicitudCorreccion.css'
+    'src/views/correcciones/SolicitudCorreccion.css'
   ]
 };
 

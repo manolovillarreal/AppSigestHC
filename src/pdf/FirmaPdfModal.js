@@ -67,7 +67,7 @@ function loadStyles() {
   const link = document.createElement('link');
   link.id = 'firma-pdf-styles';
   link.rel = 'stylesheet';
-  link.href = 'css/pdf/firmaPdf.css';
+  link.href = 'src/pdf/firmaPdf.css';
   document.head.appendChild(link);
 }
 
