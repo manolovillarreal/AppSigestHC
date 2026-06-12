@@ -185,10 +185,6 @@ export function renderCorrecciones(element, documento, onReMount) {
 
   // Fecha y usuario según estado
   const estaRespondida = estadoNombre === 'Respondida' || estadoNombre === 'Aprobada';
-  const fechaLabel = estaRespondida ? 'Respondido' : 'Solicitado';
-  const fecha = estaRespondida 
-    ? fechaSegura(solicitudPendiente.fechaCorrige || solicitudPendiente.fechaSolicitud)
-    : fechaSegura(solicitudPendiente.fechaSolicitud);
   const porUsuario = estaRespondida
     ? nombreUsuario(solicitudPendiente.usuarioCorrige)
     : nombreUsuario(solicitudPendiente.usuarioSolicita);
@@ -214,8 +210,10 @@ export function renderCorrecciones(element, documento, onReMount) {
             width: fit-content;
           ">${cfg.texto}</span>
           <div class="cp-meta">
-            <span>Solicitado: <strong>${fechaSegura(solicitudPendiente.fechaSolicitud)}</strong></span>
-            <span>${fechaLabel}: <strong>${fecha}</strong></span>
+            <span>Solicitado: <strong>${formatearFechaHora(solicitudPendiente.fechaSolicitud)}</strong></span>
+            ${solicitudPendiente.fechaCorrige ? `
+              <span>Respondido: <strong>${formatearFechaHora(solicitudPendiente.fechaCorrige)}</strong></span>
+            ` : ''}
             <span>Por: ${porUsuario}</span>
           </div>
           ${motivoPrincipal ? `
@@ -268,7 +266,7 @@ export function renderCorrecciones(element, documento, onReMount) {
                 <h5 class="timeline-titulo">Solicitud de corrección</h5>
                 <span class="badge-rol">Administración</span>
               </div>
-              <span class="timeline-fecha">${fecha}</span>
+              <span class="timeline-fecha">${formatearFechaHora(solicitudPendiente.fechaSolicitud)}</span>
               <div class="timeline-box-motivo">
                 <p style="margin: 0;">${todasObservaciones[0] || ''}</p>
               </div>
