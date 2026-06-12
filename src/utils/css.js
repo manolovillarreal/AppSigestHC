@@ -28,7 +28,7 @@ const RolesCss = [
 ];
 
 const EstadoAtencionCss = [
-  'css/EstadoAtencion/EstadoAtencion.css',
+  'css/estadoAtencion/EstadoAtencion.css',
 ];
 
 const ConfiguracionCss = [
@@ -45,7 +45,7 @@ const modulos = {
   ],
   main: [
     ...atencionesCss,
-    'css/SolicitudCorrecion/SolicitudCorrecion.css'
+    'css/solicitudCorreccion/SolicitudCorreccion.css'
   ]
 };
 
