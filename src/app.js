@@ -10,7 +10,7 @@ import EstadoAtencionService from './api/estadoAtencion.api.js';
 import { PERFILES } from "./core/config.js";
 import { SolicitudCorreccionService } from "./api/solicitudCorreccion.api.js";
 import { ListaSolicitudesCorreccion } from "./views/correcciones/ListaSolicitudesCorreccion.js";
-import { HomeView } from "./views/HomeView.js";
+import { HomeView } from "./views/home/HomeView.js";
 
 cargarCSS("main");
 

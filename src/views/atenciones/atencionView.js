@@ -14,7 +14,7 @@ import {
 } from "./AtencionActions.js";
 import { importarDocumentoIdentidad } from "../../api/documento.api.js";
 
-import { HomeView } from "../HomeView.js";
+import { HomeView } from "../home/HomeView.js";
 
 export class AtencionView extends BaseComponent {
   constructor(atencion, onSuccess, onClose = null) {

@@ -1,6 +1,6 @@
-import { BaseComponent } from "../components/BaseComponent.js";
-import contexto from "../core/store.js";
-import DashboardService from "../api/dashboard.api.js";
+import { BaseComponent } from "../../components/BaseComponent.js";
+import contexto from "../../core/store.js";
+import DashboardService from "../../api/dashboard.api.js";
 
 const REFRESH_MS = 5 * 60 * 1000; // 5 minutos
 
