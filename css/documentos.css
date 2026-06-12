@@ -578,3 +578,44 @@
   margin: 2px 0 0 14px;
   padding: 0;
 }
+
+.motivo-modal-contenido {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.motivo-modal-seccion h4,
+.motivo-modal-rechazos h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px;
+}
+
+.motivo-modal-seccion p,
+.motivo-modal-rechazo p {
+  font-size: 13px;
+  color: #475569;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.motivo-modal-rechazos {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 12px;
+}
+
+.motivo-modal-rechazo {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.motivo-modal-rechazo .material-icons {
+  font-size: 18px;
+  color: #dc2626;
+  flex-shrink: 0;
+}

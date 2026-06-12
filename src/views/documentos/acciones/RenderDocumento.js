@@ -3,6 +3,7 @@ import { formatearFecha, formatearFechaHora } from "../../../utils/date.js";
 import { SolicitudCorreccionItem } from "../../correcciones/SolicitudCorreccionItem.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../../utils/correcciones.js";
 import { SolicitudCorreccionService } from "../../../api/solicitudCorreccion.api.js";
+import { Modal } from "../../../components/modal.js";
 
 export function renderCheckbox(element, documento, onSelectionChange) {
   const checkboxContainer = document.createElement("div");
@@ -219,23 +220,11 @@ export function renderCorrecciones(element, documento, onReMount) {
           ${motivoPrincipal ? `
             <div class="cp-motivo">
               <strong>Motivo:</strong>
-              <span id="${motivoId}-corto">${truncado}</span>
+              <span>${truncado}</span>
               ${necesitaTruncado ? `
-                <span id="${motivoId}-largo" style="display:none">
-                  ${textoCompleto}
-                </span>
-                <button class="btn-ver-mas-motivo"
-                  onclick="
-                    var c=document.getElementById('${motivoId}-corto');
-                    var l=document.getElementById('${motivoId}-largo');
-                    if(l.style.display==='none'){
-                      c.style.display='none';l.style.display='';
-                      this.textContent='ver menos';
-                    } else {
-                      c.style.display='';l.style.display='none';
-                      this.textContent='ver más';
-                    }
-                  ">ver más</button>
+                <button class="btn-ver-mas-motivo btn-ver-motivo-${solicitudPendiente.id}">
+                  ver más
+                </button>
               ` : ''}
             </div>
           ` : ''}
@@ -258,6 +247,37 @@ export function renderCorrecciones(element, documento, onReMount) {
 
     </div>
   `;
+
+  if (necesitaTruncado) {
+    const btnVerMas = panel.querySelector(
+      `.btn-ver-motivo-${solicitudPendiente.id}`
+    );
+    if (btnVerMas) {
+      btnVerMas.addEventListener('click', () => {
+        const contenido = document.createElement('div');
+        contenido.className = 'motivo-modal-contenido';
+        contenido.innerHTML = `
+          <div class="motivo-modal-seccion">
+            <h4>Motivo de corrección</h4>
+            <p>${todasObservaciones[0] || ''}</p>
+          </div>
+          ${todasObservaciones.length > 1 ? `
+            <div class="motivo-modal-rechazos">
+              <h4>Observaciones adicionales</h4>
+              ${todasObservaciones.slice(1).map(o => `
+                <div class="motivo-modal-rechazo">
+                  <span class="material-icons">arrow_right</span>
+                  <p>${o}</p>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+        `;
+        const modal = new Modal('Detalle de Corrección', true);
+        modal.show(contenido);
+      });
+    }
+  }
 
   // Cargar miniatura del archivo temporal si está respondida
   if (estaRespondida) {
