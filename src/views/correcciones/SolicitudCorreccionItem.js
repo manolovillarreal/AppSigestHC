@@ -38,6 +38,12 @@ export class SolicitudCorreccionItem extends BaseComponent {
       return isNaN(d.getTime()) ? 'Fecha no disponible' : formatearFecha(valor);
     };
 
+    const fechaSeguraHora = (valor) => {
+      if (!valor) return 'Fecha no disponible';
+      const d = new Date(valor);
+      return isNaN(d.getTime()) ? 'Fecha no disponible' : formatearFechaHora(valor);
+    };
+
     const nombreUsuario = (usuario) => {
       if (!usuario) return 'Usuario desconocido';
       const nombre = usuario.nombre || usuario.nombreUsuario || '';
@@ -75,7 +81,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
             <div class="solicitud-doc-thumbnail"></div>
             <div class="solicitud-doc-meta">
               <strong class="solicitud-doc-nombre">${nombreDocumento}</strong>
-              <span class="solicitud-doc-fecha">Fecha: ${fechaSegura(doc.fecha)}</span>
+              <span class="solicitud-doc-fecha">Fecha: ${fechaSeguraHora(doc.fecha)}</span>
               <span class="solicitud-doc-carga">
                 Cargado el ${formatearFechaHora(doc.fechaCarga)}
               </span>

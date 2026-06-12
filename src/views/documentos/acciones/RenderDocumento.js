@@ -43,7 +43,7 @@ export function renderContent(element, documento, onVerDocumento) {
     fechaDoc.classList.add("doc-fecha");
     fechaDoc.innerHTML = `
       <span class="material-icons doc-meta-icon">calendar_today</span>
-      Fecha del documento: ${formatearFecha(documento.fecha)}`;
+      Fecha del documento: ${formatearFechaHora(documento.fecha)}`;
     detalles.appendChild(fechaDoc);
   }
 
@@ -179,7 +179,7 @@ export function renderCorrecciones(element, documento, onReMount) {
   const estaRespondida = estadoNombre === 'Respondida' || estadoNombre === 'Aprobada';
   const fechaLabel = estaRespondida ? 'Respondido' : 'Solicitado';
   const fecha = estaRespondida 
-    ? fechaSegura(solicitudPendiente.fechaRespuesta || solicitudPendiente.fechaSolicitud)
+    ? fechaSegura(solicitudPendiente.fechaCorrige || solicitudPendiente.fechaSolicitud)
     : fechaSegura(solicitudPendiente.fechaSolicitud);
   const porLabel = estaRespondida ? 'Por' : 'Por';
   const porUsuario = estaRespondida
