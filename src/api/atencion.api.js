@@ -1,4 +1,5 @@
 import { apiGet, apiPost, apiPut } from '../core/api.js';
+import { PAGE_SIZE } from '../core/config.js';
 
 async function obtenerAtenciones(filtros) {
   const params = new URLSearchParams();
@@ -15,8 +16,9 @@ async function obtenerAtenciones(filtros) {
   return await apiGet(`/Atenciones?${params.toString()}`);
 }
 
-async function obtenerAtencionesVisibles() {
-  return await apiGet('/Atenciones/visibles');
+async function obtenerAtencionesVisibles(page = 1, pageSize = PAGE_SIZE) {
+  const params = new URLSearchParams({ page, pageSize });
+  return await apiGet(`/Atenciones/visibles?${params.toString()}`);
 }
 
 async function buscarPaciente(pacienteId) {

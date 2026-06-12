@@ -2,11 +2,14 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import contexto from "../../core/store.js";
 import AtencionService from "../../api/atencion.api.js";
 import { ListaAtenciones } from "./listaAtenciones.js";
+import { PAGE_SIZE } from "../../core/config.js";
 
 export class BuscarAtenciones extends BaseComponent{
     constructor() {
-        super();        
+        super();
         this.listaAtenciones = [];
+        this._ultimosFiltros = null; // filtros de la última búsqueda (para paginar)
+        this._paginacion = null;     // { page, pageSize, total, totalPages }
     }
 
     
@@ -116,18 +119,34 @@ export class BuscarAtenciones extends BaseComponent{
             return;
         }
 
-        // búsqueda
-        const resAtenciones = await AtencionService.obtenerAtenciones({
+        // Se guardan los filtros para poder paginar sin volver a leer el formulario.
+        this._ultimosFiltros = {
             pacienteId,
             fechaInicio: fechaInicial,
             fechaFin: fechaFinal,
             estadoAtencionId,
             terceroId
+        };
+
+        await this._ejecutarBusqueda(1);
+    }
+
+    async _ejecutarBusqueda(page) {
+        const resAtenciones = await AtencionService.obtenerAtenciones({
+            ...this._ultimosFiltros,
+            page,
+            pageSize: PAGE_SIZE
         });
 
         if (resAtenciones.ok) {
-            console.log(resAtenciones.result);
-            this.listaAtenciones = resAtenciones.result.data;
+            const pagina = resAtenciones.result || {};
+            this.listaAtenciones = pagina.data || [];
+            this._paginacion = {
+                page: pagina.page,
+                pageSize: pagina.pageSize,
+                total: pagina.total,
+                totalPages: pagina.totalPages
+            };
             this._renderResultados();
         }
     }
@@ -139,7 +158,11 @@ export class BuscarAtenciones extends BaseComponent{
         onClose: () => {
           const filtros = new BuscarAtenciones();
           filtros.mount('main-content-panel');
-        }
+        },
+        paginacion: this._paginacion ? {
+          ...this._paginacion,
+          onPageChange: (p) => this._ejecutarBusqueda(p)
+        } : null
       });
       listaAtenciones.mount("sidebar-panel");
 

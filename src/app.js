@@ -176,18 +176,31 @@ async function cargarInicio() {
   const home = new HomeView();
   home.mount("main-content-panel");
 }
-async function renderListaAtenciones() {
-    const resAtenciones = await AtencionService.obtenerAtencionesVisibles();
+async function renderListaAtenciones(page = 1) {
+    const resAtenciones = await AtencionService.obtenerAtencionesVisibles(page);
     if (!resAtenciones.ok) {
       return;
     }
+    const pagina = resAtenciones.result || {};
+
+    // Al cambiar de página solo se refresca el panel izquierdo.
+    const sidebar = document.getElementById("sidebar-panel");
+    if (sidebar) sidebar.innerHTML = "";
+
     const listaAtenciones = new ListaAtenciones(
-      { 
-        atenciones: resAtenciones.result || [], 
-        contenedorId: "main-content-panel" 
+      {
+        atenciones: pagina.data || [],
+        contenedorId: "main-content-panel",
+        paginacion: {
+          page: pagina.page,
+          pageSize: pagina.pageSize,
+          total: pagina.total,
+          totalPages: pagina.totalPages,
+          onPageChange: (p) => renderListaAtenciones(p)
+        }
       });
     listaAtenciones.appendTo("sidebar-panel");
-   
+
 }
 
 // BUSCAR ATENCIONES
@@ -209,9 +222,16 @@ async function cargarCorrecciones() {
   const home = new HomeView();
   await home.mount("main-content-panel");
 
+  const paginaRecibidas = recibidas.result || {};
   const documentos = new ListaSolicitudesCorreccion({
-    recibidas: recibidas.result || [],
-    enviadas: enviadas.result || []
+    recibidas: paginaRecibidas.data || [],
+    enviadas: enviadas.result || [],
+    paginacion: {
+      page: paginaRecibidas.page,
+      pageSize: paginaRecibidas.pageSize,
+      total: paginaRecibidas.total,
+      totalPages: paginaRecibidas.totalPages
+    }
   });
   documentos.mount("sidebar-panel");
 }

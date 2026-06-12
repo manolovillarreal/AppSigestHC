@@ -28,6 +28,11 @@ export const UI_CONFIG = {
   FECHA_LOCALE: 'es-CO'
 };
 
+// ✅ Tamaño de página de los listados paginados (panel izquierdo).
+// Único lugar configurable en el frontend: todas las vistas y el componente
+// de paginación lo toman de aquí. El backend lo recibe como pageSize.
+export const PAGE_SIZE = 50;
+
 export const PERFILES = {
   ADMISIONES: 'Admisiones',
   MEDICO: 'Medico',

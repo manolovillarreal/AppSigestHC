@@ -6,12 +6,16 @@ import { AtencionHeader } from "../atenciones/AtencionHeader.js";
 import contexto from "../../core/store.js";
 import { FiltrosCorrecciones } from "./FiltrosCorrecciones.js";
 import { SolicitudCorreccionService } from "../../api/solicitudCorreccion.api.js";
+import { Paginacion } from "../../components/Paginacion.js";
+import { PAGE_SIZE } from "../../core/config.js";
 
 export class ListaSolicitudesCorreccion extends BaseComponent {
-    constructor({ recibidas, enviadas }) {
+    constructor({ recibidas, enviadas, paginacion }) {
         super();
         this.recibidas = recibidas || [];
         this.enviadas = enviadas || [];
+        this.paginacion = paginacion || null; // paginación de "recibidas" (pendientes por rol)
+        this._ultimosFiltros = {};            // filtros activos para paginar sin perderlos
     }
 
     async render() {
@@ -169,33 +173,67 @@ export class ListaSolicitudesCorreccion extends BaseComponent {
             });
         };
 
-        const onBuscar = async (params) => {
-            const res = await SolicitudCorreccionService.obtenerCorreccionesPorRol(params);
-            if (res.ok && res.result) {
-                this.recibidas = res.result;
-                seccionRecibidas.innerHTML = `
-                  <div class="correcciones-seccion-titulo">
-                    PENDIENTES POR RESOLVER
-                  </div>`;
-                renderListInSection(this.recibidas, seccionRecibidas);
-                if (this.recibidas.length === 0) 
-                  seccionRecibidas.style.display = 'none';
-                else
-                  seccionRecibidas.style.display = '';
-                applyFilters();
+        // Reconstruye la sección de recibidas (título + lista + paginador).
+        const pintarRecibidas = () => {
+            seccionRecibidas.innerHTML = `
+              <div class="correcciones-seccion-titulo">
+                PENDIENTES POR RESOLVER
+              </div>`;
+            renderListInSection(this.recibidas, seccionRecibidas);
+
+            if (this.paginacion) {
+                const pager = new Paginacion({
+                    ...this.paginacion,
+                    onPageChange: (p) => irAPaginaRecibidas(p)
+                });
+                seccionRecibidas.appendChild(pager.render());
             }
+
+            seccionRecibidas.style.display = this.recibidas.length === 0 ? 'none' : '';
+        };
+
+        // Aplica la respuesta paginada del backend al estado del componente.
+        const aplicarRespuesta = (res) => {
+            this.recibidas = res.result.data || [];
+            this.paginacion = {
+                page: res.result.page,
+                pageSize: res.result.pageSize,
+                total: res.result.total,
+                totalPages: res.result.totalPages
+            };
+            pintarRecibidas();
+            applyFilters();
+        };
+
+        // Cambia de página conservando los filtros activos.
+        const irAPaginaRecibidas = async (page) => {
+            const res = await SolicitudCorreccionService.obtenerCorreccionesPorRol({
+                ...this._ultimosFiltros,
+                page,
+                pageSize: PAGE_SIZE
+            });
+            if (res.ok && res.result) aplicarRespuesta(res);
+        };
+
+        // Nueva búsqueda desde los filtros: vuelve a la página 1.
+        const onBuscar = async (params) => {
+            this._ultimosFiltros = params || {};
+            const res = await SolicitudCorreccionService.obtenerCorreccionesPorRol({
+                ...this._ultimosFiltros,
+                page: 1,
+                pageSize: PAGE_SIZE
+            });
+            if (res.ok && res.result) aplicarRespuesta(res);
         };
 
         const filtros = new FiltrosCorrecciones(onBuscar);
         await filtros.render();
         filtros.mount('main-content-panel');
 
-        renderListInSection(this.recibidas, seccionRecibidas);
+        pintarRecibidas();
         renderListInSection(this.enviadas, seccionEnviadas);
 
         // Ocultar sección si está vacía
-        if (this.recibidas.length === 0) 
-          seccionRecibidas.style.display = 'none';
         if (this.enviadas.length === 0)
           seccionEnviadas.style.display = 'none';
 

@@ -2,7 +2,8 @@ const estilos = [
     "/css/estilos.css",
     'css/modal.css',
     "css/FiltroLista.css",
-    "css/components/SelectConBuscador.css"
+    "css/components/SelectConBuscador.css",
+    "css/components/paginacion.css"
 ]
 
 const atencionesCss = [

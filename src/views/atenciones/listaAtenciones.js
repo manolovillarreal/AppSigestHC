@@ -6,9 +6,10 @@ import { ModalNuevaAtencion } from "./modalNuevaAtencion.js";
 import { BaseComponent } from "../../components/BaseComponent.js";
 import contexto from "../../core/store.js";
 import { PERFILES } from "../../core/config.js";
+import { Paginacion } from "../../components/Paginacion.js";
 
 export class ListaAtenciones extends BaseComponent {
-  constructor({atenciones,contenedorId, onClose}) {
+  constructor({atenciones,contenedorId, onClose, paginacion}) {
     super();
     this.atenciones = atenciones || [];
     this.id = "atenciones-list";
@@ -18,6 +19,7 @@ export class ListaAtenciones extends BaseComponent {
     this.listElement = {};
     this.contenedorId = contenedorId;
     this.onClose = onClose;
+    this.paginacion = paginacion || null; // { page, pageSize, total, totalPages, onPageChange }
   }
 
 
@@ -86,6 +88,13 @@ export class ListaAtenciones extends BaseComponent {
     this.element.appendChild(this.listElement);
 
     this._renderGrupos();
+    this._renderPaginacion();
+  }
+
+  _renderPaginacion() {
+    if (!this.paginacion) return;
+    const pager = new Paginacion(this.paginacion);
+    this.element.appendChild(pager.render());
   }
 
   _renderGrupos() {
