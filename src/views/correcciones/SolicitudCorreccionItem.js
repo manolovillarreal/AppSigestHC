@@ -2,7 +2,7 @@ import { BaseComponent } from "../../components/BaseComponent.js";
 import { DocumentoService } from "../../api/documento.api.js";
 import { Modal } from "../../components/modal.js";
 import { Dropzone } from "../../components/Dropzone.js";
-import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../utils/correcciones.js";
+import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../domain/correcciones.js";
 import { formatearFecha, formatearFechaHora } from "../../utils/date.js";
 import { formatearErroresHTML } from "../../utils/error.js";
 import { SolicitudCorreccionService } from "../../api/solicitudCorreccion.api.js";

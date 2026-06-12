@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
 import contexto from "../../core/store.js";
-import { puedeAvanzarEstado, obtenerSiguienteEstado } from "../../utils/estados.js";
+import { puedeAvanzarEstado, obtenerSiguienteEstado } from "../../domain/estados.js";
 import { PERFILES } from "../../core/config.js";
 
 export class AtencionEstado extends BaseComponent {

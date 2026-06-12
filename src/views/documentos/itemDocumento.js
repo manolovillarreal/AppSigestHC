@@ -16,7 +16,7 @@ import {
 } from "./acciones/DescargarDocumento.js";
 import { eliminarDocumento as eliminarDocumentoAccion } from "./acciones/EliminarDocumento.js";
 import { editarDocumento as editarDocumentoAccion } from "./acciones/EditarDocumento.js";
-import { EstadoCorreccion } from "../../utils/correcciones.js";
+import { EstadoCorreccion } from "../../domain/correcciones.js";
 
 export class ItemDocumento extends BaseComponent {
   constructor(documento, esCorreccion = false, onEliminarSuccess = null) {

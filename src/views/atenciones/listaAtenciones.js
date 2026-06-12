@@ -1,5 +1,5 @@
 import debug from "../../utils/debug.js";
-import { ordenEstados, obtenerNombreEstado } from "../../utils/estados.js";
+import { ordenEstados, obtenerNombreEstado } from "../../domain/estados.js";
 import { ItemAtencion } from "./itemAtencion.js";
 import { AtencionView } from "./AtencionView.js";
 import { ModalNuevaAtencion } from "./modalNuevaAtencion.js";

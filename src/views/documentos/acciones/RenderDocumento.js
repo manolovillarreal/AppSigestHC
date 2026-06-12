@@ -1,7 +1,7 @@
 import { DocumentoService } from "../../../api/documento.api.js";
 import { formatearFecha, formatearFechaHora } from "../../../utils/date.js";
 import { SolicitudCorreccionItem } from "../../correcciones/SolicitudCorreccionItem.js";
-import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../../utils/correcciones.js";
+import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../../domain/correcciones.js";
 import { SolicitudCorreccionService } from "../../../api/solicitudCorreccion.api.js";
 import { Modal } from "../../../components/modal.js";
 

@@ -10,9 +10,9 @@ vi.mock('../../../src/core/store.js', () => ({
   }
 }));
 
-const { obtenerNombreEstado, puedeAvanzarEstado } = await import('../../../src/utils/estados.js');
+const { obtenerNombreEstado, puedeAvanzarEstado } = await import('../../../src/domain/estados.js');
 
-describe('utils/estados', () => {
+describe('domain/estados', () => {
   it('obtiene nombre de estado por id', () => {
     expect(obtenerNombreEstado(2)).toBe('En Proceso');
   });
