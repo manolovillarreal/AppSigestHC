@@ -678,6 +678,8 @@
   margin-top: 4px;
   font-size: 12px;
   color: #92400e;
+  min-height: unset !important;
+  height: auto !important;
 }
 
 .modal-body .timeline-icono,

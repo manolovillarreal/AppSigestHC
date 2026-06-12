@@ -293,7 +293,7 @@ export function renderCorrecciones(element, documento, onReMount) {
           ` : ''}
 
         `;
-        const modal = new Modal('Detalle de Corrección', true);
+        const modal = new Modal('Detalle de Corrección', false);
         modal.show(contenido);
       });
     }
