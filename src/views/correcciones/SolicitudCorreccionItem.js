@@ -242,12 +242,17 @@ export class SolicitudCorreccionItem extends BaseComponent {
           const previewCorreccion = document.createElement('div');
           previewCorreccion.className = 'solicitud-correccion-preview';
           previewCorreccion.innerHTML = `
+            <span class="solicitud-correccion-label">Documento corregido</span>
             <div class="solicitud-correccion-thumb" title="Ver corrección">
               <span class="material-icons">description</span>
             </div>
             <div class="solicitud-correccion-meta">
-              <span class="solicitud-correccion-fecha">${fechaCorrige}</span>
-              <span class="solicitud-correccion-usuario">Por: ${nombreCorrector}</span>
+              <span class="solicitud-correccion-fecha">
+                ${formatearFechaHora(solicitud.fechaCorrige)}
+              </span>
+              <span class="solicitud-correccion-usuario">
+                Por: ${nombreCorrector}
+              </span>
             </div>
           `;
 
