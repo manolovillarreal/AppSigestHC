@@ -207,7 +207,7 @@ export class ModalAgregarDocumento extends Modal {
 //         reader.onload = async (e) => {
 //           const blob = new Blob([e.target.result], { type: "application/pdf" });
 //           // importar la función si no está en el scope
-//           const { generarThumbnailPdf } = await import("../../utils/pdf.js");
+//           const { generarThumbnailPdf } = await import("../../pdf/pdfThumbnail.js");
 //           await generarThumbnailPdf(blob, canvas);
 //         };
 //         reader.readAsArrayBuffer(file);

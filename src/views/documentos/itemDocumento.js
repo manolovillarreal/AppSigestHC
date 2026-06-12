@@ -2,7 +2,7 @@ import { formatearErroresHTML } from "../../utils/error.js";
 import { BaseComponent } from "../../components/BaseComponent.js";
 import { DocumentoService } from "../../api/documento.api.js";
 import { SolicitudCorreccionService } from "../../api/solicitudCorreccion.api.js";
-import { firmarPdf } from "../../utils/firmaPdf.js";
+import { firmarPdf } from "../../pdf/FirmaPdfModal.js";
 import {
   renderCheckbox,
   renderContent,
