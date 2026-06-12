@@ -562,4 +562,61 @@
   color: white;
 }
 
+.solicitud-correccion-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.solicitud-correccion-thumb {
+  width: 70px;
+  height: 90px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.solicitud-correccion-thumb:hover {
+  border-color: #185FA5;
+}
+
+.solicitud-correccion-thumb .material-icons {
+  font-size: 32px;
+  color: #94a3b8;
+}
+
+.solicitud-correccion-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.solicitud-correccion-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.solicitud-correccion-fecha {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.solicitud-correccion-usuario {
+  font-size: 11px;
+  color: #64748b;
+}
+
 

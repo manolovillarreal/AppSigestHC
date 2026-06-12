@@ -1,4 +1,5 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
+import { apiGet } from "../../core/api.js";
 import { Modal } from "../../components/modal.js";
 import { Dropzone } from "../../components/Dropzone.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../utils/correcciones.js";
@@ -187,9 +188,58 @@ export class SolicitudCorreccionItem extends BaseComponent {
     timelineSeccion.innerHTML = htmlTimeline;
 
     // Rellenar dinámicamente según estado y permisos
-    setTimeout(() => {
+    setTimeout(async () => {
         const accionesRespuesta = this.element.querySelector(`#acciones-respuesta-${solicitudPendiente.id}`);
         const accionesFooter = this.element.querySelector(`#solicitud-acciones-${solicitudPendiente.id}`);
+        const contenedorAcciones = accionesFooter;
+
+        const solicitud = this.solicitudCorreccion;
+        const estaRespondida = solicitud.estadoCorreccion?.nombre === 'Respondida';
+
+        if (estaRespondida) {
+          const usuarioCorrige = solicitud.usuarioCorrige;
+          const fechaRespuesta = solicitud.fechaRespuesta 
+            ? fechaSegura(solicitud.fechaRespuesta)
+            : 'Sin fecha';
+          const nombreCorrector = usuarioCorrige
+            ? `${usuarioCorrige.nombre || ''} ${usuarioCorrige.apellidos || ''}`.trim()
+            : 'Sin usuario';
+
+          const previewCorreccion = document.createElement('div');
+          previewCorreccion.className = 'solicitud-correccion-preview';
+          previewCorreccion.innerHTML = `
+            <div class="solicitud-correccion-thumb" title="Ver corrección">
+              <span class="material-icons">description</span>
+            </div>
+            <div class="solicitud-correccion-meta">
+              <span class="solicitud-correccion-fecha">${fechaRespuesta}</span>
+              <span class="solicitud-correccion-usuario">Por: ${nombreCorrector}</span>
+            </div>
+          `;
+
+          // Al hacer clic en la miniatura, abrir la corrección
+          // Reutiliza el mismo handler de _verCorreccion
+          previewCorreccion.querySelector('.solicitud-correccion-thumb')
+            .addEventListener('click', () => this._verCorreccion());
+
+          contenedorAcciones.appendChild(previewCorreccion);
+
+          // Intenta cargar la miniatura real del archivo de corrección
+          try {
+            const resThumb = await apiGet(`/SolicitudCorreccion/thumbnails/${solicitud.id}`);
+            if (resThumb.ok && resThumb.result && resThumb.result.length > 0) {
+              const img = document.createElement("img");
+              img.src = `data:image/png;base64,${resThumb.result[0]}`;
+              img.title = "Click para ver";
+              
+              const thumbDiv = previewCorreccion.querySelector('.solicitud-correccion-thumb');
+              thumbDiv.innerHTML = "";
+              thumbDiv.appendChild(img);
+            }
+          } catch (err) {
+            console.error("No se pudo cargar la miniatura de la corrección:", err);
+          }
+        }
         
         if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
              const btnVerCorreccionTimeline = document.createElement("button");
