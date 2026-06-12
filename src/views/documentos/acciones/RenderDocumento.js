@@ -255,23 +255,43 @@ export function renderCorrecciones(element, documento, onReMount) {
     if (btnVerMas) {
       btnVerMas.addEventListener('click', () => {
         const contenido = document.createElement('div');
-        contenido.className = 'motivo-modal-contenido';
+        contenido.className = 'timeline-container';
         contenido.innerHTML = `
-          <div class="motivo-modal-seccion">
-            <h4>Motivo de corrección</h4>
-            <p>${todasObservaciones[0] || ''}</p>
+          
+          <div class="timeline-nodo">
+            <div class="timeline-icono bg-amber">
+              <span class="material-icons">person</span>
+            </div>
+            <div class="timeline-contenido">
+              <div class="timeline-cabecera">
+                <h5 class="timeline-titulo">Solicitud de corrección</h5>
+                <span class="badge-rol">Administración</span>
+              </div>
+              <span class="timeline-fecha">${fecha}</span>
+              <div class="timeline-box-motivo">
+                <p style="margin: 0;">${todasObservaciones[0] || ''}</p>
+              </div>
+            </div>
           </div>
+
           ${todasObservaciones.length > 1 ? `
-            <div class="motivo-modal-rechazos">
-              <h4>Observaciones adicionales</h4>
-              ${todasObservaciones.slice(1).map(o => `
-                <div class="motivo-modal-rechazo">
-                  <span class="material-icons">arrow_right</span>
-                  <p>${o}</p>
+            <div class="timeline-nodo">
+              <div class="timeline-icono bg-red">
+                <span class="material-icons">cancel</span>
+              </div>
+              <div class="timeline-contenido">
+                <div class="timeline-cabecera">
+                  <h5 class="timeline-titulo">Observaciones de rechazo</h5>
                 </div>
-              `).join('')}
+                ${todasObservaciones.slice(1).map(o => `
+                  <div class="timeline-box-motivo" style="background: #fef2f2; border-color: #fca5a5; color: #991b1b; margin-top: 8px;">
+                    <p style="margin: 0;">${o}</p>
+                  </div>
+                `).join('')}
+              </div>
             </div>
           ` : ''}
+
         `;
         const modal = new Modal('Detalle de Corrección', true);
         modal.show(contenido);
