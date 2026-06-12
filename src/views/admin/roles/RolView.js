@@ -1,4 +1,4 @@
-import { apiGet } from "../../../core/api.js";
+import TipoDocumentoRolService from "../../../api/tipoDocumentoRol.api.js";
 import { BaseComponent } from "../../../components/BaseComponent.js";
 import { Modal } from "../../../components/modal.js";
 import { RolForm } from "./RolForm.js";
@@ -14,7 +14,7 @@ export class RolView extends BaseComponent {
     }
 
     async load() {
-        const res = await  apiGet(`/tipoDocumentoRol/por-rol/${this.rol.id}`);
+        const res = await TipoDocumentoRolService.obtenerPorRol(this.rol.id);
         if (res.ok) {
             this.permisos = res.result;
             console.log("Permisos del rol:", this.permisos);

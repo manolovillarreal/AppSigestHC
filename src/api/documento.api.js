@@ -21,6 +21,14 @@ function obtenerThumbnail(documentId) {
     return apiGet(`/Documentos/thumbnails/${documentId}`);
 }
 
+function obtenerPorAtencion(atencionId) {
+    return apiGet(`/Documentos/por-atencion/${atencionId}`);
+}
+
+function cargar(formData) {
+    return apiUpload(`/Documentos/cargar`, formData);
+}
+
 async function descargarMultiples(documentos, tipo) {
     if (tipo === 'separados') {
         return await descargarSeparados(documentos);
@@ -210,6 +218,8 @@ export const DocumentoService = {
     editar,
     eliminar,
     obtenerThumbnail,
+    obtenerPorAtencion,
+    cargar,
     descargarMultiples,
     descargarSeparados,
     descargarComoZip,

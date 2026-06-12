@@ -1,4 +1,5 @@
-import { apiGet } from "../../../core/api.js";
+import usuarioService from "../../../api/usuario.api.js";
+import RolService from "../../../api/rol.api.js";
 import { UsuarioItem } from "./UsuarioItem.js";
 import { UsuarioView } from "./UsuarioView.js";
 import { UsuarioForm } from "./UsuarioForm.js";
@@ -8,7 +9,7 @@ import { AdminListaBase } from "../AdminListaBase.js";
 export class ListaUsuarios extends AdminListaBase {
   constructor() {
     super(
-      () => apiGet("/usuarios"),
+      () => usuarioService.obtenerUsuarios(),
       UsuarioItem,
       UsuarioView,
       UsuarioForm,
@@ -25,7 +26,7 @@ export class ListaUsuarios extends AdminListaBase {
   async load() {
     await super.load();
 
-    const resRoles = await apiGet("/roles");
+    const resRoles = await RolService.obtenerRoles();
     if (resRoles.ok) {
       this.roles = resRoles.result;
     } else {

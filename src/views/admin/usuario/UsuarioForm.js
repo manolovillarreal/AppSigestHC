@@ -1,7 +1,7 @@
 import { BaseComponent } from "../../../components/BaseComponent.js";
-import { apiPost, apiPut, apiGet } from "../../../core/api.js";
 import { formatearErroresHTML } from "../../../utils/error.js";
 import usuarioService from '../../../api/usuario.api.js'
+import RolService from '../../../api/rol.api.js'
 
 export class UsuarioForm extends BaseComponent {
   constructor(usuario, onSave) {
@@ -12,7 +12,7 @@ export class UsuarioForm extends BaseComponent {
   }
 
   async load() {
-    const res = await apiGet("/roles");
+    const res = await RolService.obtenerRoles();
     if (res.ok) {
       this.roles = res.result;
     } else {

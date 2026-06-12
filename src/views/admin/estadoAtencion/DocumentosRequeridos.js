@@ -1,4 +1,4 @@
-import { apiGet } from "../../../core/api.js";
+import DocumentoRequeridoService from "../../../api/documentoRequerido.api.js";
 import { BaseComponent } from "../../../components/BaseComponent.js";
 import debug from '../../../utils/debug.js';
 import { DocumentoRequeridoItem } from "./DocumentoRequeridoItem.js";
@@ -20,7 +20,7 @@ export class DocumentosRequeridos extends BaseComponent {
 
   async load() {
     // Simulación de carga de datos
-    const res = await apiGet(`/DocumentosRequeridos/por-estado/${this.estadoAtencion.id}` );
+    const res = await DocumentoRequeridoService.obtenerPorEstado(this.estadoAtencion.id);
 
     if (!res.ok) {
       debug.logError("Error al cargar documentos requeridos:", res.errorMessages);

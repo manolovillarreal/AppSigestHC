@@ -1,4 +1,4 @@
-import { apiDelete, apiPut } from "../../../core/api.js";
+import TipoDocumentoRolService from "../../../api/tipoDocumentoRol.api.js";
 import { BaseComponent } from "../../../components/BaseComponent.js";
 
 
@@ -95,7 +95,7 @@ export class TipoDocumentoPermisoItem extends BaseComponent {
       puedeCargar: this.chkCargar.checked,
     };
 
-    const res = await apiPut(`/TipoDocumentoRol`, dto);
+    const res = await TipoDocumentoRolService.actualizar(dto);
 
     if (res.ok) {
       this.original = { ...dto };
@@ -118,7 +118,7 @@ export class TipoDocumentoPermisoItem extends BaseComponent {
 
     if (confirmado.isConfirmed) {
       const { tipoDocumentoId, rolId } = this.permiso;
-      const res = await apiDelete(`/TipoDocumentoRol?tipoDocumentoId=${tipoDocumentoId}&rolId=${rolId}`);
+      const res = await TipoDocumentoRolService.eliminar(tipoDocumentoId, rolId);
 
 
       if (res.ok) {

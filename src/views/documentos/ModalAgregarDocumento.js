@@ -1,7 +1,7 @@
 // modalAgregarDocumento.js
 import contexto from "../../core/store.js";
 import { Modal } from "../../components/modal.js";
-import { apiUpload } from "../../core/api.js";
+import { DocumentoService } from "../../api/documento.api.js";
 import { formatearErroresHTML } from "../../utils/error.js";
 import { Dropzone } from "../../components/Dropzone.js";
 
@@ -134,7 +134,7 @@ export class ModalAgregarDocumento extends Modal {
       
       formData.append("atencionId", this.atencion.id);
 
-      const res = await apiUpload("/Documentos/cargar", formData);
+      const res = await DocumentoService.cargar(formData);
 
       if (res.ok) {
         Swal.fire({

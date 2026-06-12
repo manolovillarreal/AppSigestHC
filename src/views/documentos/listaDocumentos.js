@@ -1,5 +1,4 @@
 // documentos/listaDocumentos.js
-import { apiGet } from "../../core/api.js";
 import { BaseComponent } from "../../components/BaseComponent.js";
 import {GrupoDocumentosPorRol} from "./grupoDocumentosPorRol.js"
 import { ItemDocumento } from "./itemDocumento.js";
@@ -17,7 +16,7 @@ export class ListaDocumentos extends BaseComponent {
 
   async load() {
 
-    const { result: documentos } = await apiGet(`/Documentos/por-atencion/${this.atencion.id}`);
+    const { result: documentos } = await DocumentoService.obtenerPorAtencion(this.atencion.id);
     this.documentos = documentos.map(doc => {
       doc.atencion = this.atencion;
       return doc;

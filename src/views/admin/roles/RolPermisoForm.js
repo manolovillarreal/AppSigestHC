@@ -1,6 +1,7 @@
 
 import { BaseComponent } from "../../../components/BaseComponent.js";
-import { apiGet, apiPost } from "../../../core/api.js";
+import tipoDocumentoService from "../../../api/tipoDocumento.api.js";
+import TipoDocumentoRolService from "../../../api/tipoDocumentoRol.api.js";
 import { SelectConBuscador } from "../../../components/SelectConBuscador.js";
 
 /**
@@ -25,7 +26,7 @@ export class RolPermisoForm extends BaseComponent {
    * @returns {Promise<void>}
    */
   async load() {
-    const res = await apiGet("/TipoDocumento");
+    const res = await tipoDocumentoService.obtenerTodos();
     if (res.ok) {
       const usados = this.existingPermisos.map(p => p.tipoDocumentoId);
       this.tiposDocumento = res.result.filter(td => !usados.includes(td.id));
@@ -128,7 +129,7 @@ export class RolPermisoForm extends BaseComponent {
 
     console.log(dto);
     
-    const res = await apiPost("/TipoDocumentoRol", dto);
+    const res = await TipoDocumentoRolService.guardar(dto);
 
     if (res.ok) {
       Swal.fire("Guardado", "Permiso agregado correctamente", "success");

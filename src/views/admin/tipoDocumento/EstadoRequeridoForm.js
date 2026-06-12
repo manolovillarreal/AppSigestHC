@@ -1,4 +1,5 @@
-import { apiGet, apiPost, apiPut, apiDelete } from "../../../core/api.js";
+import EstadoAtencionService from "../../../api/estadoAtencion.api.js";
+import DocumentoRequeridoService from "../../../api/documentoRequerido.api.js";
 import { BaseComponent } from "../../../components/BaseComponent.js";
 
 export class EstadoRequeridoForm extends BaseComponent {
@@ -15,7 +16,7 @@ export class EstadoRequeridoForm extends BaseComponent {
   }
 
   async load() {
-    const res = await apiGet("/estadoatencion");
+    const res = await EstadoAtencionService.obtenerEstadosAtencion();
     if (res.ok) {
       this.estadosDisponibles = res.result;
     }
@@ -140,7 +141,7 @@ _renderItem(){
       estadoAtencionId: Number(estadoId),
     };
 
-    let res = await apiPost(`/DocumentosRequeridos`, dto);
+    let res = await DocumentoRequeridoService.guardar(dto);
 
     if (res.ok) {
       Swal.fire("Guardado", "Relación actualizada correctamente", "success");
@@ -166,9 +167,7 @@ _renderItem(){
     });
 
     if (confirm.isConfirmed) {
-      const res = await apiDelete(
-        `/DocumentosRequeridos/${this.tipoDocumento.id}`
-      );
+      const res = await DocumentoRequeridoService.eliminar(this.tipoDocumento.id);
       if (res.ok) {
         Swal.fire("Eliminado", "La relación fue eliminada.", "success");
         this.estadoRequerido = undefined;        

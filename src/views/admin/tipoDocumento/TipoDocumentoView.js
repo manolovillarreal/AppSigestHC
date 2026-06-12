@@ -1,5 +1,6 @@
 import { BaseComponent } from "../../../components/BaseComponent.js";
-import { apiGet } from "../../../core/api.js";
+import TipoDocumentoRolService from "../../../api/tipoDocumentoRol.api.js";
+import DocumentoRequeridoService from "../../../api/documentoRequerido.api.js";
 import { EstadoRequeridoForm } from "./EstadoRequeridoForm.js";
 import { TipoDocumentoPermisoItem } from "./TipoDocumentoPermisoItem.js";
 import { TipoDocumentoForm } from "./TipoDocumentoForm.js";
@@ -27,8 +28,8 @@ export class TipoDocumentoView extends BaseComponent {
    */
   async load() {
     const [rolesRes, requeridosRes] = await Promise.all([
-      apiGet(`/tipoDocumentoRol/por-tipo/${this.tipoDocumento.id}`),
-      apiGet(`/DocumentosRequeridos/por-tipo/${this.tipoDocumento.id}`),
+      TipoDocumentoRolService.obtenerPorTipo(this.tipoDocumento.id),
+      DocumentoRequeridoService.obtenerPorTipo(this.tipoDocumento.id),
     ]);
 
     if (rolesRes.ok) {

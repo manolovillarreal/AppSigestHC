@@ -1,5 +1,6 @@
 import { BaseComponent } from "../../../components/BaseComponent.js";
-import { apiGet, apiPost } from "../../../core/api.js";
+import RolService from "../../../api/rol.api.js";
+import TipoDocumentoRolService from "../../../api/tipoDocumentoRol.api.js";
 
 /**
  * Formulario para agregar un permiso de rol a un tipo de documento.
@@ -24,7 +25,7 @@ export class TipoDocumentoPermisoForm  extends BaseComponent {
    * @returns {Promise<void>}
    */
   async load() {
-    const res = await apiGet("/roles");
+    const res = await RolService.obtenerRoles();
     if (res.ok) {
       const usados = this.existingPermisos.map(p => p.rolId);
       this.roles = res.result.filter(r => !usados.includes(r.id));
@@ -130,7 +131,7 @@ async _guardarPermisoSubmit(e) {
   };
 
   console.log(dto)
-  const res = await apiPost("/TipoDocumentoRol", dto);
+  const res = await TipoDocumentoRolService.guardar(dto);
 
   if (res.ok) {
     Swal.fire("Guardado", "Permiso agregado correctamente", "success");

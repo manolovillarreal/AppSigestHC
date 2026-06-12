@@ -1,5 +1,6 @@
 import debug from "../../../utils/debug.js";
-import { apiGet } from "../../../core/api.js";
+import tipoDocumentoService from "../../../api/tipoDocumento.api.js";
+import EstadoAtencionService from "../../../api/estadoAtencion.api.js";
 import { AdminListaBase } from '../AdminListaBase.js'
 import { TipoDocumentoItem } from "./TipoDocumentoItem.js";
 import { TipoDocumentoView } from "./TipoDocumentoView.js";
@@ -8,7 +9,7 @@ import { FiltroLista } from "../../../components/FiltroLista.js";
 
 export class ListaTipoDocumentos extends AdminListaBase {
   constructor() {
-    super(async () => await apiGet('/TipoDocumento'), TipoDocumentoItem, TipoDocumentoView, TipoDocumentoForm, {
+    super(async () => await tipoDocumentoService.obtenerTodos(), TipoDocumentoItem, TipoDocumentoView, TipoDocumentoForm, {
       title: 'Tipos de Documento',
       addButtonText: 'Agregar Tipo',
       listClass: 'tipos-doc-list'
@@ -17,8 +18,8 @@ export class ListaTipoDocumentos extends AdminListaBase {
   }
 
   async load() {
-    const resTipos = await apiGet("/TipoDocumento");
-    const resEstados = await apiGet("/EstadoAtencion");
+    const resTipos = await tipoDocumentoService.obtenerTodos();
+    const resEstados = await EstadoAtencionService.obtenerEstadosAtencion();
 
     if (!resTipos.ok) {
       debug.logError("Error al cargar tipos de documento:", resTipos.errorMessages);

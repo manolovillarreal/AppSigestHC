@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../../components/BaseComponent.js";
-import { apiPost,apiPut,apiDelete, apiGet } from "../../../core/api.js";
-import tipoDocumentoService from '../../../api/tipoDocumento.api.js';    
+import tipoDocumentoService from '../../../api/tipoDocumento.api.js';
+import EstadoAtencionService from '../../../api/estadoAtencion.api.js';
 
 
 /**
@@ -24,7 +24,7 @@ export class TipoDocumentoForm extends BaseComponent {
   async load() {
     if (this._cargandoEstados) return;
     this._cargandoEstados = true;
-    const res = await apiGet("/EstadoAtencion");
+    const res = await EstadoAtencionService.obtenerEstadosAtencion();
     if (res.ok) {
       this.estadosAtencion = res.result;
     } else {
@@ -169,8 +169,7 @@ export class TipoDocumentoForm extends BaseComponent {
     }
 
     const { id } = this.tipoDocumento;
-    const ruta = id ? `/TipoDocumento/${id}` : "/TipoDocumento";
-    const res = id ? await apiPut(ruta, dto) : await apiPost(ruta, dto);
+    const res = id ? await tipoDocumentoService.editar(id, dto) : await tipoDocumentoService.guardar(dto);
 
     if (res.ok) {
       Swal.fire("Actualizado", "El tipo de documento fue actualizado", "success");

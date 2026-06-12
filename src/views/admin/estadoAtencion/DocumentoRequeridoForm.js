@@ -1,5 +1,6 @@
 import { BaseComponent } from "../../../components/BaseComponent.js";
-import { apiGet, apiPost } from "../../../core/api.js";
+import tipoDocumentoService from "../../../api/tipoDocumento.api.js";
+import DocumentoRequeridoService from "../../../api/documentoRequerido.api.js";
 import { SelectConBuscador } from "../../../components/SelectConBuscador.js";
 
 export class DocumentoRequeridoForm extends BaseComponent {
@@ -12,7 +13,7 @@ export class DocumentoRequeridoForm extends BaseComponent {
   }
 
   async load() {
-    const res = await apiGet("/TipoDocumento");
+    const res = await tipoDocumentoService.obtenerTodos();
     if (res.ok) {
         console.log("Tipos de documentos cargados:", res.result);
 
@@ -65,7 +66,7 @@ export class DocumentoRequeridoForm extends BaseComponent {
       estadoAtencionId: this.estadoAtencion.id,
       tipoDocumentoId
     };
-    const res = await apiPost("/DocumentosRequeridos", dto);
+    const res = await DocumentoRequeridoService.guardar(dto);
     if (res.ok) {
       Swal.fire("Guardado", "Documento requerido agregado correctamente", "success");
       this.onSuccess?.();

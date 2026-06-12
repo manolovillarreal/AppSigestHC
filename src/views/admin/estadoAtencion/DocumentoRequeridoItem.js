@@ -1,5 +1,5 @@
 import { BaseComponent } from "../../../components/BaseComponent.js";
-import { apiDelete } from "../../../core/api.js";
+import DocumentoRequeridoService from "../../../api/documentoRequerido.api.js";
 
 export class DocumentoRequeridoItem extends BaseComponent {
   constructor(documentoRequerido, onDelete = null) {
@@ -42,7 +42,7 @@ export class DocumentoRequeridoItem extends BaseComponent {
     });
 
     if (confirmado.isConfirmed) {
-      const res = await apiDelete(`/DocumentosRequeridos/${this.documentoRequerido.tipoDocumentoId}`);
+      const res = await DocumentoRequeridoService.eliminar(this.documentoRequerido.tipoDocumentoId);
       if (res.ok) {
         Swal.fire("Eliminado", "El documento requerido fue eliminado.", "success");
         this.element.remove();
