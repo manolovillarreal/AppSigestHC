@@ -214,6 +214,7 @@ export function renderCorrecciones(element, documento, onReMount) {
             width: fit-content;
           ">${cfg.texto}</span>
           <div class="cp-meta">
+            <span>Solicitado: <strong>${fechaSegura(solicitudPendiente.fechaSolicitud)}</strong></span>
             <span>${fechaLabel}: <strong>${fecha}</strong></span>
             <span>Por: ${porUsuario}</span>
           </div>
