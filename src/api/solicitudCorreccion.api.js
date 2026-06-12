@@ -17,6 +17,10 @@ function obtenerEnviadasPorRol() {
   return apiGet("/SolicitudCorreccion/enviadas-por-rol");
 }
 
+function solicitarCorreccion(payload) {
+  return apiPost("/SolicitudCorreccion/", payload);
+}
+
 function responderSolicitudCorreccion(solicitudId, data) {
   return apiUpload(`/SolicitudCorreccion/${solicitudId}/responder`, data);
 }
@@ -40,6 +44,7 @@ export async function eliminarSolicitudCorreccion(solicitudId) {
 export const SolicitudCorreccionService = {
   obtenerCorreccionesPorRol,
   obtenerEnviadasPorRol,
+  solicitarCorreccion,
   responderSolicitudCorreccion,
   visualizarCorreccion,
   obtenerThumbnail,

@@ -1,7 +1,7 @@
-import { apiDownloadBlob, apiPost } from "../../core/api.js";
 import { formatearErroresHTML } from "../../utils/error.js";
 import { BaseComponent } from "../../components/BaseComponent.js";
 import { DocumentoService } from "../../api/documento.api.js";
+import { SolicitudCorreccionService } from "../../api/solicitudCorreccion.api.js";
 import { firmarPdf } from "../../utils/firmaPdf.js";
 import {
   renderCheckbox,
@@ -110,7 +110,7 @@ export class ItemDocumento extends BaseComponent {
       observacion: observacion.trim(),
     };
 
-    const res = await apiPost("/SolicitudCorreccion/", payload);
+    const res = await SolicitudCorreccionService.solicitarCorreccion(payload);
 
     if (res.ok) {
       await Swal.fire({
@@ -161,7 +161,7 @@ export class ItemDocumento extends BaseComponent {
         didOpen: () => Swal.showLoading(),
       });
 
-      const res = await apiDownloadBlob(`/Documentos/ver/${this.documento.id}`);
+      const res = await DocumentoService.descargar(this.documento.id);
       if (!res.ok) throw new Error("No se pudo cargar el documento");
 
       const blob = await res.blob();
