@@ -157,13 +157,19 @@ export function renderCorrecciones(element, documento, onReMount) {
 
   const estadoNombre = solicitudPendiente.estadoCorreccion?.nombre || 'Pendiente';
 
-  const observaciones = (solicitudPendiente.observacion || '')
+  const todasObservaciones = (solicitudPendiente.observacion || '')
     .split('|')
     .map(o => o.trim())
     .filter(Boolean);
 
-  const motivoOriginal = observaciones[0] || '';
-  const rechazos = observaciones.slice(1);
+  const motivoPrincipal = todasObservaciones[0] || '';
+  const truncado = motivoPrincipal.length > 60
+    ? motivoPrincipal.slice(0, 60) + '...'
+    : motivoPrincipal;
+  const necesitaTruncado = motivoPrincipal.length > 60 
+    || todasObservaciones.length > 1;
+  const textoCompleto = todasObservaciones.join(' • ');
+  const motivoId = `motivo-${solicitudPendiente.id}`;
 
   const panel = document.createElement('div');
   panel.className = 'correccion-panel-simple';
@@ -185,13 +191,6 @@ export function renderCorrecciones(element, documento, onReMount) {
   const porUsuario = estaRespondida
     ? nombreUsuario(solicitudPendiente.usuarioCorrige)
     : nombreUsuario(solicitudPendiente.usuarioSolicita);
-
-  const motivoPrincipal = observaciones[0] || '';
-  const textoCompleto = observaciones.join(' | ');
-  const limite = 60;
-  const necesitaTruncado = textoCompleto.length > limite;
-  const truncado = necesitaTruncado ? textoCompleto.substring(0, limite) + '...' : textoCompleto;
-  const motivoId = `motivo-${solicitudPendiente.id}`;
 
   panel.innerHTML = `
     <div class="cp-inner">
