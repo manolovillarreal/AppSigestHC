@@ -103,88 +103,125 @@
    SOLICITUD CORRECCION ITEM (MAIN PANEL)
    ========================================================================== */
 .solicitud-card {
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: #fff;
 }
 
-/* Cabecera del Documento */
-.solicitud-doc-header {
+.solicitud-card-main {
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 16px;
+  gap: 0;
+  align-items: stretch;
+}
+
+.solicitud-card-info {
+  flex: 1;
+  padding: 16px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.solicitud-card-header {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 12px;
 }
 
 .solicitud-doc-thumbnail {
   width: 80px;
   height: 100px;
-  object-fit: cover;
-  border-radius: 4px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
   border: 1px solid #e2e8f0;
 }
 
-.solicitud-doc-info {
-  flex: 1;
+.solicitud-doc-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.solicitud-doc-meta {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.solicitud-doc-titulo {
-  font-size: 16px;
+.solicitud-doc-nombre {
+  font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
-  margin: 0;
+  color: #0f172a;
 }
 
-.solicitud-doc-fecha {
-  font-size: 13px;
-  color: #64748b;
-}
-
-.solicitud-doc-cargado {
-  font-size: 12px;
-  color: #94a3b8;
-}
-
-.solicitud-doc-solicitud-fecha {
+.solicitud-doc-fecha,
+.solicitud-doc-carga,
+.solicitud-fecha-sol {
   font-size: 12px;
   color: #64748b;
-  margin-top: 4px;
 }
 
-/* Motivo */
-.solicitud-motivo-seccion {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.solicitud-motivo {
+  margin-top: 8px;
 }
 
-.solicitud-seccion-titulo {
+.solicitud-motivo strong {
   font-size: 13px;
-  font-weight: 600;
-  color: #334155;
-  margin: 0;
+  color: #374151;
 }
 
 .solicitud-motivo-box {
-  background: #fafafa;
+  background: #f8fafc;
   border: 0.5px solid #e2e8f0;
   border-radius: 8px;
-  padding: 12px;
+  padding: 10px 14px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #475569;
 }
 
 .solicitud-motivo-box ul {
   margin: 0;
-  padding-left: 20px;
-  color: #475569;
-  font-size: 13px;
+  padding-left: 16px;
+}
+
+.solicitud-card-acciones {
+  width: 180px;
+  flex-shrink: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.solicitud-historial-toggle {
+  border-top: 1px solid #e2e8f0;
+  padding: 8px 16px;
+}
+
+.btn-toggle-historial {
+  background: none;
+  border: none;
+  color: #185FA5;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+
+.btn-toggle-historial:hover {
+  text-decoration: underline;
+}
+
+.solicitud-historial-body {
+  padding: 16px;
+  border-top: 1px solid #e2e8f0;
 }
 
 /* Timeline Vertical */

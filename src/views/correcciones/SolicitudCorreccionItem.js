@@ -36,57 +36,79 @@ export class SolicitudCorreccionItem extends BaseComponent {
     const estadoNombre = solicitudPendiente.estadoCorreccion.nombre;
     const estadoClase = estadoNombre.toLowerCase();
 
-    // CARD HEADER (Siempre visible)
-    const cardHeader = document.createElement("div");
-    cardHeader.classList.add("correccion-card-header");
+    const nombreDocumento = documento.tipoDocumento.nombre;
+    const doc = {
+      fecha: documento.fechaDocumento || documento.fechaCreacion,
+      fechaCarga: documento.fechaCreacion
+    };
+    const nombreDoc = nombreUsuario({nombre: documento.usuario?.nombre, apellidos: documento.usuario?.apellidos});
 
-    // CARD SUPERIOR — info del documento
-    const docHeader = document.createElement("div");
-    docHeader.classList.add("solicitud-doc-header");
+    const observaciones = (solicitudPendiente.observacion || '')
+      .split('|')
+      .map(o => o.trim())
+      .filter(Boolean);
 
-    const thumbnailContainer = document.createElement("div");
-    thumbnailContainer.classList.add("solicitud-doc-thumbnail");
+    this.element.innerHTML = `
+      <!-- FILA PRINCIPAL: info izquierda + acciones derecha -->
+      <div class="solicitud-card-main">
+        
+        <!-- IZQUIERDA: thumbnail + info + motivo -->
+        <div class="solicitud-card-info">
+          <div class="solicitud-card-header">
+            <div class="solicitud-doc-thumbnail"></div>
+            <div class="solicitud-doc-meta">
+              <strong class="solicitud-doc-nombre">${nombreDocumento}</strong>
+              <span class="solicitud-doc-fecha">Fecha: ${fechaSegura(doc.fecha)}</span>
+              <span class="solicitud-doc-carga">Cargado el ${fechaSegura(doc.fechaCarga)} por ${nombreDoc}</span>
+              <span class="badge-estado-correccion badge-${estadoNombre.toLowerCase()}">${estadoNombre.toUpperCase()}</span>
+              <span class="solicitud-fecha-sol">Solicitado el: ${fechaSegura(solicitudPendiente.fechaSolicitud)}</span>
+            </div>
+          </div>
+          <div class="solicitud-motivo">
+            <strong>Motivo de corrección</strong>
+            <div class="solicitud-motivo-box">
+              <ul>${observaciones.map(o => `<li>${o}</li>`).join('')}</ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- DERECHA: acciones -->
+        <div class="solicitud-card-acciones" id="solicitud-acciones-${solicitudPendiente.id}">
+          <!-- los botones de acción se inyectan aquí -->
+        </div>
+
+      </div>
+
+      <!-- HISTORIAL COLAPSABLE -->
+      <div class="solicitud-historial-toggle">
+        <button class="btn-toggle-historial">
+          <span class="material-icons">expand_more</span>
+          Ver historial
+        </button>
+      </div>
+      <div class="solicitud-historial-body" style="display:none">
+        <div class="solicitud-timeline-seccion"></div>
+        <div class="solicitud-acciones-footer"></div>
+      </div>
+    `;
+
+    // Render thumbnail
+    const thumbnailContainer = this.element.querySelector(".solicitud-doc-thumbnail");
     descargarMiniaturas(documento, thumbnailContainer, () => this._verCorreccion());
 
-    const docInfo = document.createElement("div");
-    docInfo.classList.add("solicitud-doc-info");
-    
-    const fechaDocRender = fechaSegura(documento.fechaDocumento) !== 'Fecha no disponible' 
-      ? fechaSegura(documento.fechaDocumento) 
-      : fechaSegura(documento.fechaCreacion);
+    // Toggle collapsible history
+    const btnToggleHistorial = this.element.querySelector(".btn-toggle-historial");
+    const timelineBody = this.element.querySelector(".solicitud-historial-body");
+    btnToggleHistorial.addEventListener("click", () => {
+      const isHidden = timelineBody.style.display === "none";
+      timelineBody.style.display = isHidden ? "block" : "none";
+      const icon = btnToggleHistorial.querySelector(".material-icons");
+      if (icon) {
+        icon.textContent = isHidden ? "expand_less" : "expand_more";
+      }
+    });
 
-    docInfo.innerHTML = `
-      <h3 class="solicitud-doc-titulo">${documento.tipoDocumento.nombre}</h3>
-      <span class="solicitud-doc-fecha">Fecha del documento: ${fechaDocRender}</span>
-      <span class="solicitud-doc-cargado">Cargado el ${fechaSegura(documento.fechaCreacion)} por ${nombreUsuario({nombre: documento.usuario?.nombre, apellidos: documento.usuario?.apellidos})}</span>
-      <span class="badge-estado ${estadoClase}">${estadoNombre}</span>
-      <span class="solicitud-doc-solicitud-fecha">Solicitado el: ${fechaSegura(solicitudPendiente.fechaSolicitud)}</span>
-    `;
-
-    docHeader.appendChild(thumbnailContainer);
-    docHeader.appendChild(docInfo);
-    cardHeader.appendChild(docHeader);
-
-    // SECCIÓN MOTIVO
-    const motivoSeccion = document.createElement("div");
-    motivoSeccion.classList.add("solicitud-motivo-seccion");
-    motivoSeccion.innerHTML = `
-      <h4 class="solicitud-seccion-titulo">Motivo de corrección</h4>
-      <div class="solicitud-motivo-box">${this._renderObservacionHTML()}</div>
-    `;
-    cardHeader.appendChild(motivoSeccion);
-
-    this.element.appendChild(cardHeader);
-
-    // TIMELINE BODY
-    const timelineBody = document.createElement("div");
-    timelineBody.classList.add("correccion-timeline-body");
-
-    // TIMELINE
-    const timelineSeccion = document.createElement("div");
-    timelineSeccion.classList.add("solicitud-timeline-seccion");
-    
-    // Determinar texto estado
+    // TIMELINE HTML
     let textoEstado = "Esperando respuesta del médico.";
     if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA) {
         textoEstado = "Respuesta recibida. Pendiente de revisión.";
@@ -96,11 +118,6 @@ export class SolicitudCorreccionItem extends BaseComponent {
         textoEstado = "Corrección rechazada.";
     }
 
-    const observaciones = (solicitudPendiente.observacion || '')
-      .split('|')
-      .map(o => o.trim())
-      .filter(Boolean);
-   
     const motivoOriginal = observaciones[0] || '';
     const observacionesAdicionales = observaciones.slice(1);
 
@@ -165,19 +182,14 @@ export class SolicitudCorreccionItem extends BaseComponent {
         </div>
       </div>
     `;
+
+    const timelineSeccion = this.element.querySelector(".solicitud-timeline-seccion");
     timelineSeccion.innerHTML = htmlTimeline;
-    timelineBody.appendChild(timelineSeccion);
-
-    // ACCIONES (pie de la card)
-    const accionesFooter = document.createElement("div");
-    accionesFooter.classList.add("solicitud-acciones-footer");
-    timelineBody.appendChild(accionesFooter);
-
-    this.element.appendChild(timelineBody);
 
     // Rellenar dinámicamente según estado y permisos
     setTimeout(() => {
         const accionesRespuesta = this.element.querySelector(`#acciones-respuesta-${solicitudPendiente.id}`);
+        const accionesFooter = this.element.querySelector(`#solicitud-acciones-${solicitudPendiente.id}`);
         
         if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
              const btnVerCorreccionTimeline = document.createElement("button");
