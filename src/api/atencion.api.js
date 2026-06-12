@@ -40,6 +40,10 @@ async function avanzarAtencion(payload) {
   return await apiPost('/Atenciones/cambiar-estado', payload);
 }
 
+async function cerrarAtencion(payload) {
+  return await apiPost('/Atenciones/cerrar', payload);
+}
+
 async function editarAtencion(id, atencion) {
   return await apiPut(`/Atenciones/${id}`, atencion);
 }
@@ -54,6 +58,8 @@ const AtencionService = {
   buscarPaciente,
   crearAtencion,
   guardarAtencion,
+  avanzarAtencion,
+  cerrarAtencion,
   editarAtencion,
   anularAtencion,
 };

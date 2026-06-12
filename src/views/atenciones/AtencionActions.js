@@ -1,4 +1,3 @@
-import { apiPost } from "../../core/api.js";
 import atencionesService from "../../api/atencion.api.js";
 import { formatearErroresHTML } from "../../utils/error.js";
 
@@ -28,7 +27,7 @@ export async function avanzarEstado(atencion, observacion) {
   };
 
   try {
-    const res = await apiPost(`/Atenciones/cambiar-estado`, payload);
+    const res = await atencionesService.avanzarAtencion(payload);
     if (res.ok) {
       const atencionActualizada = res.result || {};
       atencion.estadoAtencion = atencionActualizada.estadoAtencion;
@@ -81,7 +80,7 @@ export async function cerrarAtencion(atencion) {
       Atencionid: atencion.id,
     };
 
-    const res = await apiPost(`/Atenciones/cerrar`, payload);
+    const res = await atencionesService.cerrarAtencion(payload);
     if (res.ok) {
       const atencionActualizada = res.result || {};
       atencion.estadoAtencion = atencionActualizada.estadoAtencion;

@@ -2,7 +2,7 @@ import { BaseComponent } from '../../components/BaseComponent.js';
 import contexto from '../../core/store.js';
 import { formatearFechaHora } from '../../utils/date.js';
 import { PERFILES } from '../../core/config.js';
-import { apiPut } from '../../core/api.js';
+import AtencionService from '../../api/atencion.api.js';
 import { formatearErroresHTML } from '../../utils/error.js';
 
 export class AtencionHeader extends BaseComponent {
@@ -140,7 +140,7 @@ export class AtencionHeader extends BaseComponent {
             terceroId: this.atencion.terceroId,
           };
 
-          const res = await apiPut(`/Atenciones/${this.atencion.id}`, dto);
+          const res = await AtencionService.editarAtencion(this.atencion.id, dto);
 
           if (res.ok) {
             this.atencion.tipoAtencionId = nuevoTipo;

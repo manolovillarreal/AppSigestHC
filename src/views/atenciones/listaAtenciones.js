@@ -1,5 +1,4 @@
 import debug from "../../utils/debug.js";
-import { apiGet } from "../../core/api.js";
 import { ordenEstados, obtenerNombreEstado } from "../../utils/estados.js";
 import { ItemAtencion } from "./itemAtencion.js";
 import { AtencionView } from "./AtencionView.js";

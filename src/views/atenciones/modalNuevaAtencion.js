@@ -1,6 +1,7 @@
 // modalNuevaAtencion.js
 import { Modal } from "../../components/modal.js";
-import { apiPost, apiGet } from "../../core/api.js";
+import AtencionService from "../../api/atencion.api.js";
+import PacienteService from "../../api/paciente.api.js";
 import {
   calcularEdadTexto,
   formatearFecha,
@@ -128,7 +129,7 @@ export class ModalNuevaAtencion extends Modal {
   }
 
   async cargarPacientes() {
-    const result = await apiGet("/Pacientes/ingresos");
+    const result = await PacienteService.obtenerIngresos();
 
     if (!result.ok) {
       return Swal.fire({
@@ -164,7 +165,7 @@ export class ModalNuevaAtencion extends Modal {
   }
 
   async cargarUltimoPaciente() {
-    const respuesta = await apiGet("/Pacientes/ultimo");
+    const respuesta = await PacienteService.obtenerUltimoIngreso();
 
     if (respuesta.ok) {
       const ingreso = respuesta.result;
@@ -231,7 +232,7 @@ export class ModalNuevaAtencion extends Modal {
       tipoAtencionId: 1
     };
 
-    const res = await apiPost("/Atenciones", payload);
+    const res = await AtencionService.guardarAtencion(payload);
 
     if (res.ok) {
       Swal.fire({ icon: "success", title: "Atención creada" });   
