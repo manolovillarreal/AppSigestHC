@@ -294,16 +294,23 @@
 
 .cp-inner {
   display: flex;
-  gap: 0;
+  flex-direction: column;
   height: 100%;
+  gap: 10px;
+}
+
+.cp-top {
+  display: flex;
+  gap: 12px;
+  flex: 1;
 }
 
 .cp-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding-right: 12px;
+  gap: 5px;
+  min-width: 0;
 }
 
 .cp-titulo {
@@ -312,20 +319,17 @@
   color: #0f172a;
 }
 
-.cp-acciones-col {
-  width: 120px;
+.cp-thumb-col {
+  width: 80px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  border-left: 1px solid #e2e8f0;
-  padding-left: 12px;
 }
 
 .cp-thumb-correccion {
-  width: 80px;
-  height: 100px;
+  width: 70px;
+  height: 90px;
   border: 1.5px solid #e2e8f0;
   border-radius: 6px;
   overflow: hidden;
@@ -341,15 +345,16 @@
 }
 
 .cp-thumb-icon {
-  font-size: 32px;
+  font-size: 28px;
   color: #dc2626;
 }
 
 .correccion-panel-acciones {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
+  gap: 8px;
+  justify-content: flex-end;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px;
 }
 
 .badge-estado-correccion {

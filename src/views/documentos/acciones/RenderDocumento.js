@@ -186,6 +186,7 @@ export function renderCorrecciones(element, documento, onReMount) {
     ? nombreUsuario(solicitudPendiente.usuarioCorrige)
     : nombreUsuario(solicitudPendiente.usuarioSolicita);
 
+  const motivoPrincipal = observaciones[0] || '';
   const textoCompleto = observaciones.join(' | ');
   const limite = 60;
   const necesitaTruncado = textoCompleto.length > limite;
@@ -195,58 +196,65 @@ export function renderCorrecciones(element, documento, onReMount) {
   panel.innerHTML = `
     <div class="cp-inner">
       
-      <!-- COLUMNA IZQUIERDA: info -->
-      <div class="cp-info">
-        <span class="cp-titulo">Solicitud de Corrección</span>
-        <span class="cp-badge" style="
-          color: ${cfg.color};
-          background: ${cfg.bg};
-          font-size: 11px;
-          font-weight: 700;
-          padding: 3px 10px;
-          border-radius: 20px;
-          display: inline-block;
-          letter-spacing: 0.5px;
-        ">${cfg.texto}</span>
-        <div class="cp-meta">
-          <span>${fechaLabel}: <strong>${fecha}</strong></span>
-          <span>Por: ${porUsuario}</span>
-        </div>
-        ${observaciones.length > 0 ? `
-          <div class="cp-motivo">
-            <strong>Motivo:</strong>
-            <span id="${motivoId}-corto">${truncado}</span>
-            ${necesitaTruncado ? `
-              <span id="${motivoId}-largo" style="display:none">
-                ${textoCompleto}
-              </span>
-              <button class="btn-ver-mas-motivo"
-                onclick="
-                  var c=document.getElementById('${motivoId}-corto');
-                  var l=document.getElementById('${motivoId}-largo');
-                  if(l.style.display==='none'){
-                    c.style.display='none';
-                    l.style.display='';
-                    this.textContent='ver menos';
-                  } else {
-                    c.style.display='';
-                    l.style.display='none';
-                    this.textContent='ver más';
-                  }
-                ">ver más</button>
-            ` : ''}
+      <!-- FILA SUPERIOR: info + miniatura -->
+      <div class="cp-top">
+        
+        <!-- IZQUIERDA: info -->
+        <div class="cp-info">
+          <span class="cp-titulo">Solicitud de Corrección</span>
+          <span class="cp-badge" style="
+            color: ${cfg.color};
+            background: ${cfg.bg};
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+            width: fit-content;
+          ">${cfg.texto}</span>
+          <div class="cp-meta">
+            <span>${fechaLabel}: <strong>${fecha}</strong></span>
+            <span>Por: ${porUsuario}</span>
           </div>
-        ` : ''}
+          ${motivoPrincipal ? `
+            <div class="cp-motivo">
+              <strong>Motivo:</strong>
+              <span id="${motivoId}-corto">${truncado}</span>
+              ${necesitaTruncado ? `
+                <span id="${motivoId}-largo" style="display:none">
+                  ${textoCompleto}
+                </span>
+                <button class="btn-ver-mas-motivo"
+                  onclick="
+                    var c=document.getElementById('${motivoId}-corto');
+                    var l=document.getElementById('${motivoId}-largo');
+                    if(l.style.display==='none'){
+                      c.style.display='none';l.style.display='';
+                      this.textContent='ver menos';
+                    } else {
+                      c.style.display='';l.style.display='none';
+                      this.textContent='ver más';
+                    }
+                  ">ver más</button>
+              ` : ''}
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- DERECHA: miniatura -->
+        <div class="cp-thumb-col">
+          <div class="cp-thumb-correccion" 
+               id="cp-thumb-${solicitudPendiente.id}">
+            <span class="material-icons cp-thumb-icon">picture_as_pdf</span>
+          </div>
+        </div>
+
       </div>
 
-      <!-- COLUMNA DERECHA: miniatura + botones -->
-      <div class="cp-acciones-col">
-        <div class="cp-thumb-correccion" id="cp-thumb-${solicitudPendiente.id}">
-          <span class="material-icons cp-thumb-icon">picture_as_pdf</span>
-        </div>
-        <div class="correccion-panel-acciones" 
-             id="cp-acciones-${solicitudPendiente.id}">
-        </div>
+      <!-- FILA INFERIOR: botones alineados a la derecha -->
+      <div class="correccion-panel-acciones" 
+           id="cp-acciones-${solicitudPendiente.id}">
       </div>
 
     </div>
