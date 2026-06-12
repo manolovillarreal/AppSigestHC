@@ -1,8 +1,24 @@
-import { apiDownloadBlob, apiGet,apiPut,apiPost, apiUpload } from "../core/api.js";
+import { apiDownloadBlob, apiGet,apiPut,apiPost,apiDelete, apiUpload } from "../core/api.js";
 import { downloadBlobFile, generarNombreArchivo } from "../utils/files.js";
 
 function EnviarDocumentoFirmado(documentId, data) {
     return apiUpload(`/Documentos/firmar/${documentId}`, data);
+}
+
+function descargar(documentId) {
+    return apiDownloadBlob(`/Documentos/ver/${documentId}`);
+}
+
+function editar(payload) {
+    return apiPut(`/Documentos/editar`, payload);
+}
+
+function eliminar(documentId) {
+    return apiDelete(`/Documentos/${documentId}`);
+}
+
+function obtenerThumbnail(documentId) {
+    return apiGet(`/Documentos/thumbnails/${documentId}`);
 }
 
 async function descargarMultiples(documentos, tipo) {
@@ -18,7 +34,7 @@ async function descargarMultiples(documentos, tipo) {
 async function descargarSeparados(documentos) {
     // Descargar cada documento individualmente
     for (const doc of documentos) {
-        const res = await apiDownloadBlob(`/Documentos/ver/${doc.id}`);
+        const res = await descargar(doc.id);
         if (res.ok) {
             await downloadBlobFile(res, doc);
             // Pequeña pausa entre descargas
@@ -30,7 +46,7 @@ async function descargarSeparados(documentos) {
 
 async function descargarDocumentosParalelo(documentos) {
     const descargas = documentos.map(async (doc) => {
-        const res = await apiDownloadBlob(`/Documentos/ver/${doc.id}`);
+        const res = await descargar(doc.id);
         if (res.ok) {
             const blob = await res.blob();
             const extension = obtenerExtension(doc);
@@ -108,7 +124,7 @@ async function descargarComoZip(documentos) {
 async function descargarComoPdf(documentos) {
     // Descargar todos los documentos en paralelo
     const descargas = documentos.map(async (doc) => {
-        const res = await apiDownloadBlob(`/Documentos/ver/${doc.id}`);
+        const res = await descargar(doc.id);
         if (res.ok) {
             const blob = await res.blob();
             return { blob, doc, success: true };
@@ -190,6 +206,10 @@ export async function importarDocumentoIdentidad(atencionId) {
 
 export const DocumentoService = {
     EnviarDocumentoFirmado,
+    descargar,
+    editar,
+    eliminar,
+    obtenerThumbnail,
     descargarMultiples,
     descargarSeparados,
     descargarComoZip,

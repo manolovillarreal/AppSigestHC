@@ -1,4 +1,4 @@
-import { apiGet } from "../../../core/api.js";
+import { DocumentoService } from "../../../api/documento.api.js";
 import { formatearFecha, formatearFechaHora } from "../../../utils/date.js";
 import { SolicitudCorreccionItem } from "../../correcciones/SolicitudCorreccionItem.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../../utils/correcciones.js";
@@ -284,7 +284,7 @@ export async function descargarMiniaturas(doc, thumbnailContainer, onVerDocument
 
   try {
     if (doc.tipoDocumento && doc.tipoDocumento.extensionPermitida === "pdf") {
-      const res = await apiGet(`/Documentos/thumbnails/${doc.id}`);
+      const res = await DocumentoService.obtenerThumbnail(doc.id);
       console.log('respuesta API thumbnail:', res);
       if (!res.ok || !res.result || !Array.isArray(res.result) || res.result.length === 0) {
         thumb.textContent = "[Error]";

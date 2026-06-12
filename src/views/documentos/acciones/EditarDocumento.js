@@ -1,4 +1,4 @@
-import { apiPut } from "../../../core/api.js";
+import { DocumentoService } from "../../../api/documento.api.js";
 import { formatearErroresHTML } from "../../../utils/error.js";
 
 export async function editarDocumento(doc, onSuccess = null) {
@@ -6,7 +6,7 @@ export async function editarDocumento(doc, onSuccess = null) {
 
   if (!result.isConfirmed) return;
 
-  const response = await apiPut(`/Documentos/editar`, payload);
+  const response = await DocumentoService.editar(payload);
 
   if (response.ok) {
     await Swal.fire({

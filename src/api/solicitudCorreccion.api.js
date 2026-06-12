@@ -24,6 +24,9 @@ function responderSolicitudCorreccion(solicitudId, data) {
 function visualizarCorreccion(solicitudId) {
   return apiDownloadBlob(`/SolicitudCorreccion/${solicitudId}/visualizar`);
 }
+function obtenerThumbnail(solicitudId) {
+  return apiGet(`/SolicitudCorreccion/thumbnails/${solicitudId}`);
+}
 function aprobarCorreccion(solicitudId, conservarDocumentoAnterior) {
   return apiPost(`/SolicitudCorreccion/${solicitudId}/aprobar`, { conservarDocumentoAnterior });
 }
@@ -39,6 +42,7 @@ export const SolicitudCorreccionService = {
   obtenerEnviadasPorRol,
   responderSolicitudCorreccion,
   visualizarCorreccion,
+  obtenerThumbnail,
   aprobarCorreccion,
   rechazarCorreccion,
   eliminarSolicitudCorreccion

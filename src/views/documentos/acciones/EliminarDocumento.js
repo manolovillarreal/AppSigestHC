@@ -1,4 +1,4 @@
-import { apiDelete } from "../../../core/api.js";
+import { DocumentoService } from "../../../api/documento.api.js";
 import { formatearErroresHTML } from "../../../utils/error.js";
 
 export async function eliminarDocumento(docId, onSuccess = null) {
@@ -14,7 +14,7 @@ export async function eliminarDocumento(docId, onSuccess = null) {
 
   if (!confirmacion.isConfirmed) return;
 
-  const res = await apiDelete(`/Documentos/${docId}`);
+  const res = await DocumentoService.eliminar(docId);
 
   if (res.ok) {
     await Swal.fire({

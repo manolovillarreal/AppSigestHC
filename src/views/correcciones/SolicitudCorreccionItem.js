@@ -1,5 +1,4 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
-import { apiGet } from "../../core/api.js";
 import { DocumentoService } from "../../api/documento.api.js";
 import { Modal } from "../../components/modal.js";
 import { Dropzone } from "../../components/Dropzone.js";
@@ -234,7 +233,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
 
           // Intenta cargar la miniatura real del archivo de corrección
           try {
-            const resThumb = await apiGet(`/SolicitudCorreccion/thumbnails/${solicitud.id}`);
+            const resThumb = await SolicitudCorreccionService.obtenerThumbnail(solicitud.id);
             if (resThumb.ok && resThumb.result && resThumb.result.length > 0) {
               const img = document.createElement("img");
               img.src = `data:image/png;base64,${resThumb.result[0]}`;

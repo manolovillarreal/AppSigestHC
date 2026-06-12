@@ -1,9 +1,9 @@
-import { apiDownloadBlob } from "../../../core/api.js";
+import { DocumentoService } from "../../../api/documento.api.js";
 import { downloadBlobFile } from "../../../utils/files.js";
 
 export async function verDocumento(docId) {
   try {
-    const res = await apiDownloadBlob(`/Documentos/ver/${docId}`);
+    const res = await DocumentoService.descargar(docId);
 
     if (!res.ok) {
       alert("No se pudo cargar el documento");
@@ -19,7 +19,7 @@ export async function verDocumento(docId) {
 }
 
 export async function descargarDocumento(doc) {
-  const res = await apiDownloadBlob(`/Documentos/ver/${doc.id}`);
+  const res = await DocumentoService.descargar(doc.id);
 
   if (!res.ok) {
     alert("No se pudo descargar el documento");
