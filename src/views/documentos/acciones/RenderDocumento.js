@@ -146,7 +146,7 @@ export function renderCorrecciones(element, documento, onReMount) {
   const fechaSegura = (valor) => {
     if (!valor) return 'Fecha no disponible';
     const d = new Date(valor);
-    return isNaN(d.getTime()) ? 'Fecha no disponible' : formatearFecha(valor);
+    return isNaN(d.getTime()) ? 'Fecha no disponible' : formatearFechaHora(valor);
   };
 
   const nombreUsuario = (usuario) => {
