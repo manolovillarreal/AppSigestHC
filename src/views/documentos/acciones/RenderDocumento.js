@@ -2,6 +2,7 @@ import { DocumentoService } from "../../../api/documento.api.js";
 import { formatearFecha, formatearFechaHora } from "../../../utils/date.js";
 import { SolicitudCorreccionItem } from "../../correcciones/SolicitudCorreccionItem.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../../utils/correcciones.js";
+import { SolicitudCorreccionService } from "../../../api/solicitudCorreccion.api.js";
 
 export function renderCheckbox(element, documento, onSelectionChange) {
   const checkboxContainer = document.createElement("div");
@@ -181,41 +182,94 @@ export function renderCorrecciones(element, documento, onReMount) {
   const fecha = estaRespondida 
     ? fechaSegura(solicitudPendiente.fechaCorrige || solicitudPendiente.fechaSolicitud)
     : fechaSegura(solicitudPendiente.fechaSolicitud);
-  const porLabel = estaRespondida ? 'Por' : 'Por';
   const porUsuario = estaRespondida
     ? nombreUsuario(solicitudPendiente.usuarioCorrige)
     : nombreUsuario(solicitudPendiente.usuarioSolicita);
 
+  const textoCompleto = observaciones.join(' | ');
+  const limite = 60;
+  const necesitaTruncado = textoCompleto.length > limite;
+  const truncado = necesitaTruncado ? textoCompleto.substring(0, limite) + '...' : textoCompleto;
+  const motivoId = `motivo-${solicitudPendiente.id}`;
+
   panel.innerHTML = `
-    <div class="cp-badge" style="
-      color: ${cfg.color}; 
-      background: ${cfg.bg};
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
-    ">${cfg.texto}</div>
-    <div class="cp-meta">
-      <span>${fechaLabel}: <strong>${fecha}</strong></span>
-      <span>${porLabel}: ${porUsuario}</span>
-      ${motivoOriginal ? `
-        <div class="cp-motivo">
-          <strong>Motivo:</strong>
-          <span>${motivoOriginal}</span>
-          ${rechazos.length > 0 ? `
-            <div class="cp-rechazos">
-              <strong>Rechazos previos:</strong>
-              <ul>${rechazos.map(r => `<li>${r}</li>`).join('')}</ul>
-            </div>
-          ` : ''}
+    <div class="cp-inner">
+      
+      <!-- COLUMNA IZQUIERDA: info -->
+      <div class="cp-info">
+        <span class="cp-titulo">Solicitud de Corrección</span>
+        <span class="cp-badge" style="
+          color: ${cfg.color};
+          background: ${cfg.bg};
+          font-size: 11px;
+          font-weight: 700;
+          padding: 3px 10px;
+          border-radius: 20px;
+          display: inline-block;
+          letter-spacing: 0.5px;
+        ">${cfg.texto}</span>
+        <div class="cp-meta">
+          <span>${fechaLabel}: <strong>${fecha}</strong></span>
+          <span>Por: ${porUsuario}</span>
         </div>
-      ` : ''}
+        ${observaciones.length > 0 ? `
+          <div class="cp-motivo">
+            <strong>Motivo:</strong>
+            <span id="${motivoId}-corto">${truncado}</span>
+            ${necesitaTruncado ? `
+              <span id="${motivoId}-largo" style="display:none">
+                ${textoCompleto}
+              </span>
+              <button class="btn-ver-mas-motivo"
+                onclick="
+                  var c=document.getElementById('${motivoId}-corto');
+                  var l=document.getElementById('${motivoId}-largo');
+                  if(l.style.display==='none'){
+                    c.style.display='none';
+                    l.style.display='';
+                    this.textContent='ver menos';
+                  } else {
+                    c.style.display='';
+                    l.style.display='none';
+                    this.textContent='ver más';
+                  }
+                ">ver más</button>
+            ` : ''}
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- COLUMNA DERECHA: miniatura + botones -->
+      <div class="cp-acciones-col">
+        <div class="cp-thumb-correccion" id="cp-thumb-${solicitudPendiente.id}">
+          <span class="material-icons cp-thumb-icon">picture_as_pdf</span>
+        </div>
+        <div class="correccion-panel-acciones" 
+             id="cp-acciones-${solicitudPendiente.id}">
+        </div>
+      </div>
+
     </div>
-    <div class="correccion-panel-acciones"></div>
   `;
+
+  // Cargar miniatura del archivo temporal si está respondida
+  if (estaRespondida) {
+    SolicitudCorreccionService.obtenerThumbnail(solicitudPendiente.id)
+      .then(async res => {
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const thumb = panel.querySelector(
+            `#cp-thumb-${solicitudPendiente.id}`
+          );
+          if (thumb) {
+            thumb.innerHTML = `
+              <img src="${url}" 
+                style="width:100%;height:100%;object-fit:cover;" />`;
+          }
+        }
+      }).catch(() => {});
+  }
 
   // Instanciar SolicitudCorreccionItem para reutilizar sus métodos
   solicitudPendiente.documento = solicitudPendiente.documento || documento;
@@ -224,7 +278,12 @@ export function renderCorrecciones(element, documento, onReMount) {
     onReMount();
   });
 
-  const accionesContainer = panel.querySelector('.correccion-panel-acciones');
+  const accionesContainer = panel.querySelector(`#cp-acciones-${solicitudPendiente.id}`);
+
+  const thumbContainer = panel.querySelector(`#cp-thumb-${solicitudPendiente.id}`);
+  if (thumbContainer && (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA)) {
+    thumbContainer.addEventListener('click', () => solicitudItem._verCorreccion());
+  }
 
   // Botón "Ver corrección" (Visible si está Respondida o Aceptada)
   if (solicitudPendiente.estadoCorreccionId === EstadoCorreccion.RESPONDIDA || solicitudPendiente.estadoCorreccionId === EstadoCorreccion.ACEPTADA) {
