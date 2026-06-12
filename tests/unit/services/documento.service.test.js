@@ -1,4 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { API_URL } from '../../../src/core/config.js';
 
 function mockJsonResponse({ ok = true, status = 200, body = { ok: true, result: { id: 1 } } } = {}) {
   return {
@@ -68,7 +69,7 @@ describe('api/documento.api', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const [url, options] = fetch.mock.calls[0];
-    expect(url).toBe('http://10.10.1.1:8002/api/Documentos/firmar/100');
+    expect(url).toBe(`${API_URL}/Documentos/firmar/100`);
     expect(options.method).toBe('POST');
     expect(result).toEqual({ ok: true, result: { id: 100 } });
   });
@@ -81,7 +82,7 @@ describe('api/documento.api', () => {
     const result = await DocumentoService.EnviarDocumentoFirmado(9, fd);
 
     const [url, options] = fetch.mock.calls[0];
-    expect(url).toBe('http://10.10.1.1:8002/api/Documentos/firmar/9');
+    expect(url).toBe(`${API_URL}/Documentos/firmar/9`);
     expect(options.method).toBe('POST');
     expect(result.ok).toBe(false);
   });

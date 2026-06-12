@@ -1,4 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { API_URL } from '../../../src/core/config.js';
 
 function mockResponse({ ok = true, status = 200, body = { ok: true, result: [] } } = {}) {
   return {
@@ -45,7 +46,7 @@ describe('api/solicitudCorreccion.api', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const [url, options] = fetch.mock.calls[0];
-    expect(url).toBe('http://10.10.1.1:8002/api/SolicitudCorreccion/7/aprobar');
+    expect(url).toBe(`${API_URL}/SolicitudCorreccion/7/aprobar`);
     expect(options.method).toBe('POST');
     expect(result).toEqual({ ok: true, result: { estado: 'aprobada' } });
   });
@@ -57,7 +58,7 @@ describe('api/solicitudCorreccion.api', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     const [url] = fetch.mock.calls[0];
-    expect(url).toBe('http://10.10.1.1:8002/api/SolicitudCorreccion/9/rechazar');
+    expect(url).toBe(`${API_URL}/SolicitudCorreccion/9/rechazar`);
     expect(result.ok).toBe(false);
   });
 });
