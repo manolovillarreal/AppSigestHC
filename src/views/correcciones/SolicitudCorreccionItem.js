@@ -3,7 +3,7 @@ import { DocumentoService } from "../../api/documento.api.js";
 import { Modal } from "../../components/modal.js";
 import { Dropzone } from "../../components/Dropzone.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../utils/correcciones.js";
-import { formatearFecha } from "../../utils/date.js";
+import { formatearFecha, formatearFechaHora } from "../../utils/date.js";
 import { formatearErroresHTML } from "../../utils/error.js";
 import { SolicitudCorreccionService } from "../../api/solicitudCorreccion.api.js";
 import { descargarMiniaturas } from "../documentos/acciones/RenderDocumento.js";
@@ -16,6 +16,19 @@ export class SolicitudCorreccionItem extends BaseComponent {
   }
 
   render() {
+    const docParaLog = this.solicitudCorreccion.documento;
+    console.log('doc:', {
+      fecha: docParaLog?.fecha,
+      fechaCarga: docParaLog?.fechaCarga,
+      usuario: docParaLog?.usuario
+    });
+    console.log('solicitud:', {
+      fechaSolicitud: this.solicitudCorreccion.fechaSolicitud,
+      fechaCorrige: this.solicitudCorreccion.fechaCorrige,
+      usuarioSolicita: this.solicitudCorreccion.usuarioSolicita,
+      usuarioCorrige: this.solicitudCorreccion.usuarioCorrige
+    });
+
     this.element = document.createElement("div");
     this.element.classList.add("solicitud-card");
 
@@ -39,10 +52,13 @@ export class SolicitudCorreccionItem extends BaseComponent {
 
     const nombreDocumento = documento.tipoDocumento.nombre;
     const doc = {
-      fecha: documento.fechaDocumento || documento.fechaCreacion,
-      fechaCarga: documento.fechaCreacion
+      fecha: documento.fecha,
+      fechaCarga: documento.fechaCarga
     };
-    const nombreDoc = nombreUsuario({nombre: documento.usuario?.nombre, apellidos: documento.usuario?.apellidos});
+    const usuario = {
+      nombre: documento.usuario?.nombre || documento.usuario?.nombreUsuario || 'Usuario',
+      apellidos: documento.usuario?.apellidos || (documento.usuario ? '' : 'desconocido')
+    };
 
     const observaciones = (solicitudPendiente.observacion || '')
       .split('|')
@@ -60,7 +76,12 @@ export class SolicitudCorreccionItem extends BaseComponent {
             <div class="solicitud-doc-meta">
               <strong class="solicitud-doc-nombre">${nombreDocumento}</strong>
               <span class="solicitud-doc-fecha">Fecha: ${fechaSegura(doc.fecha)}</span>
-              <span class="solicitud-doc-carga">Cargado el ${fechaSegura(doc.fechaCarga)} por ${nombreDoc}</span>
+              <span class="solicitud-doc-carga">
+                Cargado el ${formatearFechaHora(doc.fechaCarga)}
+              </span>
+              <span class="solicitud-doc-usuario">
+                por ${usuario.nombre} ${usuario.apellidos}
+              </span>
               <span class="badge-estado-correccion badge-${estadoNombre.toLowerCase()}">${estadoNombre.toUpperCase()}</span>
               <span class="solicitud-fecha-sol">Solicitado el: ${fechaSegura(solicitudPendiente.fechaSolicitud)}</span>
             </div>
@@ -199,14 +220,14 @@ export class SolicitudCorreccionItem extends BaseComponent {
         const solicitud = this.solicitudCorreccion;
         console.log('solicitud fechas:', {
           fechaSolicitud: solicitud.fechaSolicitud,
-          fechaRespuesta: solicitud.fechaRespuesta
+          fechaCorrige: solicitud.fechaCorrige
         });
         const estaRespondida = solicitud.estadoCorreccion?.nombre === 'Respondida';
 
         if (estaRespondida) {
           const usuarioCorrige = solicitud.usuarioCorrige;
-          const fechaRespuesta = solicitud.fechaRespuesta 
-            ? fechaSegura(solicitud.fechaRespuesta)
+          const fechaCorrige = solicitud.fechaCorrige 
+            ? fechaSegura(solicitud.fechaCorrige)
             : 'Sin fecha';
           const nombreCorrector = usuarioCorrige
             ? `${usuarioCorrige.nombre || ''} ${usuarioCorrige.apellidos || ''}`.trim()
@@ -219,7 +240,7 @@ export class SolicitudCorreccionItem extends BaseComponent {
               <span class="material-icons">description</span>
             </div>
             <div class="solicitud-correccion-meta">
-              <span class="solicitud-correccion-fecha">${fechaRespuesta}</span>
+              <span class="solicitud-correccion-fecha">${fechaCorrige}</span>
               <span class="solicitud-correccion-usuario">Por: ${nombreCorrector}</span>
             </div>
           `;
