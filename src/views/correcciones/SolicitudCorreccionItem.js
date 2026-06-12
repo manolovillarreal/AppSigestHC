@@ -1,5 +1,6 @@
 import { BaseComponent } from "../../components/BaseComponent.js";
 import { apiGet } from "../../core/api.js";
+import { DocumentoService } from "../../api/documento.api.js";
 import { Modal } from "../../components/modal.js";
 import { Dropzone } from "../../components/Dropzone.js";
 import { puedeSolicitarCorrecion, EstadoCorreccion } from "../../utils/correcciones.js";
@@ -95,7 +96,10 @@ export class SolicitudCorreccionItem extends BaseComponent {
 
     // Render thumbnail
     const thumbnailContainer = this.element.querySelector(".solicitud-doc-thumbnail");
-    descargarMiniaturas(documento, thumbnailContainer, () => this._verCorreccion());
+    descargarMiniaturas(documento, thumbnailContainer, () => {
+      // Abrir documento original, no la corrección
+      this._verDocumentoOriginal();
+    });
 
     // Toggle collapsible history
     const btnToggleHistorial = this.element.querySelector(".btn-toggle-historial");
@@ -194,6 +198,10 @@ export class SolicitudCorreccionItem extends BaseComponent {
         const contenedorAcciones = accionesFooter;
 
         const solicitud = this.solicitudCorreccion;
+        console.log('solicitud fechas:', {
+          fechaSolicitud: solicitud.fechaSolicitud,
+          fechaRespuesta: solicitud.fechaRespuesta
+        });
         const estaRespondida = solicitud.estadoCorreccion?.nombre === 'Respondida';
 
         if (estaRespondida) {
@@ -302,6 +310,16 @@ export class SolicitudCorreccionItem extends BaseComponent {
     });
     html += '</ul>';
     return html;
+  }
+
+  async _verDocumentoOriginal() {
+    const res = await DocumentoService.descargar(
+      this.solicitudCorreccion.documento.id
+    );
+    if (!res.ok) return;
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
   }
 
   async _verCorreccion() {
