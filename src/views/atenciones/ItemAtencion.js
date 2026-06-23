@@ -11,6 +11,9 @@ export class ItemAtencion extends BaseComponent{
     }
 
     render() {
+        console.log('atencion:', this.atencion.id, 
+          'tieneCorreccionesPendientes:', 
+          this.atencion.tieneCorreccionesPendientes);
         const {paciente,ubicacionPaciente} = this.atencion;
 
         const item = document.createElement('li');
@@ -40,13 +43,17 @@ export class ItemAtencion extends BaseComponent{
                 <span class="fecha">${new Date(
                     this.atencion.fecha
                 ).toLocaleString()}</span>
-                
                 </div>
                 <div class="extra-info">
                     <span class="extra-label">${this.atencion.extraLabel}</span>
                     ${this.atencion.tieneCorreccionesPendientes ? 
                     `<span class="correcciones-pendientes material-symbols-outlined">quick_reference</span>` : ''}                
                 </div>
+                ${this.atencion.estadoAtencionId === 2 && this.atencion.nombreMedicoConsulta ? 
+                  `<div class="medico-consulta" style="font-weight: 500; color: #1976d2; margin-top: 4px; font-size: 0.9em; display: flex; align-items: center; gap: 4px;">
+                     <span class="material-icons" style="font-size: 16px;">person</span> 
+                     ${this.atencion.nombreMedicoConsulta}
+                   </div>` : ''}
             `;
         this.element = item;
     }

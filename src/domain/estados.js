@@ -9,8 +9,8 @@ export function obtenerNombreEstado(estadoId) {
 }
 
 const reglasCambioEstado = {
-  Admisiones: [1, 4],
-  Medico: [2],
+  Admisiones: [4],
+  Medico: [1, 2],
   Enfermeria: [3],
   Auditoria: [4, 5],
   Facturacion: [6],

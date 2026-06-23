@@ -41,6 +41,11 @@ export class AtencionHeader extends BaseComponent {
           <span class="grid-label">Estado:</span>
           <span class="grid-valor badge-estado estado-${estadoStr}" style="margin-left:8px;">${estadoNombre}</span>
         </div>
+        ${this.atencion.estadoAtencionId === 2 && this.atencion.nombreMedicoConsulta ? `
+        <div class="grid-dato">
+          <span class="grid-label">Médico:</span>
+          <span class="grid-valor">${this.atencion.nombreMedicoConsulta}</span>
+        </div>` : ''}
         <div class="grid-dato">
           <span class="grid-label">Paciente:</span>
           <span class="grid-valor paciente-link">${p.primerNombre} ${p.primerApellido}</span>

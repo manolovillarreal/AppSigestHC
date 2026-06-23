@@ -108,8 +108,8 @@ export class UsuarioForm extends BaseComponent {
       Swal.fire("Error", "Todos los campos obligatorios deben completarse", "warning");
       return;
     }
-     if (!this.usuario.id && form.password.value.trim()) {
-      dto.password = form.password.value.trim();
+     if (form.password.value.trim()) {
+      dto.contraseña = form.password.value.trim();
     }
 
     const accion = dto.id? "actualizado":"creado";

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(printf '%s\\\\n' \"refactor: centralizar acceso HTTP de admin y documentos en src/api\" \"\" \"Las vistas de admin \\(usuarios, roles, tipoDocumento, estadoAtencion\\) y\" \"los componentes restantes de documentos llamaban directo a core/api con\" \"rutas hardcodeadas, varias con casing inconsistente \\(/usuarios, /roles,\" \"/estadoatencion, /tipoDocumentoRol\\).\" \"\" \"- Nuevos servicios: RolService, TipoDocumentoRolService,\" \"  DocumentoRequeridoService\" \"- DocumentoService: nuevos obtenerPorAtencion y cargar\" \"- Vistas reutilizan usuarioService, tipoDocumentoService,\" \"  EstadoAtencionService ya existentes\" \"\" \"Endpoints normalizados a PascalCase \\(routing ASP.NET case-insensitive\\).\" \"Ninguna vista importa ya core/api. Sin cambios de comportamiento visible.\" \"24/24 tests en verde.\" \"\" \"Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>\")",
+      "Bash(rm .git/CMSG)"
+    ]
+  }
+}
